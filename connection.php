@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <!doctype html>
 <html lang="fr">
 	<head>
@@ -5,17 +8,18 @@
 		<title>Connection</title>
 	</head>
 		<body>
-<!-- 			<?php
-				include('controlRegistration.php');
-				if (controlRegistration($_POST)['status']) {
-					include('dbPDO_members.php');
-					include('dbRegistration_addMember.php');
-					echo 'Your account has been created';
+			<?php
+				include('controlConnection.php');
+				if (controlConnection()['status']) {
+					echo 'You are connected';
+					// header('Location : .php');
 				}
 				else {
 					include('formConnection.php');
-					echo controlRegistration($_POST)['error'];
+					?> <p class="error"> <?php 
+					echo controlConnection()['error'];
+					?> </p> <?php
 				}
-			?> -->
+			?>
 		</body>
 </html>

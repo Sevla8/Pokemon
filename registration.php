@@ -7,14 +7,18 @@
 		<body>
 			<?php
 				include('controlRegistration.php');
-				if (controlRegistration($_POST)['status']) {
+				if (controlRegistration()['status']) {
 					include('dbPDO_members.php');
 					include('dbRegistration_addMember.php');
+					include('registrationValidation.php');
 					echo 'Your account has been created';
+					// header("Location: .php");
 				}
 				else {
 					include('formRegistration.php');
-					echo controlRegistration($_POST)['error'];
+					?> <p class="error"> <?php
+					echo controlRegistration()['error'];
+					?> </p> <?php
 				}
 			?>
 		</body>

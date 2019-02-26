@@ -1,5 +1,5 @@
 <?php
 	$query = $db->prepare('SELECT * FROM members WHERE email = ?');
 	$query->execute(array($_POST['email']));
-	$emailExists = $query->rowCount();
+	$emailExists = $query->rowCount() > 0 ? true : false;
 ?>

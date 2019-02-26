@@ -21,7 +21,7 @@
 		<input type="password" name="passwordConfirmation" id="passwordConfirmation" placeholder="Confirm your password">
 	</div>
 	<div id="registerDiv">
-		<input type="submit" name="register" value="register">
+		<input type="submit" name="registration" value="registration">
 		<input type="reset" name="reset" value="reset">
 	</div>
 </form>

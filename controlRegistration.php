@@ -1,9 +1,9 @@
 <?php
 
-	function controlRegistration(&$array) {
+	function controlRegistration() {
 		$control = array('status' => false, 'error' => '');
 
-		if (isset($_POST['register'])) {
+		if (isset($_POST['registration'])) {
 			if (!empty($_POST['pseudo']) &&
 				!empty($_POST['email']) &&
 				!empty($_POST['emailConfirmation']) &&
