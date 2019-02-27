@@ -2,7 +2,7 @@
 <form method="post">
 	<div id="pseudoDivC">
 		<label for="pseudoC">Pseudo</label>
-		<input type="text" name="pseudoC" id="pseudoC" placeholder="Your pseudonym" value="<?php if (isset($_POST['pseudoC'])) echo $_POST['pseudoC'] ?>">
+		<input type="text" name="pseudoC" id="pseudoC" placeholder="Your pseudonym" value="<?php if (isset($_POST['pseudoC'])) echo $_POST['pseudoC']; else { if (isset($_COOKIE['pseudo'])) echo $_COOKIE['pseudo']; } ?>">
 	</div>
 	<div id="passwordDivC">
 		<label for="passwordC">Password</label>
