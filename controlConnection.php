@@ -20,9 +20,8 @@
 					else
 						$control['error'] = 'Your account have not been activated. Please activate your account first';	
 				}
-				else {
+				else
 					$control['error'] = 'Member does not exists';
-				}
 			}
 			else 
 				$control['error'] = 'All fields must be completed';
