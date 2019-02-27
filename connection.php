@@ -10,14 +10,15 @@
 		<body>
 			<?php
 				include('controlConnection.php');
-				if (controlConnection()['status']) {
+				$controlConnection = controlConnection();
+				if ($controlConnection['status']) {
 					echo 'You are connected';
 					// header('Location : .php');
 				}
 				else {
 					include('formConnection.php');
 					?> <p class="error"> <?php 
-					echo controlConnection()['error'];
+					echo $controlConnection['error'];
 					?> </p> <?php
 				}
 			?>

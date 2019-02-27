@@ -7,13 +7,14 @@
 	<body>
 		<?php
 			include('controlActivation.php');
-			if (controlActivation()['status']) {
-				echo 'Your account has been activated';
+			$controlActivation = controlActivation();
+			if ($controlActivation['status']) {
+				echo 'Your account has been activated.';
 				// header(Location: .php);
 			}
 			else {
 				?> <p class="error"> <?php
-				echo controlActivation()['error'];
+				echo $controlActivation['error'];
 				?> </p> <?php
 			}
 		?>
