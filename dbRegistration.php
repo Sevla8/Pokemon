@@ -6,6 +6,6 @@
 		die('Erreur : ' . $exception->getMessage());
 	}
 
-	$query = $db->prepare('INSERT INTO members(pseudo, email, password) VALUES (?, ?, ?)');
+	$query = $db->prepare('INSERT INTO membre(pseudo, email, password) VALUES (?, ?, ?)');
 	$query->execute(array($pseudo, $email, $password));
 ?>
