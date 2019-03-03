@@ -21,5 +21,5 @@ https://www.copier-coller.com/envoyer-des-mails-en-local-avec-wamp/
 
 ## Dates
 
-Since Febrary 2019 
-In development
+- Since Febrary 2019 
+- In development
