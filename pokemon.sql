@@ -1,12 +1,77 @@
-DROP TABLE IF EXISTS type, capacite;
+DROP TABLE IF EXISTS member, type, capacity, pokemon, trainer;
+
+CREATE TABLE member(
+	id
+);
 
 CREATE TABLE type (
 	id_type int NOT NULL,
-	name_type varchar(10) NOT NULL,
+	name_type varchar(10),
 	PRIMARY KEY(id_type)
 );
 
+CREATE TABLE capacity (
+	id_capa int NOT NULL,
+	name_capa varchar(25) NOT NULL,
+	type_capa int NOT NULL,
+	class_capa enum('physical', 'special'),
+	puis_capa int,
+	prec_capa int,
+	pp_capa int NOT NULL,
+	eff_sec_capa varchar(255),
+	PRIMARY KEY(id_capa),
+	FOREIGN KEY(type_capa) REFERENCES type(id_type)
+);
+
+CREATE TABLE pokemon (
+	id_pok int NOT NULL,
+	nom_pok varchar(25) NOT NULL,
+	id_type_1 varchar(10) NOT NULL,
+	id_type_2 varchar(10),
+	hp int NOT NULL, 
+	attack int NOT NULL, 
+	defense int NOT NULL,
+	sp_attack int NOT NULL,
+	sp_defense int NOT NULL,
+	speed int NOT NULL,
+	id_capa_1 int, 
+	id_capa_2 int, 
+	id_capa_3 int, 
+	id_capa_4 int, 
+	lvl_pok, int NOT NULL,
+	PRIMARY KEY(id_pok),
+	FOREIGN KEY(id_type_1) REFERENCES type(id_type),
+	FOREIGN KEY(id_type_2) REFERENCES type(id_type), 
+	FOREIGN KEY(id_capa_1) REFERENCES capacity(id_capa),
+	FOREIGN KEY(id_capa_2) REFERENCES capacity(id_capa),
+	FOREIGN KEY(id_capa_3) REFERENCES capacity(id_capa),
+	FOREIGN KEY(id_capa_4) REFERENCES capacity(id_capa)
+);
+
+CREATE TABLE trainer (
+	id_dress int NOT NULL,
+	nom_dress varchar(25) NOT NULL,
+	id_pok_1 int,
+	id_pok_2 int, 
+	id_pok_3 int,
+	id_pok_4 int, 
+	id_pok_5 int,
+	id_pok_6 int, 
+	PRIMARY KEY(id_dress),
+	FOREIGN KEY(id_pok_1) REFERENCES pokemon(id_pok),
+	FOREIGN KEY(id_pok_2) REFERENCES pokemon(id_pok),
+	FOREIGN KEY(id_pok_3) REFERENCES pokemon(id_pok),
+	FOREIGN KEY(id_pok_4) REFERENCES pokemon(id_pok),
+	FOREIGN KEY(id_pok_5) REFERENCES pokemon(id_pok),
+	FOREIGN KEY(id_pok_6) REFERENCES pokemon(id_pok),
+);
+
+--
+-- DATA
+--
+
 INSERT INTO type(id_type, name_type) VALUES
+	(0, null),
 	(1, 'fight'),
 	(2, 'dragon'),
 	(3, 'water'),
@@ -23,20 +88,7 @@ INSERT INTO type(id_type, name_type) VALUES
 	(14, 'ghost'),
 	(15, 'fly');
 
-CREATE TABLE capacity (
-	id_capa int NOT NULL,
-	name_capa varchar(25) NOT NULL,
-	type_capa int NOT NULL,
-	class_capa enum('physical', 'special'),
-	puis_capa int,
-	prec_capa int,
-	pp_capa int NOT NULL,
-	eff_sec_capa varchar(255),
-	PRIMARY KEY(id_capa),
-	FOREIGN KEY(type_capa) REFERENCES type(id_type)
-);
-
-INSERT INTO capacity VALUES 
+INSERT INTO capacity(id_capa, name_capa, type_capa, class_capa, puis_capa, prec_capa, pp_capa, eff_sec_capa) VALUES 
 	(1, 'Riposte', 1, 'physical', null, 100, 20, "Inflige le double des dégâts subis par une attaque de type Normal ou Combat durant le tour, échoue sinon"),
 	(2, 'Frappe Atlas', 1, 'physical', null, 100, 20, "Inflige des dégâts égaux au niveau du lanceur"),
 	(3, 'Double Pied', 1, 'physical', 30, 100, 30, "Frappe deux fois"),
@@ -153,241 +205,158 @@ INSERT INTO capacity VALUES
 	(114, "Destruction", 8, 'physical', 130, 100, 5, "Lanceur KO après l'attaque, ne tient compte que de la moitié de la défense adverse, ce qui équivaut à une puissance réelle de 260"), 
 	(115, "Ultralaser", 8, 'physical', 150, 90, 5, "Lanceur immobilisé au tour suivant"), 
 	(116, "Explosion", 8, 'physical', 170, 100, 5, "Lanceur KO après l'attaque, ne tient compte que de la moitié dela défense adverse, ce qui équivaut à une puissance réelle de 340"), 
-	(Para-Spore	Type plante 3G	- 	- 	75	30	Paralyse la cible
-	(Poudre Dodo	Type plante 3G	- 	- 	75	15	Endort la cible
-	(Spore	Type plante 3G	- 	- 	100	15	Endort la cible
-	(Vampigraine	Type plante 3G	- 	- 	90	10	Draîne à chaque tour des PV de la cible vers le lanceur
-	(Vol-Vie	Type plante 3G	, 'special',	20	100	20	Restaure un nombre de PV au lanceur égal
-	(à la moitié des dégâts infligés à la cible
-	(Fouet Lianes	Type plante 3G	, 'special',	35	100	10	null
-	(Méga-Sangsue	Type plante 3G	, 'special',	40	100	10	Restaure un nombre de PV au lanceur égal
-	(à la moitié des dégâts infligés à la cible
-	(Tranch'Herbe	Type plante 3G	, 'special',	55	95	25	Taux de Coups Critiques élevé
-	(Danse-Fleur	Type plante 3G	, 'special',	70	100	20	Attaque continue sur deux ou trois tour, le
-	(lanceur devient confus par la suite
-	(Lance-Soleil	Type plante 3G	, 'special',	120	100	10	Attaque en deux tours, n'agit pas au premier
-	(Acidarmure	Type poison 3G	- 	- 	- 	40	Augmente la défense du lanceur de deux niveaux
-	(Gaz Toxik	Type poison 3G	- 	- 	55	40	Empoisonne la cible
-	(Poudre Toxik	Type poison 3G	- 	- 	75	35	Empoisonne la cible
-	(Toxik	Type poison 3G	- 	- 	85	10	Empoisonne gravement la cible
-	(Dard-Venin	Type poison 3G	, 'physical',	15	100	35	Peut empoisonner la cible
-	(Purédpois	Type poison 3G	, 'physical',	20	70	20	Peut empoisonner la cible
-	(Acide	Type poison 3G	, 'physical',	40	100	30	Peut baisser la défense de la cible
-	(Détritus	Type poison 3G	, 'physical',	65	100	20	Peut empoisonner la cible
-	(Amnésie	Type psy 3G	- 	- 	- 	20	Augmente le spécial du lanceur de deux niveaux
-	(Bouclier	Type psy 3G	- 	- 	- 	30	Augmente la défense du lanceur de deux niveaux
-	(Hâte	Type psy 3G	- 	- 	- 	30	Augmente la vitesse du lanceur de deux niveaux
-	(Hypnose	Type psy 3G	- 	- 	60	20	Endort la cible
-	(Mur Lumière	Type psy 3G	- 	- 	- 	30	Augmente la résistance du lanceur aux attaques , 'special',s
-	(Protection	Type psy 3G	- 	- 	- 	20	Augmente la résistance du lanceur aux attaques , 'physical',s
-	(Repos	Type psy 3G	- 	- 	- 	10	Restaure tous les PV du lanceur ainsi que son statut,
-	(le lanceur est immobilisé pendant deux tours
-	(Télékinésie	Type psy 3G	- 	- 	80	15	Baisse la précision de la cible
-	(Téléport	Type psy 3G	- 	- 	- 	20	Met fin au combat contre un Pokémon sauvage,
-	(échoue contre un dresseur
-	(Yoga	Type psy 3G	- 	- 	- 	40	Augmente l'attaque du lanceur
-	(Vague Psy	Type psy 3G	, 'special',	- 	80	15	Inflige des dégâts variables
-	(Choc Mental	Type psy 3G	, 'special',	50	100	25	Peut rendre la cible confuse
-	(Rafale Psy	Type psy 3G	, 'special',	65	100	20	Peut rendre la cible confuse
-	(Psyko	Type psy 3G	, 'special',	90	100	10	Peut baisser le spécial de la cible
-	(Dévorêve	Type psy 3G	, 'special',	100	100	15	Restaure un nombre de PV au lanceur égal à la moitié des dégâts
-	(infligés à la cible, ne fonctionne que si la cible est endormie
-	(Jet-Pierres	Type roche 3G	, 'physical',	50	65	15	null
-	(Éboulement	Type roche 3G	, 'physical',	75	90	10	Peut apeurer la cible
-	(Abîme	Type sol 3G	, 'physical',	- 	30	5	Met l'adversaire KO, échoue s'il a une vitesse
-	(supérieure à celle du lanceur
-	(Osmerang	Type sol 3G	, 'physical',	50	90	10	Attaque deux fois
-	(Massd'Os	Type sol 3G	, 'physical',	65	85	10	Peut apeurer la cible
-	(Séisme	Type sol 3G	, 'physical',	100	100	10	null
-	(Tunnel	Type sol 3G	, 'physical',	100	100	10	Attaque en deux tours, le lanceur ne peut être atteint
-	(que par Météores et Patience au premier tour
-	(Onde Folie	Type spectre 3G	- 	- 	100	10	Rend la cible confuse
-	(Ténèbres	Type spectre 3G	, 'physical',	- 	100	15	Inflige des dégâts égaux au niveau du lanceur
-	(Léchouille	Type spectre 3G	, 'physical',	20	100	30	Peut paralyser la cible
-	(Mimique	Type vol 3G	- 	- 	- 	20	Le lanceur utilise la dernière attaque lancée par l'adversaire
-	(Cru-Aile	Type vol 3G	, 'physical',	35	100	35	null
-	(Picpic	Type vol 3G	, 'physical',	35	100	35	null
-	(Vol	Type vol 3G	, 'physical',	70	100	15	Attaque en deux tours, le lanceur ne peut être atteint
-	(que par Météores et Patience au premier tour
-	(Bec Vrille	Type vol 3G	, 'physical',	80	100	20	null
+	(117, "Para-Spore", 9, null, null, 75, 30, "Paralyse la cible"),
+	(118, "Poudre Dodo", 9, null, null, 75, 15, "Endort la cible"), 
+	(119, "Spore", 9, null, null, 100, 15, "Endort la cible"), 
+	(120, "Vampigraine", 9,	null, null, 90, 10, "Draîne à chaque tour des PV de la cible vers le lanceur"), 
+	(121, "Vol-Vie", 9,	'special', 20, 100, 20, "Restaure un nombre de PV au lanceur égal à la moitié des dégâts infligés à la cible"), 
+	(122, "Fouet Lianes", 9, 'special', 35, 100, 10, null),
+	(123, "Méga-Sangsue", 9, 'special', 40, 100, 10, "Restaure un nombre de PV au lanceur égal à la moitié des dégâts infligés à la cible"), 
+	(124, "Tranch'Herbe", 9, 'special', 55, 95, 25, "Taux de Coups Critiques élevé"), 
+	(125, "Danse-Fleur", 9, 'special', 70, 100, 20, "Attaque continue sur deux ou trois tour, le lanceur devient confus par la suite"),
+	(126, "Lance-Soleil", 9, 'special', 120, 100, 10, "Attaque en deux tours, n'agit pas au premier"),
+	(127, "Acidarmure", 10, null, null, null, 40, "Augmente la défense du lanceur de deux niveaux"), 
+	(128, "Gaz Toxik", 10, null, null, 55, 40, "Empoisonne la cible"), 
+	(129, "Poudre Toxik", 10, null, null, 75, 35, "Empoisonne la cible"), 
+	(130, "Toxik", 10, null, null, 85, 10, "Empoisonne gravement la cible"), 
+	(131, "Dard-Venin", 10, 'physical', 15, 100, 35, "Peut empoisonner la cible"), 
+	(132, "Purédpois", 10, 'physical', 20, 70, 20, "Peut empoisonner la cible"), 
+	(133, "Acide", 10, 'physical', 40, 100, 30, "Peut baisser la défense de la cible"), 
+	(134, "Détritus",	10, 'physical', 65, 100, 20, "Peut empoisonner la cible"), 
+	(135, "Amnésie", 11, null, null, null, 20, "Augmente le spécial du lanceur de deux niveaux"), 
+	(136, "Bouclier", 11, null, null, null, 30, "Augmente la défense du lanceur de deux niveaux"), 
+	(137, "Hâte	Type", 11, null, null, null, 30, "Augmente la vitesse du lanceur de deux niveaux"), 
+	(138, "Hypnose", 11, null, null, 60, 20, "Endort la cible"), 
+	(139, "Mur Lumière", 11, null null, null, 30, "Augmente la résistance du lanceur aux attaques , 'special',s"),
+	(140, "Protection", 11, null, null, null, 20, "Augmente la résistance du lanceur aux attaques , 'physical',s"),
+	(141, "Repos", 11, null, null, null, 10, "Restaure tous les PV du lanceur ainsi que son statut, le lanceur est immobilisé pendant deux tours"), 
+	(142, "Télékinésie", 11, null, null, 80, 15, "Baisse la précision de la cible"), 
+	(143, "Téléport", 11, null, null, null, 20, "Met fin au combat contre un Pokémon sauvage,échoue contre un dresseur"), 
+	(144, "Yoga", 11, null, null, null, 40, "Augmente l'attaque du lanceur"), 
+	(145, "Vague", 11, 'special', null, 80, 15, "Inflige des dégâts variables"), 
+	(146, "Choc Mental", 11, 'special',	50, 100, 25, "Peut rendre la cible confuse"), 
+	(147, "Rafale Psy", 11, 'special', 65, 100, 20, "Peut rendre la cible confuse"), 
+	(148, "Psyko", 11, 'special', 90, 100, 10, "Peut baisser le spécial de la cible"), 
+	(149, "Dévorêve", 11, 'special', 100, 100, 15, "Restaure un nombre de PV au lanceur égal à la moitié des dégâts infligés à la cible, ne fonctionne que si la cible est endormie"), 
+	(150, "Jet-Pierres", 12, 'physical', 50, 65, 15, null), 
+	(151, "Éboulement", 12, 'physical',	75, 90, 10, "Peut apeurer la cible"), 
+	(152, "Abîme", 13, 'physical', null, 30, 5, "Met l'adversaire KO, échoue s'il a une vitesse supérieure à celle du lanceur"), 
+	(153, "Osmerang", 13, 'physical', 50, 90, 10, "Attaque deux fois"), 
+	(154, "Massd'Os", 13, 'physical', 65, 85, 10, "Peut apeurer la cible"), 
+	(155, "Séisme", 13, 'physical', 100, 100, 10, null), 
+	(156, "Tunnel", 13, 'physical', 100, 100, 10, "Attaque en deux tours, le lanceur ne peut être atteint que par Météores et Patience au premier tour"), 
+	(157, "Onde Folie", 14, null, null, 100, 10, "Rend la cible confuse"), 
+	(158, "Ténèbres", 14, 'physical', null, 100, 15, "Inflige des dégâts égaux au niveau du lanceur"), 
+	(159, "Léchouille", 14, 'physical', 20, 100, 30, "Peut paralyser la cible"), 
+	(160, "Mimique", 15, null, null, null, 20, "Le lanceur utilise la dernière attaque lancée par l'adversaire"), 
+	(161, "Cru-Aile", 15, 'physical', 35, 100, 35, null), 
+	(162, "Picpic", 15, 'physical', 35, 100, 35, null), 
+	(163, "Vol", 15, 'physical', 70, 100, 15, "Attaque en deux tours, le lanceur ne peut être atteint que par Météores et Patience au premier tour"), 
+	(164, "Bec Vrille", 15, 'physical',	80, 100, 20, null), 
 	(165, 'Piqué', 15, 'physical', 140, 90, 5, "Attaque en deux tours, n'agit pas au premier");
 
-
-CREATE TABLE pokemon (
-	id_pok int NOT NULL,
-	nom_pok varchar(25) NOT NULL,
-	id_type varchar(25) NOT NULL,
-	PRIMARY KEY(id_pok),
-	FOREIGN KEY(id_type) REFERENCES type(id_type)
-);
-
--- Table evolueEn
--- Un pokémon peut évoluer en un autre pokémon à un certain niveau
--- lvl = -1 -> nécessite une pierre pour évoluer
--- lvl = -2 -> nécessite un échange pour évoluer
-CREATE TABLE evolue_en (
-	id_pok_base int NOT NULL,
-	id_pok_evol int NOT NULL,
-	lvl_evol_pok int NOT NULL,
-	FOREIGN KEY(id_pok_base) REFERENCES pokemon(id_pok),
-	FOREIGN KEY(id_pok_evol) REFERENCES pokemon(id_pok)
-);
-
-CREATE TABLE est_type (
-	id_pok int NOT NULL,
-	type_pok varchar(25) NOT NULL,
-	FOREIGN KEY(id_pok) REFERENCES pokemon(id_pok)
-);
-	
--- Structure de la table dresseur
-CREATE TABLE dresseur (
-	id_dress int NOT NULL,
-	nom_dress varchar(25) NOT NULL,
-	PRIMARY KEY(id_dress)
-);
-
-
--- Table détientPokémon
--- Un dresseur détient au maximum 6 pokémons
--- arenes https://www.pokebip.com/page__jeuxvideo__rbvj__champions_arene.html
--- ligue https://www.pokebip.com/page__jeuxvideo__rbvj__conseil4.html
-CREATE TABLE detient_pokemon (
-	id_dress int NOT NULL, 
-	id_pok int NOT NULL,  
-	lvl_pok int NOT NULL,
-	FOREIGN KEY(id_dress) REFERENCES dresseur(id_dress),
-	FOREIGN KEY(id_pok) REFERENCES pokemon(id_pok)
-);
-
-CREATE TABLE capacite (
-	id_capa int NOT NULL, 
-	nom_capa varchar(25) NOT NULL,
-	type_capa enum('combat','vol','ouiseau','arbre') NOT NULL,
-	classe,
-	puis_capa int,
-	prec_capa int,
-	pp_capa int,
-	eff_sec_capa varchar(255),
-	PRIMARY KEY(id_capa)
-);
-
-CREATE TABLE possede_capacite (
-	id_pok int NOT NULL, 
-	id_capa varchar(25) NOT NULL,
-	FOREIGN KEY(id_capa) REFERENCES capacite(id_capa),
-	FOREIGN KEY(id_pok) REFERENCES pokemon(id_pok)
-);
-
-
---
--- DATA
---
-
--- http://www.g33kmania.com/liste-pokemon-generation-1/
-
-
-INSERT INTO pokemon (id_pok, nom_pok) VALUES
-	(  1, 'Bulbizarre'),
-	(  2, 'Herbizarre'),
-	(  3, 'Florizarre'),
-	(  4, 'Salameche'),
-	(  5, 'Reptincel'),
-	(  6, 'Dracaufeu'),
-	(  7, 'Carapuce'),
-	(  8, 'Carabaffe'),
-	(  9, 'Tortank'),
-	( 10, 'Chenipan'),
-	( 11, 'Chrysacier'),
-	( 12, 'Papilusion'),
-	( 13, 'Aspicot'),
-	( 14, 'Coconfort'),
-	( 15, 'Dardargnan'),
-	( 16, 'Roucool'),
-	( 17, 'Roucoups'),
-	( 18, 'Roucarnage'),
-	( 19, 'Rattata'),
-	( 20, 'Rattatac'),
-	( 21, 'Piafabec'),
-	( 22, 'Rapasdepic'),
-	( 23, 'Abo'),
-	( 24, 'Arbok'),
-	( 25, 'Pikachu'),
-	( 26, 'Raichu'),
-	( 27, 'Sabelette'),
-	( 28, 'Sablaireau'),
+INSERT INTO pokemon (id_pok, nom_pok, id_type_1, id_type_2, hp, attack, defense, sp_attack, sp_defense, speed, id_capa_1, id_capa_2, id_capa_3, id_capa_4, lvl_pok) VALUES
+	(1, 'Bulbizarre', 9, 10, 45, 49, 49, 65, 65, 45, 1, 1, 1, 1 , 100),
+	(2, 'Herbizarre', 9, 10, 60, 62, 63, 80, 80, 60, 1, 1, 1, 1, 100),
+	(3, 'Florizarre', 9, 10, 80, 82, 83, 100, 100, 80, 1, 1, 1, 1, 100),
+	(4, 'Salameche', 5, 0, 39, 52, 43, 60, 50, 65, 1, 1, 1, 1, 100),
+	(5, 'Reptincel', 5, 0, 58, 64, 58, 80, 65, 80, 1, 1, 1, 1, 100),
+	(6, 'Dracaufeu', 5, 15, 78, 84, 78, 109, 85, 100, 1, 1, 1, 1, 100),
+	(7, 'Carapuce', 3, 0, 44, 48, 65, 50, 64, 43, 1, 1, 1, 1, 100),
+	(8, 'Carabaffe', 3, 0, 59, 63, 80, 65, 80, 58, 1, 1, 1, 1, 100),
+	(9, 'Tortank', 3, 0, 79, 83, 100, 85, 105, 78, 1, 1, 1, 1, 100),
+	(10, 'Chenipan'),
+	(11, 'Chrysacier'),
+	(12, 'Papilusion'),
+	(13, 'Aspicot'),
+	(14, 'Coconfort'),
+	(15, 'Dardargnan'),
+	(16, 'Roucool'),
+	(17, 'Roucoups'),
+	(18, 'Roucarnage'),
+	(19, 'Rattata'),
+	(20, 'Rattatac'),
+	(21, 'Piafabec'),
+	(22, 'Rapasdepic'),
+	(23, 'Abo'),
+	(24, 'Arbok'),
+	(25, 'Pikachu'),
+	(26, 'Raichu'),
+	(27, 'Sabelette'),
+	(28, 'Sablaireau'),
 	-- ( 29, 'Nidoran♀'),
-	( 29, 'NidoranF'),
-	( 30, 'Nidorina'),
-	( 31, 'Nidoqueen'),
+	(29, 'NidoranF'),
+	(30, 'Nidorina'),
+	(31, 'Nidoqueen'),
 	-- ( 32, 'Nidoran♂'),
-	( 32, 'NidoranM'),
-	( 33, 'Nidorino'),
-	( 34, 'Nidoking'),
-	( 35, 'Melofee'),
-	( 36, 'Melodelfe'),
-	( 37, 'Goupix'),
-	( 38, 'Feunard'),
-	( 39, 'Rondoudou'),
-	( 40, 'Grodoudou'),
-	( 41, 'Nosferapti'),
-	( 42, 'Nosferalto'),
-	( 43, 'Mystherbe'),
-	( 44, 'Ortide'),
-	( 45, 'Rafflesia'),
-	( 46, 'Paras'),
-	( 47, 'Parasect'),
-	( 48, 'Mimitoss'),
-	( 49, 'Aeromite'),
-	( 50, 'Taupiqueur'),
-	( 51, 'Triopikeur'),
-	( 52, 'Miaouss'),
-	( 53, 'Persian'),
-	( 54, 'Psykokwak'),
-	( 55, 'Akwakwak'),
-	( 56, 'Ferosinge'),
-	( 57, 'Colossinge'),
-	( 58, 'Caninos'),
-	( 59, 'Arcanin'),
-	( 60, 'Ptitard'),
-	( 61, 'Tetarte'),
-	( 62, 'Tartard'),
-	( 63, 'Abra'),
-	( 64, 'Kadabra'),
-	( 65, 'Alakazam'),
-	( 66, 'Machoc'),
-	( 67, 'Machopeur'),
-	( 68, 'Mackogneur'),
-	( 69, 'Chetiflor'),
-	( 70, 'Boustiflor'),
-	( 71, 'Empiflor'),
-	( 72, 'Tentacool'),
-	( 73, 'Tentacruel'),
-	( 74, 'Racaillou'),
-	( 75, 'Gravalanch'),
-	( 76, 'Grolem'),
-	( 77, 'Ponyta'),
-	( 78, 'Galopa'),
-	( 79, 'Ramoloss'),
-	( 80, 'Flagadoss'),
-	( 81, 'Magneti'),
-	( 82, 'Magneton'),
-	( 83, 'Canarticho'),
-	( 84, 'Doduo'),
-	( 85, 'Dodrio'),
-	( 86, 'Otaria'),
-	( 87, 'Lamantine'),
-	( 88, 'Tadmorv'),
-	( 89, 'Grotadmorv'),
-	( 90, 'Kokiyas'),
-	( 91, 'Crustabri'),
-	( 92, 'Fantominus'),
-	( 93, 'Spectrum'),
-	( 94, 'Ectoplasma'),
-	( 95, 'Onix'),
-	( 96, 'Soporifik'),
-	( 97, 'Hypnomade'),
-	( 98, 'Krabby'),
-	( 99, 'Krabboss'),
+	(32, 'NidoranM'),
+	(33, 'Nidorino'),
+	(34, 'Nidoking'),
+	(35, 'Melofee'),
+	(36, 'Melodelfe'),
+	(37, 'Goupix'),
+	(38, 'Feunard'),
+	(39, 'Rondoudou'),
+	(40, 'Grodoudou'),
+	(41, 'Nosferapti'),
+	(42, 'Nosferalto'),
+	(43, 'Mystherbe'),
+	(44, 'Ortide'),
+	(45, 'Rafflesia'),
+	(46, 'Paras'),
+	(47, 'Parasect'),
+	(48, 'Mimitoss'),
+	(49, 'Aeromite'),
+	(50, 'Taupiqueur'),
+	(51, 'Triopikeur'),
+	(52, 'Miaouss'),
+	(53, 'Persian'),
+	(54, 'Psykokwak'),
+	(55, 'Akwakwak'),
+	(56, 'Ferosinge'),
+	(57, 'Colossinge'),
+	(58, 'Caninos'),
+	(59, 'Arcanin'),
+	(60, 'Ptitard'),
+	(61, 'Tetarte'),
+	(62, 'Tartard'),
+	(63, 'Abra'),
+	(64, 'Kadabra'),
+	(65, 'Alakazam'),
+	(66, 'Machoc'),
+	(67, 'Machopeur'),
+	(68, 'Mackogneur'),
+	(69, 'Chetiflor'),
+	(70, 'Boustiflor'),
+	(71, 'Empiflor'),
+	(72, 'Tentacool'),
+	(73, 'Tentacruel'),
+	(74, 'Racaillou'),
+	(75, 'Gravalanch'),
+	(76, 'Grolem'),
+	(77, 'Ponyta'),
+	(78, 'Galopa'),
+	(79, 'Ramoloss'),
+	(80, 'Flagadoss'),
+	(81, 'Magneti'),
+	(82, 'Magneton'),
+	(83, 'Canarticho'),
+	(84, 'Doduo'),
+	(85, 'Dodrio'),
+	(86, 'Otaria'),
+	(87, 'Lamantine'),
+	(88, 'Tadmorv'),
+	(89, 'Grotadmorv'),
+	(90, 'Kokiyas'),
+	(91, 'Crustabri'),
+	(92, 'Fantominus'),
+	(93, 'Spectrum'),
+	(94, 'Ectoplasma'),
+	(95, 'Onix'),
+	(96, 'Soporifik'),
+	(97, 'Hypnomade'),
+	(98, 'Krabby'),
+	(99, 'Krabboss'),
 	(100, 'Voltorbe'),
 	(101, 'Electrode'),
 	(102, 'Noeunoeuf'),
@@ -441,224 +410,8 @@ INSERT INTO pokemon (id_pok, nom_pok) VALUES
 	(150, 'Mewtwo'),
 	(151, 'Mew');
 
-INSERT INTO est_type (id_pok, type_pok) VALUES
-	(  1, 'Plante'),
-	(  1, 'Poison'),
-	(  2, 'Plante'),
-	(  2, 'Poison'),
-	(  3, 'Plante'),
-	(  3, 'Poison'),
-	(  4, 'Feu'),
-	(  5, 'Feu'),
-	(  6, 'Feu'),
-	(  6, 'Vol'),
-	(  7, 'Eau'),
-	(  8, 'Eau'),
-	(  9, 'Eau'),
-	( 10, 'Insecte'),
-	( 11, 'Insecte'),
-	( 12, 'Insecte'),
-	( 12, 'Vol'),
-	( 13, 'Insecte'),
-	( 13, 'Poison'),
-	( 14, 'Insecte'),
-	( 14, 'Poison'),
-	( 15, 'Insecte'),
-	( 15, 'Poison'),
-	( 16, 'Normal'),
-	( 16, 'Vol'),
-	( 17, 'Normal'),
-	( 17, 'Vol'),
-	( 18, 'Normal'),
-	( 18, 'Vol'),
-	( 19, 'Normal'),
-	( 20, 'Normal'),
-	( 21, 'Normal'),
-	( 21, 'Vol'),
-	( 22, 'Normal'),
-	( 22, 'Vol'),
-	( 23, 'Poison'),
-	( 24, 'Poison'),
-	( 25, 'Electrique'),
-	( 26, 'Electrique'),
-	( 27, 'Sol'),
-	( 28, 'Sol'),
-	( 29, 'Poison'),
-	( 30, 'Poison'),
-	( 31, 'Poison'),
-	( 31, 'Sol'),
-	( 32, 'Poison'),
-	( 33, 'Poison'),
-	( 34, 'Poison'),
-	( 34, 'Sol'),
-	( 35, 'Normal'),
-	( 36, 'Normal'),
-	( 37, 'Feu'),
-	( 38, 'Feu'),
-	( 39, 'Normal'),
-	( 40, 'Normal'),
-	( 41, 'Poison'),
-	( 41, 'Vol'),
-	( 42, 'Poison'),
-	( 42, 'Vol'),
-	( 43, 'Plante'),
-	( 43, 'Poison'),
-	( 44, 'Plante'),
-	( 44, 'Poison'),
-	( 45, 'Plante'),
-	( 45, 'Poison'),
-	( 46, 'Insecte'),
-	( 46, 'Plante'),
-	( 47, 'Insecte'),
-	( 47, 'Plante'),
-	( 48, 'Insecte'),
-	( 48, 'Poison'),
-	( 49, 'Insecte'),
-	( 49, 'Poison'),
-	( 50, 'Sol'),
-	( 51, 'Sol'),
-	( 52, 'Normal'),
-	( 53, 'Normal'),
-	( 54, 'Eau'),
-	( 55, 'Eau'),
-	( 56, 'Combat'),
-	( 57, 'Combat'),
-	( 58, 'Feu'),
-	( 59, 'Feu'),
-	( 60, 'Eau'),
-	( 61, 'Eau'),
-	( 62, 'Eau'),
-	( 62, 'Combat'),
-	( 63, 'Psy'),
-	( 64, 'Psy'),
-	( 65, 'Psy'),
-	( 66, 'Combat'),
-	( 67, 'Combat'),
-	( 68, 'Combat'),
-	( 69, 'Plante'),
-	( 69, 'Poison'),
-	( 70, 'Plante'),
-	( 70, 'Poison'),
-	( 71, 'Plante'),
-	( 71, 'Poison'),
-	( 72, 'Eau'),
-	( 72, 'Poison'),
-	( 73, 'Eau'),
-	( 73, 'Poison'),
-	( 74, 'Roche'),
-	( 74, 'Sol'),
-	( 75, 'Roche'),
-	( 75, 'Sol'),
-	( 76, 'Roche'),
-	( 76, 'Sol'),
-	( 77, 'Feu'),
-	( 78, 'Feu'),
-	( 79, 'Eau'),
-	( 79, 'Psy'),
-	( 80, 'Eau'),
-	( 80, 'Psy'),
-	( 81, 'Electrique'),
-	( 82, 'Electrique'),
-	( 83, 'Normal'),
-	( 83, 'Vol'),
-	( 84, 'Normal'),
-	( 84, 'Vol'),
-	( 85, 'Normal'),
-	( 85, 'Vol'),
-	( 86, 'Eau'),
-	( 87, 'Eau'),
-	( 87, 'Glace'),
-	( 88, 'Poison'),
-	( 89, 'Poison'),
-	( 90, 'Eau'),
-	( 91, 'Eau'),
-	( 91, 'Glace'),
-	( 92, 'Spectre'),
-	( 92, 'Poison'),
-	( 93, 'Spectre'),
-	( 93, 'Poison'),
-	( 94, 'Spectre'),
-	( 94, 'Poison'),
-	( 95, 'Roche'),
-	( 95, 'Sol'),
-	( 96, 'Psy'),
-	( 97, 'Psy'),
-	( 98, 'Eau'),
-	( 99, 'Eau'),
-	(100, 'Electrique'),
-	(101, 'Electrique'),
-	(102, 'Plante'),
-	(102, 'Psy'),
-	(103, 'Plante'),
-	(103, 'Psy'),
-	(104, 'Sol'),
-	(105, 'Sol'),
-	(106, 'Combat'),
-	(107, 'Combat'),
-	(108, 'Normal'),
-	(109, 'Poison'),
-	(110, 'Poison'),
-	(111, 'Sol'),
-	(111, 'Roche'),
-	(112, 'Sol'),
-	(112, 'Roche'),
-	(113, 'Normal'),
-	(114, 'Plante'),
-	(115, 'Normal'),
-	(116, 'Eau'),
-	(117, 'Eau'),
-	(118, 'Eau'),
-	(119, 'Eau'),
-	(120, 'Eau'),
-	(121, 'Eau'),
-	(121, 'Psy'),
-	(122, 'Psy'),
-	(123, 'Insecte'),
-	(123, 'Vol'),
-	(124, 'Glace'),
-	(124, 'Psy'),
-	(125, 'Electrique'),
-	(126, 'Feu'),
-	(127, 'Insecte'),
-	(128, 'Normal'),
-	(129, 'Eau'),
-	(130, 'Eau'),
-	(130, 'Vol'),
-	(131, 'Eau'),
-	(131, 'Glace'),
-	(132, 'Normal'),
-	(133, 'Normal'),
-	(134, 'Eau'),
-	(135, 'Electrique'),
-	(136, 'Feu'),
-	(137, 'Normal'),
-	(138, 'Roche'),
-	(138, 'Eau'),
-	(139, 'Roche'),
-	(139, 'Eau'),
-	(140, 'Roche'),
-	(140, 'Eau'),
-	(141, 'Roche'),
-	(141, 'Eau'),
-	(142, 'Roche'),
-	(142, 'Vol'),
-	(143, 'Normal'),
-	(144, 'Glace'),
-	(144, 'Vol'),
-	(145, 'Electrique'),
-	(145, 'Vol'),
-	(146, 'Feu'),
-	(146, 'Vol'),
-	(147, 'Dragon'),
-	(148, 'Dragon'),
-	(149, 'Dragon'),
-	(149, 'Vol'),
-	(150, 'Psy'),
-	(151, 'Psy');
-
-
 INSERT INTO dresseur (id_dress, nom_dress) VALUES 
-	(2, 'Pierre'),
+	(2, 'Pierre', ),
 	(3, 'Ondine'),
 	(4, 'Major Bob'),
 	(5, 'Erika'),
@@ -733,113 +486,78 @@ INSERT INTO detientPokemon (id_dress, id_pok, lvl_pok) VALUES
 	(13, 149, 62);
 
 
--- evolutions
-INSERT INTO evolue_en (id_pok_base, id_pok_evol, lvl_evol_pok) VALUES
--- http://www.pokepedia.fr/Liste_des_Pok%C3%A9mon_par_famille_d%27%C3%A9volution
-	(  1,   2, 16),
-	(  2,   3, 32),
-	(  4,   5, 16),
-	(  5,   6, 36),
-	(  7,   8, 16),
-	(  8,   9, 36),
-	( 10,  11, 7 ),
-	( 11,  12, 10),
-	( 13,  14, 7 ),
-	( 14,  15, 10),
-	( 16,  17, 18),
-	( 17,  18, 36),
-	( 19,  20, 20),
-	( 21,  22, 20),
-	( 23,  24, 22),
-	( 25,  26, -1),
-	( 27,  28, 22),
-	( 29,  30, 16),
-	( 30,  31, -1),
-	( 32,  33, 16),
-	( 33,  34, -1),
-	( 35,  36, -1),
-	( 37,  38, -1),
-	( 39,  40, -1),
-	( 41,  42, 22),
-	( 43,  44, 21),
-	( 44,  45, -1),
-	( 46,  47, 24),
-	( 48,  49, 31),
-	( 50,  51, 26),
-	( 52,  53, 28),
-	( 54,  55, 33),
-	( 56,  57, 28),
-	( 58,  59, -1),
-	( 60,  61, 25),
-	( 61,  62, -1),
-	( 63,  64, 16),
-	( 64,  65, -2),
-	( 66,  67, 28),
-	( 67,  68, -2),
-	( 69,  70, 21),
-	( 70,  71, -1),
-	( 72,  73, 30),
-	( 74,  75, 25),
-	( 75,  76, -2),
-	( 77,  78, 40),
-	( 79,  80, 37),
-	( 81,  82, 30),
-	( 84,  85, 31),
-	( 86,  87, 34),
-	( 88,  89, 38),
-	( 90,  91, -1),
-	( 92,  93, 25),
-	( 93,  94, -2),
-	( 96,  97, 26),
-	( 98,  99, 28),
-	(100, 101, 30),
-	(102, 103, -1),
-	(104, 105, 28),
-	(109, 110, 35),
-	(111, 112, 42),
-	(116, 117, 32),
-	(118, 119, 33),
-	(120, 121, -1),
-	(129, 130, 20),
-	(133, 134, -1),
-	(133, 135, -1),
-	(133, 136, -1),
-	(138, 139, 40),
-	(140, 141, 40),
-	(147, 148, 30),
-	(148, 149, 55);
-
-
-
-
--- Gestion de la carte du monde
--- Tous les élements de la carte sont regroupés dans une table afin qu'ils aient un id unique
--- Les élements de la map sont: des villes, des sites et des routes
--- Les routes ont l'id de leur numéro
--- CREATE TABLE mapElement (
--- 	'id_elem' SERIAL NOT NULL PRIMARY KEY
--- );
--- 
--- CREATE TABLE ville (
--- 	'id_ville' int NOT NULL, -- FK mapElement(id_elem)
--- 	'nom_ville' varchar(25) 
--- );
--- 
--- CREATE TABLE site (
--- 	'id_site' int NOT NULL, -- FK mapElement(id_elem)
--- 	'nom_site' varchar(25)
--- );
--- 
--- CREATE TABLE route (
--- 	'id_route' int NOT NULL, -- FK mapElement(id_elem)
--- 	'type_route' varchar(20) NOT NULL -- maritime ou terrestre
--- );
--- 
--- -- id_elem peut représenter une route ou un site:
--- --   Une route relie deux elements de la carte
--- --   Un site a une entrée et une sortie qui sont des éléments de map
--- CREATE TABLE liensMap (
--- 	'id_elem' int NOT NULL, -- FK route(id_route)
--- 	'id_elem_in' int NOT NULL, -- FK mapElement(id_elem)
--- 	'id_elem_out' int NOT NULL -- FK mapElement(id_elem)
--- );
+-- -- evolutions
+-- INSERT INTO evolue_en (id_pok_base, id_pok_evol, lvl_evol_pok) VALUES
+-- -- http://www.pokepedia.fr/Liste_des_Pok%C3%A9mon_par_famille_d%27%C3%A9volution
+-- 	(  1,   2, 16),
+-- 	(  2,   3, 32),
+-- 	(  4,   5, 16),
+-- 	(  5,   6, 36),
+-- 	(  7,   8, 16),
+-- 	(  8,   9, 36),
+-- 	( 10,  11, 7 ),
+-- 	( 11,  12, 10),
+-- 	( 13,  14, 7 ),
+-- 	( 14,  15, 10),
+-- 	( 16,  17, 18),
+-- 	( 17,  18, 36),
+-- 	( 19,  20, 20),
+-- 	( 21,  22, 20),
+-- 	( 23,  24, 22),
+-- 	( 25,  26, -1),
+-- 	( 27,  28, 22),
+-- 	( 29,  30, 16),
+-- 	( 30,  31, -1),
+-- 	( 32,  33, 16),
+-- 	( 33,  34, -1),
+-- 	( 35,  36, -1),
+-- 	( 37,  38, -1),
+-- 	( 39,  40, -1),
+-- 	( 41,  42, 22),
+-- 	( 43,  44, 21),
+-- 	( 44,  45, -1),
+-- 	( 46,  47, 24),
+-- 	( 48,  49, 31),
+-- 	( 50,  51, 26),
+-- 	( 52,  53, 28),
+-- 	( 54,  55, 33),
+-- 	( 56,  57, 28),
+-- 	( 58,  59, -1),
+-- 	( 60,  61, 25),
+-- 	( 61,  62, -1),
+-- 	( 63,  64, 16),
+-- 	( 64,  65, -2),
+-- 	( 66,  67, 28),
+-- 	( 67,  68, -2),
+-- 	( 69,  70, 21),
+-- 	( 70,  71, -1),
+-- 	( 72,  73, 30),
+-- 	( 74,  75, 25),
+-- 	( 75,  76, -2),
+-- 	( 77,  78, 40),
+-- 	( 79,  80, 37),
+-- 	( 81,  82, 30),
+-- 	( 84,  85, 31),
+-- 	( 86,  87, 34),
+-- 	( 88,  89, 38),
+-- 	( 90,  91, -1),
+-- 	( 92,  93, 25),
+-- 	( 93,  94, -2),
+-- 	( 96,  97, 26),
+-- 	( 98,  99, 28),
+-- 	(100, 101, 30),
+-- 	(102, 103, -1),
+-- 	(104, 105, 28),
+-- 	(109, 110, 35),
+-- 	(111, 112, 42),
+-- 	(116, 117, 32),
+-- 	(118, 119, 33),
+-- 	(120, 121, -1),
+-- 	(129, 130, 20),
+-- 	(133, 134, -1),
+-- 	(133, 135, -1),
+-- 	(133, 136, -1),
+-- 	(138, 139, 40),
+-- 	(140, 141, 40),
+-- 	(147, 148, 30),
+-- 	(148, 149, 55);
