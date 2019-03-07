@@ -3,6 +3,6 @@
 	Welcome to Pokemon Wim <?php echo $pseudo; ?>
 </p>
 <p>
-	Your account has been created. Please check your mailbox and follow the steps to activate your account.
+	Your account has already been activated. Please click on the link bellow to connect you.
 </p>
 <a href="<?php echo site_url('user/connection') ?>">Connection</a>

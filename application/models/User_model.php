@@ -4,6 +4,8 @@ if (!defined('BASEPATH'))
 
 class User_model extends CI_Model {
 
+	private $table = 'member';
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
@@ -14,7 +16,7 @@ class User_model extends CI_Model {
 		$this->db->set('email', $email, true);
 		$this->db->set('password', sha1($pseudo));
 		$this->db->set('email_validation_key', $key);
-		$this->db->insert('member');
+		$this->db->insert($this->table);
 
 		switch ($pokemon) {
 			case 'bulbizarre':
@@ -31,14 +33,28 @@ class User_model extends CI_Model {
 	}
 
 	public function member_exists($pseudo, $key) {
-
+		return $this->db->select('*')
+						->from($this->table)
+						->where('pseudo', $pseudo)
+						->where('email_validation_key', $key)
+						->get()
+						->result();
 	}
 
 	public function member_active($pseudo, $key) {
-
+		return $this->db->select('*')
+						->from($this->table)
+						->where('pseudo', $pseudo)
+						->where('email_validation_key', $key)
+						->where('active', 1)
+						->get()
+						->result();
 	}
 
 	public function active_member($pseudo, $key) {
-		
+		return $this->db->set('active', 1)
+						->where('pseudo', $pseudo)
+						->where('email_validation_key', $key)
+						->update($this->table);
 	}
 }

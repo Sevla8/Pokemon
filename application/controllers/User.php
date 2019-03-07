@@ -6,6 +6,8 @@ class User extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
+		$this->load->helper('url');
+		$this->load->library('form_validation');
 		$this->load->model('User_model', 'user_modele');
 	}
 
@@ -21,14 +23,12 @@ class User extends CI_Controller {
 		$recipient = $_POST['email'];
 		$topic = 'Account activation';
 		$header = array('From' => 'inscription@pokemon-wim.com');
-		$message = 'Welcome to Pokemon-WIM,'."\n\n".'To activate your account, please click on the link below or copy / paste it in your internet browser.'."\n".'http://localhost/Pokemon/activation.php?pseudo='.urlencode($pseudo).'&key='.urlencode($key)."\n\n".'---------------'."\n".'This is an automatic email, Thank you to do not answer.';
+		$message = 'Welcome to Pokemon-WIM,'."\n\n".'To activate your account, please click on the link below or copy / paste it in your internet browser.'."\n".site_url(array('user', 'activation', $pseudo, $key))."\n\n".'---------------'."\n".'This is an automatic email, Thank you to do not answer.';
 		mail($recipient, $topic, $message, $header);
 	}
 
 	public function inscription() {
-		$this->load->library('form_validation');
-
-		$this->form_validation->set_rules('pseudo', 'Pseudo', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags');
+		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags');
 		$this->form_validation->set_rules('emailConfirmation', 'E-mail Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email|encode_php_tags|matches[emailConfirmation]');
 		$this->form_validation->set_rules('passwordConfirmation', 'Password Confirmation', 'required');
@@ -51,28 +51,34 @@ class User extends CI_Controller {
 
 			$this->load->view('accountCreated', $data);
 		}
-		else {
+		else
 			$this->load->view('formInscription');
-		}
 	}
 
-	public function activation($pseudo, $key) {
+	public function activation($pseudo = null, $key = null) {
 		if ($this->user_modele->member_exists($pseudo, $key)) {
+			$data['pseudo'] = $pseudo;
 			if ($this->user_modele->member_active($pseudo, $key))
-				$this->load->view('memberAlreadyActive');
+				$this->load->view('memberAlreadyActive', $data);
 			else {
 				$this->user_modele->active_member($pseudo, $key);
-				$this->load->view('memberActivated');
+				$this->load->view('memberActivated', $data);
 			}
 		}
-		else {
+		else
 			show_404();
-		}
 	}
 
-	// public function connection() {
+	public function connection() {
+		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[8]|max_length[50]|encode_php_tags');
 
-	// }
+		if ($this->form_validation->run()) {
+
+		}
+		else
+			$this->load->view('formConnection');
+	}
 
 	// public function disconnection() {
 
