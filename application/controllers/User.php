@@ -32,10 +32,13 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('emailConfirmation', 'E-mail Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email|encode_php_tags|matches[emailConfirmation]');
 		$this->form_validation->set_rules('passwordConfirmation', 'Password Confirmation', 'required');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[8]|max_length[50]|encode_php_tags|matches[passwordConfirmation]');
+		$this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|max_length[50]|encode_php_tags|matches[passwordConfirmation]');
 		$this->form_validation->set_rules('pokemon', 'Starting Pokemon', 'required|in_list[bulbizarre,salameche,carapuce]');
 
-		if ($this->form_validation->run()) {
+		if ($this->form_validation->run() && 
+			!$this->user_modele->pseudo_exists($this->input->post('pseudo')) && 
+			!$this->user_modele->email_exists($this->input->post('email'))) {
+			
 			$key = sha1(time());
 
 			$this->user_modele->add_member($this->input->post('pseudo'),
@@ -51,14 +54,19 @@ class User extends CI_Controller {
 
 			$this->load->view('accountCreated', $data);
 		}
-		else
+		else {
 			$this->load->view('formInscription');
+			if ($this->user_modele->pseudo_exists($this->input->post('pseudo')))
+				$this->load->view('pseudoExists');
+			if ($this->user_modele->email_exists($this->input->post('email')))
+				$this->load->view('emailExists');
+		}
 	}
 
 	public function activation($pseudo = null, $key = null) {
-		if ($this->user_modele->member_exists($pseudo, $key)) {
+		if ($this->user_modele->member_exists_0($pseudo, $key)) {
 			$data['pseudo'] = $pseudo;
-			if ($this->user_modele->member_active($pseudo, $key))
+			if ($this->user_modele->member_active_0($pseudo, $key))
 				$this->load->view('memberAlreadyActive', $data);
 			else {
 				$this->user_modele->active_member($pseudo, $key);
@@ -70,14 +78,41 @@ class User extends CI_Controller {
 	}
 
 	public function connection() {
-		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[8]|max_length[50]|encode_php_tags');
+		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'required|encode_php_tags');
+		$this->form_validation->set_rules('password', 'Password', 'required|encode_php_tags');
 
-		if ($this->form_validation->run()) {
+		if ($this->form_validation->run() && 
+			$this->user_modele->member_exists($this->input->post('pseudo'),
+											sha1($this->input->post('password')),
+											null) &&
+			$this->user_modele->member_active($this->input->post('pseudo'),
+											sha1($this->input->post('password')),
+											null)) {
 
+			echo "session";
+			$this->home();
 		}
-		else
+		else {
 			$this->load->view('formConnection');
+
+			if ($this->input->post('pseudo') != null &&
+				$this->input->post('password') != null &&
+				!$this->user_modele->member_exists($this->input->post('pseudo'), 
+													sha1($this->input->post('password')), 
+													null)) {
+				$this->load->view('memberNotExists');
+			}
+			if ($this->input->post('pseudo') != null &&
+				$this->input->post('password') != null &&
+				$this->user_modele->member_exists($this->input->post('pseudo'), 
+													sha1($this->input->post('password')), 
+													null) &&
+				!$this->user_modele->member_active($this->input->post('pseudo'), 
+													sha1($this->input->post('password')), 
+													null)) {
+				$this->load->view('memberNotActive');
+			}
+		}
 	}
 
 	// public function disconnection() {

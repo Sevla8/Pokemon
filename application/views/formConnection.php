@@ -2,7 +2,7 @@
 <form method="post">
 	<div id="pseudoDiv">
 		<label for="pseudo">Pseudo</label>
-		<input type="text" name="pseudo" id="pseudo" placeholder="Your pseudonym" value="">
+		<input type="text" name="pseudo" id="pseudo" placeholder="Your pseudonym" value="<?php echo set_value('pseudo') ?>">
 	</div>
 	<div id="passwordDiv">
 		<label for="password">Password</label>
@@ -12,4 +12,5 @@
 		<input type="submit" name="connection" value="connection">
 		<input type="reset" name="reset" value="reset">
 	</div>
+<?php echo validation_errors(); ?>
 </form>

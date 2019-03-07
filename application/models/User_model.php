@@ -14,7 +14,7 @@ class User_model extends CI_Model {
 	public function add_member($pseudo, $email, $password, $pokemon, $key) {
 		$this->db->set('pseudo', $pseudo, true);
 		$this->db->set('email', $email, true);
-		$this->db->set('password', sha1($pseudo));
+		$this->db->set('password', sha1($password));
 		$this->db->set('email_validation_key', $key);
 		$this->db->insert($this->table);
 
@@ -32,7 +32,23 @@ class User_model extends CI_Model {
 		$this->db->insert('trainer');
 	}
 
-	public function member_exists($pseudo, $key) {
+	public function pseudo_exists($pseudo) {
+		return $this->db->select('*')
+						->from($this->table)
+						->where('pseudo', $pseudo)
+						->get()
+						->result();
+	}
+
+	public function email_exists($email) {
+		return $this->db->select('*')
+						->from($this->table)
+						->where('email', $email)
+						->get()
+						->result();
+	}
+
+	public function member_exists_0($pseudo, $key) {
 		return $this->db->select('*')
 						->from($this->table)
 						->where('pseudo', $pseudo)
@@ -41,11 +57,30 @@ class User_model extends CI_Model {
 						->result();
 	}
 
-	public function member_active($pseudo, $key) {
+	public function member_exists($pseudo, $password) {
+		return $this->db->select('*')
+						->from($this->table)
+						->where('pseudo', $pseudo)
+						->where('password', $password)
+						->get()
+						->result();
+	}
+
+	public function member_active_0($pseudo, $key) {
 		return $this->db->select('*')
 						->from($this->table)
 						->where('pseudo', $pseudo)
 						->where('email_validation_key', $key)
+						->where('active', 1)
+						->get()
+						->result();
+	}
+	
+	public function member_active($pseudo, $password) {
+		return $this->db->select('*')
+						->from($this->table)
+						->where('pseudo', $pseudo)
+						->where('password', $password)
 						->where('active', 1)
 						->get()
 						->result();
