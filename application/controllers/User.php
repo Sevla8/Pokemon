@@ -7,8 +7,9 @@ class User extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->library('form_validation');
+		$this->load->helper('cookie');
 		$this->load->library('session');
+		$this->load->library('form_validation');
 		$this->load->model('User_model', 'user_modele');
 	}
 
@@ -92,6 +93,10 @@ class User extends CI_Controller {
 			$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
 			$this->user_modele->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 
+			$cookie = array('name' => 'pseudo',
+							'value' => $this->input->post('pseudo'),
+							'expire' => '604800');
+			$this->input->set_cookie($cookie, true);
 			$this->session->set_userdata('pseudo', $this->input->post('pseudo'));
 			$this->session->set_userdata('password', sha1($this->input->post('password')));
 			redirect('user/home/');

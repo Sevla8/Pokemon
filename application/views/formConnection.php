@@ -2,7 +2,7 @@
 <form method="post">
 	<div id="pseudoDiv">
 		<label for="pseudo">Pseudo</label>
-		<input type="text" name="pseudo" id="pseudo" placeholder="Your pseudonym" value="<?php echo set_value('pseudo') ?>">
+		<input type="text" name="pseudo" id="pseudo" placeholder="Your pseudonym" value="<?php echo get_cookie('pseudo') ?>">
 	</div>
 	<div id="passwordDiv">
 		<label for="password">Password</label>
