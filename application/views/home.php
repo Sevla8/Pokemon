@@ -1,12 +1,15 @@
 <h1>Home</h1>
-<div>
-	Your team
+<div id="team">
+	Team
 </div>
-<div>
-	Pokemon chasse
+<div id="hunt">
+	Hunt
 </div>
-<div>
-	Combat
+<div id="fight">
+	Fight
+</div>
+<div id="shop">
+	Shop
 </div>
 <div id="disconnection">
 	<a href="<?php echo site_url('user/disconnection/') ?>">disconnection</a>
