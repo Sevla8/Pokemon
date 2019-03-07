@@ -8,16 +8,23 @@ class User extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('form_validation');
+		$this->load->library('session');
 		$this->load->model('User_model', 'user_modele');
 	}
 
-	// public function index() {
-	// 	$this->home();
-	// }
+	public function index() {
+		redirect('user/home/');
+	}
 
-	// public function home() {
-
-	// }
+	public function home() {
+		if ($this->user_modele->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
+			$this->load->view('home');
+			$this->output->enable_profiler(true);
+		}
+		else {
+			show_404();
+		}
+	}
 
 	private function sendmail($pseudo, $key) {
 		$recipient = $_POST['email'];
@@ -82,42 +89,34 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('password', 'Password', 'required|encode_php_tags');
 
 		if ($this->form_validation->run() && 
-			$this->user_modele->member_exists($this->input->post('pseudo'),
-											sha1($this->input->post('password')),
-											null) &&
-			$this->user_modele->member_active($this->input->post('pseudo'),
-											sha1($this->input->post('password')),
-											null)) {
+			$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
+			$this->user_modele->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 
-			echo "session";
-			$this->home();
+			$this->session->set_userdata('pseudo', $this->input->post('pseudo'));
+			$this->session->set_userdata('password', sha1($this->input->post('password')));
+			redirect('user/home/');
 		}
 		else {
 			$this->load->view('formConnection');
 
 			if ($this->input->post('pseudo') != null &&
 				$this->input->post('password') != null &&
-				!$this->user_modele->member_exists($this->input->post('pseudo'), 
-													sha1($this->input->post('password')), 
-													null)) {
+				!$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 				$this->load->view('memberNotExists');
 			}
 			if ($this->input->post('pseudo') != null &&
 				$this->input->post('password') != null &&
-				$this->user_modele->member_exists($this->input->post('pseudo'), 
-													sha1($this->input->post('password')), 
-													null) &&
-				!$this->user_modele->member_active($this->input->post('pseudo'), 
-													sha1($this->input->post('password')), 
-													null)) {
+				$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
+				!$this->user_modele->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 				$this->load->view('memberNotActive');
 			}
 		}
 	}
 
-	// public function disconnection() {
-
-	// }
+	public function disconnection() {
+		$this->session->sess_destroy();
+		redirect('user/connection/');
+	}
 
 	// public function profil() {
 
