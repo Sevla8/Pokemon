@@ -18,6 +18,7 @@ https://www.copier-coller.com/envoyer-des-mails-en-local-avec-wamp/
 - https://github.com/bthouverez/Pokemon-BDD
 - https://github.com/fanzeyi/pokemon.json
 - https://www.pokebip.com/page/jeuxvideo/rbvj/version_jaune/index
+- https://www.pokepedia.fr/Portail:Accueil
 
 ## Authors
 - Raizens (aghilesferrat@hotmail.fr)
