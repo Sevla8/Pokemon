@@ -256,7 +256,7 @@ INSERT INTO pokedex (id, name, hp, attack, defense, sp_attack, sp_defense, speed
 	(151, 'Mew')*/;
 
 INSERT INTO type(id, name) VALUES
-	(1, 1),
+	(1, 'fight'),
 	(2, 'dragon'),
 	(3, 'water'),
 	(4, 'electric'),
@@ -775,6 +775,8 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(4, 66, 20),
 	(4, 67, 20),
 	(4, 68, 20),
+	(5, 106, 33), #mawashi geri
+	(6,)
 
 INSERT INTO pokedex_evolution (id_from, id_to, level) VALUES
 	(  1,   2, 16),
