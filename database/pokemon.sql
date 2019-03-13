@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS member, trainer, pokemon, pokedex, type, capacity, pokedex_type, capacity_type, pokemon_capacity, pokedex_capacity, pokedex_evolution;
 
 CREATE TABLE member (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -19,17 +18,6 @@ CREATE TABLE trainer (
 	FOREIGN KEY (id_member) REFERENCES member(id)
 );
 
-CREATE TABLE pokemon (
-	id int(11) NOT NULL, 
-	level int(11) NOT NULL,
-	xp int(11) NOT NULL,
-	id_trainer int(11), NOT NULL,
-	id_pokedex int(11) NOT NULL,
-	PRIMARY KEY (id), 
-	FOREIGN KEY id_trainer REFERENCES trainer(id),
-	FOREIGN KEY id_pokedex REFERENCES pokedex(id)
-);
-
 CREATE TABLE pokedex (
 	id int NOT NULL,
 	name varchar(25) NOT NULL,
@@ -41,6 +29,17 @@ CREATE TABLE pokedex (
 	speed int NOT NULL,
 	description varchar(255) NOT NULL,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE pokemon (
+	id int(11) NOT NULL, 
+	level int(11) NOT NULL,
+	xp int(11) NOT NULL,
+	id_trainer int(11) NOT NULL,
+	id_pokedex int(11) NOT NULL,
+	PRIMARY KEY (id), 
+	FOREIGN KEY (id_trainer) REFERENCES trainer(id),
+	FOREIGN KEY (id_pokedex) REFERENCES pokedex(id)
 );
 
 CREATE TABLE type (
@@ -57,9 +56,9 @@ CREATE TABLE capacity (
 	puis int,
 	prec int,
 	pp int NOT NULL,
-	eff_sec_ varchar(255),
-	PRIMARY KEY(id),
-	FOREIGN KEY id_type REFERENCES type(id)
+	eff_sec varchar(255),
+	PRIMARY KEY (id),
+	FOREIGN KEY (id_type) REFERENCES type(id)
 );
 
 CREATE TABLE pokedex_type (
@@ -272,7 +271,7 @@ INSERT INTO type(id, name) VALUES
 	(14, 'ghost'),
 	(15, 'fly');
 
-INSERT INTO capacity(id, name, type, class, puis, prec, pp, eff_sec) VALUES 
+INSERT INTO capacity(id, name, id_type, class, puis, prec, pp, eff_sec) VALUES 
 	(1, 'Riposte', 1, 'physical', null, 100, 20, "Inflige le double des dégâts subis par une attaque de type Normal ou Combat durant le tour, échoue sinon"),
 	(2, 'Frappe Atlas', 1, 'physical', null, 100, 20, "Inflige des dégâts égaux au niveau du lanceur"),
 	(3, 'Double Pied', 1, 'physical', 30, 100, 30, "Frappe deux fois"),
@@ -291,7 +290,7 @@ INSERT INTO capacity(id, name, type, class, puis, prec, pp, eff_sec) VALUES
 	(16, 'Pince-Masse', 3, 'special', 90, 85, 10, 'Taux de Coups Critiques élevé'),
 	(17, 'Surf', 3, 'special', 95, 100, 15, null),
 	(18, 'Hydrocanon', 3, 'special', 120, 80, 5, null),
-	(19, 'Cage-Éclair', 4, null, null, null, 100, 20, 'Paralyse la cible'),
+	(19, 'Cage-Éclair', 4, null, null, 100, 20, 'Paralyse la cible'),
 	(20, 'Éclair', 4, 'special', 40, 100, 30, 'Peut paralyser la cible'),
 	(21, 'Poing-Éclair', 4, 'special', 75, 100, 15, 'Peut paralyser la cible'),
 	(22, 'Tonnerre', 4, 'special', 95, 100, 15, 'Peut paralyser la cible'),
@@ -318,8 +317,8 @@ INSERT INTO capacity(id, name, type, class, puis, prec, pp, eff_sec) VALUES
 	(43, "Boul'Armure", 8, null, null, null, 40, "Augmente la défense du lanceur"),
 	(44, "Brouillard", 8, null, null, 100, 20, "Baisse la précision de la cible"), 
 	(45, 'Clonage', 8, null, null, null, 10, "Crée un clone qui prend les dommages à la place du lanceur, enlève 25% des PV du lanceur"),
-	(46, 'Copie', , 8, null, null, null, 10, "Apprend une des attaques de l'advresaire au hasard jusqu'à la fin du combat"), 
-	(47, 'Croissance', , 8, null, null, null, 40, "Augmente le spécial du lanceur"), 
+	(46, 'Copie', 8, null, null, null, 10, "Apprend une des attaques de l'advresaire au hasard jusqu'à la fin du combat"), 
+	(47, 'Croissance', 8, null, null, null, 40, "Augmente le spécial du lanceur"), 
 	(48, "Cyclone", 8, null, null, 100, 20, "Met fin au combat contre un Pokémon sauvage, échoue contre un dresseur"),
 	(49, "Danse-Lames", 8, null, null, null, 30, "Augmente l'attaque du lanceur de deux niveaux"),
 	(50, "E-Coque", 8, null, null, null, 10, "Restaure jusqu'à la moitié des PV du lanceur"), 
@@ -340,7 +339,7 @@ INSERT INTO capacity(id, name, type, class, puis, prec, pp, eff_sec) VALUES
 	(65, "Rugissement", 8, null, null, null, 40, "Baisse l'attaque de la cible"), 
 	(66, "Soin", 8, null, null, null, 20, "Restaure jusqu'à la moitié des PV du lanceur"), 
 	(67, "Trempette", 8, null, null, null, 40, null),
-	(68, "Ultrason", 8, null, null, 55	20, "Rend la cible confuse"), 
+	(68, "Ultrason", 8, null, null, 55,	20, "Rend la cible confuse"), 
 	(69, "Croc Fatal", 8, 'physical', null, 90, 10, "Enlève 50% des PV restants de la cible"),
 	(70, "Patience", 8, 'physical', null, null, 10, "Immobilise le lanceur deux ou trois tours, puis inflige à l'adversaire le double des dégâts subis pendant cette période"), 
 	(71, "Sonicboom", 8, 'physical', null, 90, 20, "Inflige toujours 20 PV de dégâts"), 
@@ -355,7 +354,7 @@ INSERT INTO capacity(id, name, type, class, puis, prec, pp, eff_sec) VALUES
 	(80, "Combo-Griffe", 8, 'physical',	18, 80, 15, "Attaque deux à cinq fois"), 
 	(81, "Poing Comète", 8, 'physical',	18, 85, 15, "Attaque deux à cinq fois"), 
 	(82, "Frénésie", 8, 'physical', 20, 100, 20, "Attaque sans fin, provoque l'augmentation de l'attaque du lanceur à chaque fois qu'il subit des dégâts"), 
-	(83, "Picanon", 8, , 'physical', 20, 100, 15, "Attaque deux à cinq fois"), 
+	(83, "Picanon", 8, 'physical', 20, 100, 15, "Attaque deux à cinq fois"), 
 	(84, "Charge", 8, 'physical', 35, 95, 35, null),
 	(85, "Tornade", 8, 'physical', 35, 100, 40, null),
 	(86, "Écras'Face", 8, 'physical', 40, 100, 35, null),
@@ -411,7 +410,7 @@ INSERT INTO capacity(id, name, type, class, puis, prec, pp, eff_sec) VALUES
 	(136, "Bouclier", 11, null, null, null, 30, "Augmente la défense du lanceur de deux niveaux"), 
 	(137, "Hâte	Type", 11, null, null, null, 30, "Augmente la vitesse du lanceur de deux niveaux"), 
 	(138, "Hypnose", 11, null, null, 60, 20, "Endort la cible"), 
-	(139, "Mur Lumière", 11, null null, null, 30, "Augmente la résistance du lanceur aux attaques , 'special',s"),
+	(139, "Mur Lumière", 11, null, null, null, 30, "Augmente la résistance du lanceur aux attaques , 'special',s"),
 	(140, "Protection", 11, null, null, null, 20, "Augmente la résistance du lanceur aux attaques , 'physical',s"),
 	(141, "Repos", 11, null, null, null, 10, "Restaure tous les PV du lanceur ainsi que son statut, le lanceur est immobilisé pendant deux tours"), 
 	(142, "Télékinésie", 11, null, null, 80, 15, "Baisse la précision de la cible"), 

@@ -12,24 +12,46 @@ class User_model extends CI_Model {
 	}
 
 	public function add_member($pseudo, $email, $password, $pokemon, $key) {
-		$this->db->set('pseudo', $pseudo, true);
-		$this->db->set('email', $email, true);
-		$this->db->set('password', sha1($password));
-		$this->db->set('email_validation_key', $key);
-		$this->db->insert($this->table);
+		$this->db->set('pseudo', $pseudo, true)
+				 ->set('email', $email, true)
+				 ->set('password', sha1($password))
+				 ->set('email_validation_key', $key)
+				 ->insert($this->table);
+
+
+		$id_member = $this->db->select('id')
+							  ->from('member')
+							  ->where('pseudo', $pseudo)
+							  ->get()
+							  ->result_array()[0]['id'];
+
+		$this->db->set('name', $pseudo, true)
+				 ->set('id_member', $id_member)
+				 ->insert('trainer');
 
 		switch ($pokemon) {
 			case 'bulbizarre':
-				$this->db->set('id_poke', 1);
+				$id_pokedex = 1;
 				break;
 			case 'salameche':
-				$this->db->set('id_poke', 4);
+				$id_pokedex = 4;
 				break;
 			case 'carapuce':
-				$this->db->set('id_poke', 7);
+				$id_pokedex = 7;
 				break;
 		}
-		$this->db->insert('trainer');
+
+		$id_trainer = $this->db->select('id')
+					  ->from('trainer')
+					  ->where('name', $pseudo)
+					  ->get()
+					  ->result_array()[0]['id'];
+
+		$this->db->set('level', 1)
+				 ->set('xp', 0)
+				 ->set('id_trainer', $id_trainer)
+				 ->set('id_pokedex', $id_pokedex)
+				 ->insert('pokemon');
 	}
 
 	public function pseudo_exists($pseudo) {
