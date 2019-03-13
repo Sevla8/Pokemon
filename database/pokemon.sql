@@ -32,7 +32,7 @@ CREATE TABLE pokedex (
 );
 
 CREATE TABLE pokemon (
-	id int(11) NOT NULL, 
+	id int(11) NOT NULL AUTO_INCREMENT, 
 	level int(11) NOT NULL,
 	xp int(11) NOT NULL,
 	id_trainer int(11) NOT NULL,
@@ -363,7 +363,7 @@ INSERT INTO capacity(id, name, id_type, class, puis, prec, pp, eff_sec) VALUES
 	(89, "Vive-Attaque", 8, 'physical',	40, 100, 30, "Attaque en premier"), 
 	(90, "Coupe", 8, 'physical', 50, 95, 30, null), 
 	(91, "Poing Karaté", 8, 'physical',	50, 100, 25, "Taux de Coups Critiques élevé"), 
-	(92, "Lutte", 8, 'physical', 50, 100, null, "Blesse le lanceur"), 
+	(92, "Lutte", 8, 'physical', 50, 100, 10, "Blesse le lanceur"), 
 	(93, "Force Poigne", 8, 'physical', 55, 100, 30, null), 
 	(94, "Météores", 8, 'physical', 60, null, 20, "N'échoue jamais"), 
 	(95, "Morsure", 8, 'physical', 60, 100, 25, "Peut apeurer la cible"), 
