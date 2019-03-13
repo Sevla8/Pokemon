@@ -11,10 +11,19 @@ class Home_model extends CI_Model {
 		$this->load->database();
 	}
 
-	public function pickRandomWildPokemon($rand) {
-		return $this->db->select('*')
-						->from('pokedex')
-						->where('id' = $rand)
+	public function selectTrainer() {
+		//retourn le trainer connecté
 	}
 
+	public function sizeTeam() {
+		//retourne le nb de pokemon dans la team d'un trainer
+	}
+
+	public function pickRandomWildPokemon($randId_pokedex, $randLevel, $randXp, $id_trainer) {
+		$this->db->set('id_pokedex', $randId_pokedex)
+					->set('level', $randLevel)
+					->set('xp', $randXp)
+					->set('id_trainer', $id_trainer)
+					->insert('pokemon');
+	}
 }

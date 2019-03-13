@@ -42,10 +42,10 @@ class User_model extends CI_Model {
 		}
 
 		$id_trainer = $this->db->select('id')
-					  ->from('trainer')
-					  ->where('name', $pseudo)
-					  ->get()
-					  ->result_array()[0]['id'];
+							   ->from('trainer')
+							   ->where('name', $pseudo)
+							   ->get()
+							   ->result_array()[0]['id'];
 
 		$this->db->set('level', 1)
 				 ->set('xp', 0)

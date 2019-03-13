@@ -14,9 +14,16 @@ class Home extends CI_Controller {
 	}
 
 	public function hunt() {
-		$rand = ramdom_int(1, 9);
-		$data['wild'] = $this->home_model->pickRandomWildPokemon($rand);
-		$this->load->view('wildPokemonAppears', $data);
+		if ($this->home->model->sizeTeam() < 6) {
+			$randId_pokedex = ramdom_int(1, 9);
+			$randLevel = ramdom_int(1, 30);
+			$randXp = 0;
+			$id_trainer = $this->home_model->selectTrainer(); ///!!!
+			$data['wild'] = $this->home_model->pickRandomWildPokemon($randId_pokedex, $randLevel, $randXp, $id_trainer);
+			$this->load->view('wildPokemonAppears', $data);
+		}
+		else {
+			$this->load->view('teamAlreadyFull');
+		}
 	}
-
 }
