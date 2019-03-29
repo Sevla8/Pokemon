@@ -2,11 +2,13 @@
 if (!defined('BASEPATH')) 
 	exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Hunt extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Home_model', 'home_modele');
+		$this->load->helper('url');
+		$this->load->library('session');
+		$this->load->model('Hunt_model', 'hunt_model');
 	}
 
 	public function index() {
@@ -14,7 +16,7 @@ class Home extends CI_Controller {
 	}
 
 	public function hunt() {
-		if ($this->home->model->sizeTeam() < 6) {
+		if ($this->hunt_model->sizeTeam() < 6) {
 			$randId_pokedex = ramdom_int(1, 9);
 			$randLevel = ramdom_int(1, 30);
 			$randXp = 0;

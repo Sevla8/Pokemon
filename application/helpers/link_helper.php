@@ -9,13 +9,13 @@ if (!function_exists('css_url')) {
 }
 
 if (!function_exists('js_url')) {
-	function js_url($nom) {
+	function js_url($name) {
 		return base_url() . 'application/links/js/' . $name . '.js';
 	}
 }
 
 if (!function_exists('img_url')) {
-	function img_url($nom) {
+	function img_url($name) {
 		return base_url() . 'application/links/img/' . $name;
 	}
 }

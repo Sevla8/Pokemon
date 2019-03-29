@@ -114,4 +114,14 @@ class User_model extends CI_Model {
 						->where('email_validation_key', $key)
 						->update($this->table);
 	}
+
+	public function save_data($pseudo) {
+		return $this->db->select('*')
+					->from('member')
+					->join('trainer', 'member.id = trainer.id_member');
+	}
+
+	// public function new_day() {
+	// 	$this->db->set('')
+	// }
 }

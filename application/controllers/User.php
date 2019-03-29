@@ -12,7 +12,7 @@ class User extends CI_Controller {
 		$this->load->library('layout');
 		$this->load->library('session');
 		$this->load->library('form_validation');
-		$this->load->model('User_model', 'user_modele');
+		$this->load->model('User_model', 'user_model');
 	}
 
 	public function index() {
@@ -20,13 +20,18 @@ class User extends CI_Controller {
 	}
 
 	public function home() {
-		if ($this->user_modele->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
+		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
 			$this->load->view('home');
-			$this->output->enable_profiler(true);
+			if ($this->user_model->new_day()) {
+				
+			}
+			// $this->user_model->save_data($this->session->userdata('pseudo'));
+			// if (date('m') >= date('m', $last_activity))
+			// 	$this->user_model->new_day();
+			// $this->output->enable_profiler(true);
 		}
-		else {
+		else
 			show_404();
-		}
 	}
 
 	private function sendmail($pseudo, $key) {
@@ -46,12 +51,12 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('pokemon', 'Starting Pokemon', 'required|in_list[bulbizarre,salameche,carapuce]');
 
 		if ($this->form_validation->run() && 
-			!$this->user_modele->pseudo_exists($this->input->post('pseudo')) && 
-			!$this->user_modele->email_exists($this->input->post('email'))) {
+			!$this->user_model->pseudo_exists($this->input->post('pseudo')) && 
+			!$this->user_model->email_exists($this->input->post('email'))) {
 			
 			$key = sha1(time());
 
-			$this->user_modele->add_member($this->input->post('pseudo'),
+			$this->user_model->add_member($this->input->post('pseudo'),
 										$this->input->post('email'),
 										$this->input->post('password'),
 										$this->input->post('pokemon'),
@@ -66,20 +71,20 @@ class User extends CI_Controller {
 		}
 		else {
 			$this->load->view('formInscription');
-			if ($this->user_modele->pseudo_exists($this->input->post('pseudo')))
+			if ($this->user_model->pseudo_exists($this->input->post('pseudo')))
 				$this->load->view('pseudoExists');
-			if ($this->user_modele->email_exists($this->input->post('email')))
+			if ($this->user_model->email_exists($this->input->post('email')))
 				$this->load->view('emailExists');
 		}
 	}
 
 	public function activation($pseudo = null, $key = null) {
-		if ($this->user_modele->member_exists_0($pseudo, $key)) {
+		if ($this->user_model->member_exists_0($pseudo, $key)) {
 			$data['pseudo'] = $pseudo;
-			if ($this->user_modele->member_active_0($pseudo, $key))
+			if ($this->user_model->member_active_0($pseudo, $key))
 				$this->load->view('memberAlreadyActive', $data);
 			else {
-				$this->user_modele->active_member($pseudo, $key);
+				$this->user_model->active_member($pseudo, $key);
 				$this->load->view('memberActivated', $data);
 			}
 		}
@@ -92,8 +97,8 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('password', 'Password', 'required|encode_php_tags');
 
 		if ($this->form_validation->run() && 
-			$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
-			$this->user_modele->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
+			$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
+			$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 
 			$cookie = array('name' => 'pseudo',
 							'value' => $this->input->post('pseudo'),
@@ -108,13 +113,13 @@ class User extends CI_Controller {
 
 			if ($this->input->post('pseudo') != null &&
 				$this->input->post('password') != null &&
-				!$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password')))) {
+				!$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 				$this->load->view('memberNotExists');
 			}
 			if ($this->input->post('pseudo') != null &&
 				$this->input->post('password') != null &&
-				$this->user_modele->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
-				!$this->user_modele->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
+				$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
+				!$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 				$this->load->view('memberNotActive');
 			}
 		}

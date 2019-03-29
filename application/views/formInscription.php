@@ -21,12 +21,13 @@
 		<input type="password" name="passwordConfirmation" id="passwordConfirmation" placeholder="Confirm your password">
 	</div>
 	<div id="startPokemon">
-		<label for="startPoke">Starting Pokemon</label>
-		<select name="pokemon" id="startPoke">
-			<option value="bulbizarre">Bulbizarre</option>
-			<option value="salameche">Salameche</option>
-			<option value="carapuce">Carapuce</option>
-		</select>
+		Starting Pokemon :
+		<label for="bulbi"><?php echo img('1.png', 'Bulbizarre') ?></label>
+		<input type="radio" name="pokemon" value="bulbizarre" id="bulbi">
+		<label for="sala"><?php echo img('4.png', 'Salameche') ?></label>
+		<input type="radio" name="pokemon" value="salameche" id="sala">
+		<label for="cara"><?php echo img('7.png', 'Carapuce') ?></label>		
+		<input type="radio" name="pokemon" value="carapuce" id="cara">
 	</div>
 	<div id="registerDiv">
 		<input type="submit" name="registration" value="registration">
