@@ -25,8 +25,8 @@ class User_model extends CI_Model {
 							  ->get()
 							  ->result_array()[0]['id'];
 
-		$this->db->set('name', $pseudo, true)
-				 ->set('id_member', $id_member)
+		$this->db->set('id', $id_member)
+				 ->set('name', $pseudo, true)
 				 ->insert('trainer');
 
 		switch ($pokemon) {
@@ -41,15 +41,9 @@ class User_model extends CI_Model {
 				break;
 		}
 
-		$id_trainer = $this->db->select('id')
-							   ->from('trainer')
-							   ->where('name', $pseudo)
-							   ->get()
-							   ->result_array()[0]['id'];
-
 		$this->db->set('level', 1)
 				 ->set('xp', 0)
-				 ->set('id_trainer', $id_trainer)
+				 ->set('id_trainer', $id_member)
 				 ->set('id_pokedex', $id_pokedex)
 				 ->insert('pokemon');
 	}
@@ -115,13 +109,33 @@ class User_model extends CI_Model {
 						->update($this->table);
 	}
 
-	public function save_data($pseudo) {
-		return $this->db->select('*')
-					->from('member')
-					->join('trainer', 'member.id = trainer.id_member');
+	public function get_id($pseudo) {
+		return $this->db->select('id')
+						->from('member')
+						->where('pseudo', $pseudo)
+						->get()
+						->result_array()[0]['id'];
 	}
 
-	// public function new_day() {
-	// 	$this->db->set('')
-	// }
+	public function get_day($id) {
+		return $this->db->select('DAY(last_activity)')
+						->from($this->table)
+						->where('id', $id)
+						->get()
+						->result_array()[0]['DAY(last_activity)'];
+	}
+
+	public function new_day($id) {
+		$data = $this->db->select('*')
+						 ->from('trainer')
+						 ->where('id', $id)
+						 ->get()
+						 ->result_array()[0];
+
+		$update = array('pokedollar' => $data['pokedollar'] + 50, 
+						'pokeball' => $data['pokeball'] + 5);
+
+		$this->db->update('trainer', $update)
+				 ->where('id', $id);
+	}
 }

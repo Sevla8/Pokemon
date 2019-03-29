@@ -10,12 +10,10 @@ CREATE TABLE member (
 );
 
 CREATE TABLE trainer (
-	id int(11) NOT NULL AUTO_INCREMENT,
+	id int(11) NOT NULL,
 	name varchar(25) NOT NULL,
-	id_member int(11) NOT NULL,
 	credit int(11) NOT NULL DEFAULT 500,
-	PRIMARY KEY (id),
-	FOREIGN KEY (id_member) REFERENCES member(id)
+	FOREIGN KEY (id) REFERENCES member(id)
 );
 
 CREATE TABLE pokedex (

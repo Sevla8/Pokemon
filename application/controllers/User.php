@@ -22,13 +22,11 @@ class User extends CI_Controller {
 	public function home() {
 		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
 			$this->load->view('home');
-			if ($this->user_model->new_day()) {
-				
+			$this->session->set_userdata('id', $this->user_model->get_id($this->session->userdata('pseudo')));
+			if ($this->user_model->get_day($this->session->userdata('id')) < date('d')) {
+				echo "string";
 			}
-			// $this->user_model->save_data($this->session->userdata('pseudo'));
-			// if (date('m') >= date('m', $last_activity))
-			// 	$this->user_model->new_day();
-			// $this->output->enable_profiler(true);
+			$this->output->enable_profiler(true);
 		}
 		else
 			show_404();
