@@ -9,23 +9,23 @@ class Hunt extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->library('session');
 		$this->load->model('Hunt_model', 'hunt_model');
+		$this->load->model('User_model', 'user_model');
 	}
 
 	public function index() {
-		redirect('user/home/');
+		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
+				echo "string";
+		}
+		else {
+			show_404();
+		}
 	}
 
 	public function hunt() {
-		if ($this->hunt_model->sizeTeam() < 6) {
-			$randId_pokedex = ramdom_int(1, 9);
-			$randLevel = ramdom_int(1, 30);
-			$randXp = 0;
-			$id_trainer = $this->home_model->selectTrainer(); ///!!!
-			$data['wild'] = $this->home_model->pickRandomWildPokemon($randId_pokedex, $randLevel, $randXp, $id_trainer);
-			$this->load->view('wildPokemonAppears', $data);
-		}
-		else {
-			$this->load->view('teamAlreadyFull');
-		}
+		$rand_id_pokedex = random_int(1, 9);
+		$rand_level = random_int(1, 30);
+		// $data = $this->hunt_model->get_wild_pokemon($rand_id_pokedex, $rand_level);
+		// $this->load->view('wildPokemonAppears', $data);
+		// $this->hunt->model->
 	}
 }

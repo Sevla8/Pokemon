@@ -12,20 +12,11 @@ class Team extends CI_Controller {
 	}
 
 	public function index() {
-		redirect('user/home/');
+		$this->pc();
 	}
 
-	public function hunt() {
-		if ($this->hunt_model->sizeTeam() < 6) {
-			$randId_pokedex = ramdom_int(1, 9);
-			$randLevel = ramdom_int(1, 30);
-			$randXp = 0;
-			$id_trainer = $this->home_model->selectTrainer(); ///!!!
-			$data['wild'] = $this->home_model->pickRandomWildPokemon($randId_pokedex, $randLevel, $randXp, $id_trainer);
-			$this->load->view('wildPokemonAppears', $data);
-		}
-		else {
-			$this->load->view('teamAlreadyFull');
-		}
+	public function pc() {
+		$data = $this->team_model->get_pokemon($this->session->userdata('id'));
+		echo "string";
 	}
 }

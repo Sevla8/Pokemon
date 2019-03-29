@@ -44,8 +44,10 @@ class User_model extends CI_Model {
 
 		$this->db->set('level', 1)
 				 ->set('xp', 0)
+				 ->set('%_hp', 100)
 				 ->set('id_trainer', $id_member)
 				 ->set('id_pokedex', $id_pokedex)
+				 ->set('in_team', 1)
 				 ->insert('pokemon');
 
 		$id = $this->db->select('id')
@@ -54,9 +56,6 @@ class User_model extends CI_Model {
 					   ->where('id_pokedex', $id_pokedex)
 					   ->get()
 					   ->result_array()[0]['id'];
-
-		$this->db->set('id_pokemon', $id)
-				 ->insert('pokemon_status');
 
 		$id_capacity = $this->db->select('id_capacity')
 								->from('pokedex_capacity')

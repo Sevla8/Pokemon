@@ -4,22 +4,22 @@ if (!defined('BASEPATH'))
 
 class Hunt_model extends CI_Model {
 
-	private $table = '';
+	private $table_pokemon = 'pokemon';
 
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
 	}
 
-	public function selectTrainer() {
-		//retourn le trainer connecté
+	public function get_team_size($id) {
+		return $this->db->select('COUNT(*)')
+						->from($this->table_pokemon)
+						->where('id_trainer', $id)
+						->get()
+						->result_array()[0]['COUNT(*)'];
 	}
 
-	public function sizeTeam() {
-		//retourne le nb de pokemon dans la team d'un trainer
-	}
-
-	public function pickRandomWildPokemon($randId_pokedex, $randLevel, $randXp, $id_trainer) {
+	public function get_wild_pokemon($rand_id_pokedex, $rand_level) {
 		$this->db->set('id_pokedex', $randId_pokedex)
 					->set('level', $randLevel)
 					->set('xp', $randXp)
