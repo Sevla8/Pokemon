@@ -13,6 +13,7 @@ CREATE TABLE trainer (
 	id int(11) NOT NULL,
 	name varchar(25) NOT NULL,
 	credit int(11) NOT NULL DEFAULT 500,
+	PRIMARY KEY (id),
 	FOREIGN KEY (id) REFERENCES member(id)
 );
 
@@ -70,9 +71,18 @@ CREATE TABLE pokedex_type (
 CREATE TABLE pokemon_capacity (
 	id_pokemon int(11) NOT NULL,
 	id_capacity int(11) NOT NULL,
+	pp int NOT NULL,
 	PRIMARY KEY (id_pokemon, id_capacity),
 	FOREIGN KEY (id_pokemon) REFERENCES pokemon(id),
 	FOREIGN KEY (id_capacity) REFERENCES capacity(id)	
+);
+
+CREATE TABLE pokemon_status (
+	id_pokemon int(11) NOT NULL,
+	hp int(11) NOT NULL DEFAULT 100,
+	xp int NOT NULL DEFAULT 0,
+	PRIMARY KEY (id_pokemon),
+	FOREIGN KEY (id_pokemon) REFERENCES pokemon(id)
 );
 
 CREATE TABLE pokedex_capacity (
@@ -1148,7 +1158,6 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 
 	(26,107,33),#Poing de Feu
 	(26,126,43),
-
 
 INSERT INTO pokedex_evolution (id_from, id_to, level) VALUES
 	(  1,   2, 16),

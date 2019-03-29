@@ -23,9 +23,10 @@ class User extends CI_Controller {
 		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
 			$this->load->view('home');
 			$this->session->set_userdata('id', $this->user_model->get_id($this->session->userdata('pseudo')));
-			if ($this->user_model->get_day($this->session->userdata('id')) < date('d')) {
-				echo "string";
+			if ($this->user_model->get_day($this->session->userdata('id')) < date('j')) {
+				$this->user_model->new_day($this->session->userdata('id'));
 			}
+			$this->user_model->set_last_activity($this->session->userdata('id'));
 			$this->output->enable_profiler(true);
 		}
 		else

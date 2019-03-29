@@ -29,6 +29,7 @@ class User_model extends CI_Model {
 				 ->set('name', $pseudo, true)
 				 ->insert('trainer');
 
+		$id_pokedex;
 		switch ($pokemon) {
 			case 'bulbizarre':
 				$id_pokedex = 1;
@@ -46,6 +47,56 @@ class User_model extends CI_Model {
 				 ->set('id_trainer', $id_member)
 				 ->set('id_pokedex', $id_pokedex)
 				 ->insert('pokemon');
+
+		$id = $this->db->select('id')
+					   ->from('pokemon')
+					   ->where('id_trainer', $id_member)
+					   ->where('id_pokedex', $id_pokedex)
+					   ->get()
+					   ->result_array()[0]['id'];
+
+		$this->db->set('id_pokemon', $id)
+				 ->insert('pokemon_status');
+
+		$id_capacity = $this->db->select('id_capacity')
+								->from('pokedex_capacity')
+								->where('id_pokedex', $id_pokedex)
+								->where('level <=', 1)
+								->get()
+								->result_array();
+
+		$id_capacity_1 = $id_capacity[0]['id_capacity'];
+		$id_capacity_2;
+		if ($pokemon == 'salameche')
+			$id_capacity_2 = $id_capacity[1]['id_capacity'];
+
+		$pp_1 = $this->db->select('pp')
+						 ->from('capacity')
+						 ->where('id', $id_capacity_1)
+						 ->get()
+						 ->result_array()[0]['pp'];
+
+		$pp_2;
+		if ($pokemon == 'salameche') {
+			$pp_2 = $this->db->select('pp')
+							 ->from('capacity')
+							 ->where('id', $id_capacity_2)
+							 ->get()
+							 ->result_array()[0]['pp'];
+		}
+
+		$this->db->set('id_pokemon', $id)
+				 ->set('id_capacity', $id_capacity_1)
+				 ->set('pp', $pp_1)
+				 ->insert('pokemon_capacity');
+
+		if ($pokemon == 'salameche') {
+			$this->db->set('id_pokemon', $id)
+					 ->set('id_capacity', $id_capacity_2)
+					 ->set('pp', $pp_2)
+					 ->insert('pokemon_capacity');
+		}
+
 	}
 
 	public function pseudo_exists($pseudo) {
@@ -132,10 +183,27 @@ class User_model extends CI_Model {
 						 ->get()
 						 ->result_array()[0];
 
-		$update = array('pokedollar' => $data['pokedollar'] + 50, 
-						'pokeball' => $data['pokeball'] + 5);
+		$this->db->set('pokedollar', $data['pokedollar'] + 50)
+				 ->set('pokeball', $data['pokeball'] + 5)
+				 ->where('id', $id)
+				 ->update('trainer');
 
-		$this->db->update('trainer', $update)
-				 ->where('id', $id);
+		$data = $this->db->select('id')
+						 ->from('pokemon')
+						 ->where('id_trainer', $id)
+						 ->get()
+						 ->result_array();
+
+		foreach ($data as $poke) {
+			$this->db->set('hp', 100)
+					 ->where('id_pokemon', $poke['id'])
+					 ->update('pokemon_status');
+		}
+	}
+
+	public function set_last_activity($id) {
+		$this->db->set('last_activity', date('Y-m-d G:i:s'))
+				 ->where('id', $id)
+				 ->update('member');
 	}
 }
