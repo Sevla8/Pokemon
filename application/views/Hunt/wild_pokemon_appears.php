@@ -4,4 +4,4 @@
 <a href="<?php echo site_url('hunt/pokeball') ?>">Pokeball</a>
 <a href="<?php echo site_url('user/home/') ?>">Run</a>
 <a href="<?php echo site_url('fight/') ?>">Fight</a>
-<a href="<?php echo site_url('hunt/pokedex') ?>">Pokedex</a>
+<a href="<?php echo site_url('hunt/pokedex/'.$id) ?>">Pokedex</a>

@@ -31,7 +31,8 @@ class Hunt extends CI_Controller {
 	}
 
 	public function pokedex($id) {
-
+		$data = $this->hunt_model->get_pokedex($id);
+		$this->load->view('Hunt/pokedex', $data);
 	}
 
 	public function pokeball($d, $prct_hp) {
