@@ -11,6 +11,9 @@
 <div id="shop">
 	<a href="<?php echo site_url('shop/'); ?>">Shop</a>
 </div>
+<div id="pokedex">
+	<a href="<?php echo site_url('pokedex/'); ?>">Pokedex</a>
+</div>
 <div id="disconnection">
 	<a href="<?php echo site_url('user/disconnection/') ?>">disconnection</a>
 </div>
