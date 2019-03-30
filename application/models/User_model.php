@@ -194,9 +194,9 @@ class User_model extends CI_Model {
 						 ->result_array();
 
 		foreach ($data as $poke) {
-			$this->db->set('hp', 100)
-					 ->where('id_pokemon', $poke['id'])
-					 ->update('pokemon_status');
+			$this->db->set('%_hp', 100)
+					 ->where('id', $poke['id'])
+					 ->update('pokemon');
 		}
 	}
 

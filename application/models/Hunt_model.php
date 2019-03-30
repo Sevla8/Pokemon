@@ -19,11 +19,11 @@ class Hunt_model extends CI_Model {
 						->result_array()[0]['COUNT(*)'];
 	}
 
-	public function get_wild_pokemon($rand_id_pokedex, $rand_level) {
-		$this->db->set('id_pokedex', $randId_pokedex)
-					->set('level', $randLevel)
-					->set('xp', $randXp)
-					->set('id_trainer', $id_trainer)
-					->insert('pokemon');
+	public function wild_pokemon_appears($rand_id_pokedex, $rand_level) {
+		return $this->db->select('*')
+						->from('pokedex')
+						->where('id', $rand_id_pokedex)
+						->get()
+						->result_array()[0];
 	}
 }
