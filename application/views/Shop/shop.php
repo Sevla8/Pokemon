@@ -1,6 +1,6 @@
 <h1>Shop</h1>
 <h2>Welcome <?php echo $pseudo; ?> ! Make your choice</h2>
-<form>
+<!-- <form method="POST" action=""> -->
 	<div id="potion_div">
 		<label for="potion">Potion</label>
 		<input type="number" name="potion" id="potion" value="0">
@@ -15,7 +15,7 @@
 		<input type="submit" name="submit" value="buy">
 		<input type="reset" name="reset" value="reset">
 	</div>
-	<div id="total"></div>
-</form>
+	<div id="total">55555</div>
+<!-- </form> -->
 <a href="<?php echo site_url('user/home/') ?>">Home</a>
 <script src="<?php echo js_url('shop') ?>"></script>

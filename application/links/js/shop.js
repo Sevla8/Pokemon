@@ -6,16 +6,17 @@ var pokeball = 0;
 
 function getResults(potion, pokeball) { // Effectue une requête et récupère les résultats
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'http://localhost/Pokemon/application/controllers/Shop/ajax/');
+	xhr.open('POST', site_url('/Shop/ajax/'));
 	xhr.addEventListener('readystatechange', function() {
 		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 			displayResults(xhr.responseText);
 		}
 	});
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.send('potion='+potion+'pokeball='+pokeball);
+	xhr.send('potion='+potion+'&pokeball='+pokeball);
 	return xhr;
 }
+
 function displayResults(response) { // Affiche les résultats d'une requête
 	totalElement.innerHTML = 'Total : '+response+' poke$';
 }
