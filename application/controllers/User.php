@@ -20,13 +20,18 @@ class User extends CI_Controller {
 	}
 
 	public function home() {
+		// control session
 		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
-			$this->load->view('home');
+			$this->load->view('User/home');
+			// save id
 			$this->session->set_userdata('id', $this->user_model->get_id($this->session->userdata('pseudo')));
-			if ($this->user_model->get_day($this->session->userdata('id')) < date('j')) {
+			// new day
+			if ($this->user_model->get_day($this->session->userdata('id')) != date('Y-m-d')) {
 				$this->user_model->new_day($this->session->userdata('id'));
 			}
+			// update last_activity
 			$this->user_model->set_last_activity($this->session->userdata('id'));
+
 			$this->output->enable_profiler(true);
 		}
 		else
@@ -42,6 +47,7 @@ class User extends CI_Controller {
 	}
 
 	public function inscription() {
+		// control form
 		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags');
 		$this->form_validation->set_rules('emailConfirmation', 'E-mail Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email|encode_php_tags|matches[emailConfirmation]');
@@ -53,7 +59,7 @@ class User extends CI_Controller {
 			!$this->user_model->pseudo_exists($this->input->post('pseudo')) && 
 			!$this->user_model->email_exists($this->input->post('email'))) {
 			
-			$key = sha1(time());
+			$key = sha1(time()); // generate random key
 
 			$this->user_model->add_member($this->input->post('pseudo'),
 										$this->input->post('email'),
@@ -66,14 +72,14 @@ class User extends CI_Controller {
 
 			$data['pseudo'] = $this->input->post('pseudo');
 
-			$this->load->view('accountCreated', $data);
+			$this->load->view('User/account_created', $data);
 		}
 		else {
-			$this->load->view('formInscription');
+			$this->load->view('User/form_inscription');	// basic form
 			if ($this->user_model->pseudo_exists($this->input->post('pseudo')))
-				$this->load->view('pseudoExists');
+				$this->load->view('User/pseudo_exists');	// error psuedo
 			if ($this->user_model->email_exists($this->input->post('email')))
-				$this->load->view('emailExists');
+				$this->load->view('User/email_exists');	// error email
 		}
 	}
 
@@ -81,10 +87,10 @@ class User extends CI_Controller {
 		if ($this->user_model->member_exists_0($pseudo, $key)) {
 			$data['pseudo'] = $pseudo;
 			if ($this->user_model->member_active_0($pseudo, $key))
-				$this->load->view('memberAlreadyActive', $data);
+				$this->load->view('User/member_already_active', $data);
 			else {
 				$this->user_model->active_member($pseudo, $key);
-				$this->load->view('memberActivated', $data);
+				$this->load->view('User/member_activated', $data);
 			}
 		}
 		else
@@ -92,34 +98,37 @@ class User extends CI_Controller {
 	}
 
 	public function connection() {
+		// control form
 		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'required|encode_php_tags');
 		$this->form_validation->set_rules('password', 'Password', 'required|encode_php_tags');
 
 		if ($this->form_validation->run() && 
 			$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
 			$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
-
+			// create cookie for pseudo
 			$cookie = array('name' => 'pseudo',
 							'value' => $this->input->post('pseudo'),
 							'expire' => '604800');
 			$this->input->set_cookie($cookie, true);
+			// save pseudo & password in session
 			$this->session->set_userdata('pseudo', $this->input->post('pseudo'));
 			$this->session->set_userdata('password', sha1($this->input->post('password')));
 			redirect('user/home/');
 		}
 		else {
-			$this->load->view('formConnection');
-
+			$this->load->view('User/form_connection');
+			// member do not exists error
 			if ($this->input->post('pseudo') != null &&
 				$this->input->post('password') != null &&
 				!$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password')))) {
-				$this->load->view('memberNotExists');
+				$this->load->view('User/member_not_exists');
 			}
+			// member not active error
 			if ($this->input->post('pseudo') != null &&
 				$this->input->post('password') != null &&
 				$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
 				!$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
-				$this->load->view('memberNotActive');
+				$this->load->view('User/member_not_active');
 			}
 		}
 	}

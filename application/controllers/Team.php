@@ -17,6 +17,20 @@ class Team extends CI_Controller {
 
 	public function pc() {
 		$data = $this->team_model->get_pokemon($this->session->userdata('id'));
-		echo "string";
+		echo $data['a.id'];
+		print_r($data);
+		$this->output->enable_profiler(true);
+		/*for ($i = 0; $i < sizeof($data); $i += 1) {
+			$dataX['id'][$i] = $data[$i]['id'];
+			$dataX['name'][$i] = $data[$i]['name'];
+			$dataX['hp'][$i] = $data[$i]['hp'];
+			$dataX['attack'][$i] = $data[$i]['attack'];
+			$dataX['defense'][$i] = $data[$i]['defense'];
+			$dataX['sp_attack'][$i] = $data[$i]['sp_attack'];
+			$dataX['sp_defense'][$i] = $data[$i]['sp_defense'];
+			$dataX['speed'][$i] = $data[$i]['speed'];
+			$dataX['description'][$i] = $data[$i]['description'];
+		}
+		$this->load->view('Team/team', $dataX);*/
 	}
 }

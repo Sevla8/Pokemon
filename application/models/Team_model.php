@@ -4,9 +4,10 @@ if (!defined('BASEPATH'))
 
 class Team_Model extends CI_Model {
 
-	private $table_pokemon = 'pokemon';
-	private $table_pokemon_capacity = 'pokemon_capacity';
-	private $table_pokemon_status = 'pokemon_status';
+	private $pokemon_table = 'pokemon';
+	private $pokedex_table = 'pokedex';
+	private $pokemon_capacity_table = 'pokemon_capacity';
+	private $capacity_table = 'capacity';
 
 	public function __construct() {
 		parent::__construct();
@@ -14,13 +15,14 @@ class Team_Model extends CI_Model {
 	}
 
 	public function get_pokemon($id) {
-		return $this->db->select('*')
-						->from($this->table_pokemon)
-						->join($this->table_pokemon, $this->table_pokemon.'.id = '.$this->table_pokemon_capacity.'.id_pokemon')
-						->join($this->table_pokemon, $this->table_pokemon.'.id = '.$this->table_pokemon_status.'.id_pokemon')
-						->where('id_trainer', $id)
-						->get()
-						->result_array();
+		$data = $this->db->select('a.id')
+					 ->from($this->pokemon_table.' a')
+					 ->join($this->pokedex_table.' b', 'a.id_pokedex = b.id')
+					 ->join($this->pokemon_capacity_table.' c', 'a.id = c.id_pokemon')
+					 ->join($this->capacity_table.' d', 'c.id_capacity = d.id')
+					 ->where('a.id_trainer', $id)
+					 ->get()
+					 ->result_array();
 	}
 
 

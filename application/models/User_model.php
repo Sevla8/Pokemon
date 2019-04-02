@@ -4,7 +4,12 @@ if (!defined('BASEPATH'))
 
 class User_model extends CI_Model {
 
-	private $table = 'member';
+	private $member_table = 'member';
+	private $trainer_table = 'trainer';
+	private $pokemon_table = 'pokemon';
+	private $pokedex_capacity_table = 'pokedex_capacity';
+	private $capacity_table = 'capacity';
+	private $pokemon_capacity_table = 'pokemon_capacity';
 
 	public function __construct() {
 		parent::__construct();
@@ -16,18 +21,18 @@ class User_model extends CI_Model {
 				 ->set('email', $email, true)
 				 ->set('password', sha1($password))
 				 ->set('email_validation_key', $key)
-				 ->insert($this->table);
+				 ->insert($this->member_table);
 
 
 		$id_member = $this->db->select('id')
-							  ->from('member')
+							  ->from($this->member_table)
 							  ->where('pseudo', $pseudo)
 							  ->get()
 							  ->result_array()[0]['id'];
 
 		$this->db->set('id', $id_member)
 				 ->set('name', $pseudo, true)
-				 ->insert('trainer');
+				 ->insert($this->trainer_table);
 
 		$id_pokedex;
 		switch ($pokemon) {
@@ -48,17 +53,17 @@ class User_model extends CI_Model {
 				 ->set('id_trainer', $id_member)
 				 ->set('id_pokedex', $id_pokedex)
 				 ->set('in_team', 1)
-				 ->insert('pokemon');
+				 ->insert($this->pokemon_table);
 
 		$id = $this->db->select('id')
-					   ->from('pokemon')
+					   ->from($this->pokemon_table)
 					   ->where('id_trainer', $id_member)
 					   ->where('id_pokedex', $id_pokedex)
 					   ->get()
 					   ->result_array()[0]['id'];
 
 		$id_capacity = $this->db->select('id_capacity')
-								->from('pokedex_capacity')
+								->from($this->pokedex_capacity_table)
 								->where('id_pokedex', $id_pokedex)
 								->where('level <=', 1)
 								->get()
@@ -70,7 +75,7 @@ class User_model extends CI_Model {
 			$id_capacity_2 = $id_capacity[1]['id_capacity'];
 
 		$pp_1 = $this->db->select('pp')
-						 ->from('capacity')
+						 ->from($this->capacity_table)
 						 ->where('id', $id_capacity_1)
 						 ->get()
 						 ->result_array()[0]['pp'];
@@ -78,7 +83,7 @@ class User_model extends CI_Model {
 		$pp_2;
 		if ($pokemon == 'salameche') {
 			$pp_2 = $this->db->select('pp')
-							 ->from('capacity')
+							 ->from($this->capacity_table)
 							 ->where('id', $id_capacity_2)
 							 ->get()
 							 ->result_array()[0]['pp'];
@@ -87,20 +92,20 @@ class User_model extends CI_Model {
 		$this->db->set('id_pokemon', $id)
 				 ->set('id_capacity', $id_capacity_1)
 				 ->set('pp', $pp_1)
-				 ->insert('pokemon_capacity');
+				 ->insert($this->pokemon_capacity_table);
 
 		if ($pokemon == 'salameche') {
 			$this->db->set('id_pokemon', $id)
 					 ->set('id_capacity', $id_capacity_2)
 					 ->set('pp', $pp_2)
-					 ->insert('pokemon_capacity');
+					 ->insert($this->pokemon_capacity_table);
 		}
 
 	}
 
 	public function pseudo_exists($pseudo) {
 		return $this->db->select('*')
-						->from($this->table)
+						->from($this->member_table)
 						->where('pseudo', $pseudo)
 						->get()
 						->result();
@@ -108,7 +113,7 @@ class User_model extends CI_Model {
 
 	public function email_exists($email) {
 		return $this->db->select('*')
-						->from($this->table)
+						->from($this->member_table)
 						->where('email', $email)
 						->get()
 						->result();
@@ -116,7 +121,7 @@ class User_model extends CI_Model {
 
 	public function member_exists_0($pseudo, $key) {
 		return $this->db->select('*')
-						->from($this->table)
+						->from($this->member_table)
 						->where('pseudo', $pseudo)
 						->where('email_validation_key', $key)
 						->get()
@@ -125,7 +130,7 @@ class User_model extends CI_Model {
 
 	public function member_exists($pseudo, $password) {
 		return $this->db->select('*')
-						->from($this->table)
+						->from($this->member_table)
 						->where('pseudo', $pseudo)
 						->where('password', $password)
 						->get()
@@ -134,7 +139,7 @@ class User_model extends CI_Model {
 
 	public function member_active_0($pseudo, $key) {
 		return $this->db->select('*')
-						->from($this->table)
+						->from($this->member_table)
 						->where('pseudo', $pseudo)
 						->where('email_validation_key', $key)
 						->where('active', 1)
@@ -144,7 +149,7 @@ class User_model extends CI_Model {
 	
 	public function member_active($pseudo, $password) {
 		return $this->db->select('*')
-						->from($this->table)
+						->from($this->member_table)
 						->where('pseudo', $pseudo)
 						->where('password', $password)
 						->where('active', 1)
@@ -156,28 +161,28 @@ class User_model extends CI_Model {
 		return $this->db->set('active', 1)
 						->where('pseudo', $pseudo)
 						->where('email_validation_key', $key)
-						->update($this->table);
+						->update($this->member_table);
 	}
 
 	public function get_id($pseudo) {
 		return $this->db->select('id')
-						->from('member')
+						->from($this->member_table)
 						->where('pseudo', $pseudo)
 						->get()
 						->result_array()[0]['id'];
 	}
 
 	public function get_day($id) {
-		return $this->db->select('DAY(last_activity)')
-						->from($this->table)
+		return $this->db->select('DATE_FORMAT(last_activity, "%Y-%m-%d")')
+						->from($this->member_table)
 						->where('id', $id)
 						->get()
-						->result_array()[0]['DAY(last_activity)'];
+						->result_array()[0]['DATE_FORMAT(last_activity, "%Y-%m-%d")'];
 	}
 
 	public function new_day($id) {
 		$data = $this->db->select('*')
-						 ->from('trainer')
+						 ->from($this->trainer_table)
 						 ->where('id', $id)
 						 ->get()
 						 ->result_array()[0];
@@ -185,24 +190,16 @@ class User_model extends CI_Model {
 		$this->db->set('pokedollar', $data['pokedollar'] + 50)
 				 ->set('pokeball', $data['pokeball'] + 5)
 				 ->where('id', $id)
-				 ->update('trainer');
+				 ->update($this->trainer_table);
 
-		$data = $this->db->select('id')
-						 ->from('pokemon')
-						 ->where('id_trainer', $id)
-						 ->get()
-						 ->result_array();
-
-		foreach ($data as $poke) {
-			$this->db->set('%_hp', 100)
-					 ->where('id', $poke['id'])
-					 ->update('pokemon');
-		}
+		$this->db->set('%_hp', 100)
+				 ->where('id_trainer', $id)
+				 ->update($this->pokemon_table);
 	}
 
 	public function set_last_activity($id) {
 		$this->db->set('last_activity', date('Y-m-d G:i:s'))
 				 ->where('id', $id)
-				 ->update('member');
+				 ->update($this->member_table);
 	}
 }
