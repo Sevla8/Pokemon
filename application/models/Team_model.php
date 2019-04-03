@@ -15,14 +15,14 @@ class Team_Model extends CI_Model {
 	}
 
 	public function get_pokemon($id) {
-		$data = $this->db->select('a.id')
-					 ->from($this->pokemon_table.' a')
-					 ->join($this->pokedex_table.' b', 'a.id_pokedex = b.id')
-					 ->join($this->pokemon_capacity_table.' c', 'a.id = c.id_pokemon')
-					 ->join($this->capacity_table.' d', 'c.id_capacity = d.id')
-					 ->where('a.id_trainer', $id)
-					 ->get()
-					 ->result_array();
+		return $this->db->select('*')
+						->from($this->pokemon_table.' a')
+						->join($this->pokedex_table.' b', 'a.id_pokedex = b.id')
+						->join($this->pokemon_capacity_table.' c', 'a.id = c.id_pokemon')
+						->join($this->capacity_table.' d', 'c.id_capacity = d.id')
+						->where('a.id_trainer', $id)
+						->get()
+						->result_array();
 	}
 
 

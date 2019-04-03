@@ -17,19 +17,27 @@ class Pokedex extends CI_Controller {
 	}
 
 	public function index() {
-		$data = $this->pokedex_model->get_pokedex();
-		for ($i = 0; $i < sizeof($data); $i += 1) {
-			$dataX['id'][$i] = $data[$i]['id'];
-			$dataX['name'][$i] = $data[$i]['name'];
-			$dataX['hp'][$i] = $data[$i]['hp'];
-			$dataX['attack'][$i] = $data[$i]['attack'];
-			$dataX['defense'][$i] = $data[$i]['defense'];
-			$dataX['sp_attack'][$i] = $data[$i]['sp_attack'];
-			$dataX['sp_defense'][$i] = $data[$i]['sp_defense'];
-			$dataX['speed'][$i] = $data[$i]['speed'];
-			$dataX['description'][$i] = $data[$i]['description'];
+		$data = ["pokemons" => $this->pokedex_model->get_pokedex(),
+					"title" => "Votre liste de pokemon"];
+	
+		$this->load->view('Pokedex/pokedex', $data);
+	}
+
+	public function ajax() {
+		if (isset($_POST['like'])) {
+			$_POST['like'] = htmlspecialchars($_POST['like']);
+			$result = $this->pokedex_model->get_pokemon_like($_POST['like']);
+			foreach ($result as $pokemon) 
+				echo $pokemon['name'].'|';
 		}
-		$this->load->view('Pokedex/pokedex', $dataX);
+	}
+
+	public function get_pokedex_pokemon() {
+		if (isset($_POST['name']) && isset($_POST['submit'])) {
+			$_POST['name'] = htmlspecialchars($_POST['name']);
+			$data = ['pokemon' => $this->pokedex_model->get_pokedex_pokemon($_POST['name'])];
+			$this->load->view('Pokedex/pokemon', $data);
+		}
 	}
 
 }

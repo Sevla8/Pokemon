@@ -1,6 +1,8 @@
 <h1>Pokedex</h1>
-<form>
-	<input type="text" name="name" id="name" value="">
+<form method="POST" action="<?php echo site_url('pokedex/get_pokedex_pokemon'); ?>">
+	<input type="text" name="name" id="search" value="" autocomplete="off">
+	<div id="results"></div>
+	<input type="submit" name="submit" value="find">
 </form>
 <table>
 	<caption>Pokedex</caption>
@@ -21,21 +23,22 @@
 	<tbody>
 
 		<?php 
-		for ($i = 0; $i < sizeof($id); $i += 1) {
+		foreach ($pokemons as $pokemon) {	
 			echo '<tr>';
-			echo '<td>'.img($i.'.png', $name[$i]).'</td>';
-			echo '<td>'.$id[$i].'</td>';
-			echo '<td>'.$name[$i].'</td>';
-			echo '<td>'.$hp[$i].'</td>';
-			echo '<td>'.$attack[$i].'</td>';
-			echo '<td>'.$defense[$i].'</td>';
-			echo '<td>'.$sp_attack[$i].'</td>';
-			echo '<td>'.$sp_defense[$i].'</td>';
-			echo '<td>'.$speed[$i].'</td>';
-			echo '<td>'.$description[$i].'</td>';
+			echo '<td>'.img($pokemon['id'].'.png', $pokemon['name']).'</td>';
+			echo '<td>'.$pokemon['id'].'</td>';
+			echo '<td>'.$pokemon['name'].'</td>';
+			echo '<td>'.$pokemon['hp'].'</td>';
+			echo '<td>'.$pokemon['attack'].'</td>';
+			echo '<td>'.$pokemon['defense'].'</td>';
+			echo '<td>'.$pokemon['sp_attack'].'</td>';
+			echo '<td>'.$pokemon['sp_defense'].'</td>';
+			echo '<td>'.$pokemon['speed'].'</td>';
+			echo '<td>'.$pokemon['description'].'</td>';
 			echo '</tr>';
 		}
 		?>
 
 	</tbody>
 </table>
+<script src="<?php echo js_url('pokedex') ?>"></script>

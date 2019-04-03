@@ -17,8 +17,9 @@ class Team extends CI_Controller {
 
 	public function pc() {
 		$data = $this->team_model->get_pokemon($this->session->userdata('id'));
-		echo $data['a.id'];
-		print_r($data);
+		echo $data['id'];
+		print_r("data is :");
+		($data);
 		$this->output->enable_profiler(true);
 		/*for ($i = 0; $i < sizeof($data); $i += 1) {
 			$dataX['id'][$i] = $data[$i]['id'];
