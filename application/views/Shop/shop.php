@@ -4,12 +4,12 @@
 	<div id="potion_div">
 		<label for="potion">Potion</label>
 		<input type="number" name="potion" id="potion" value="0">
-		<span>10 poke$</span>
+		<span><?php echo $potion_price; ?> poke$</span>
 	</div>
 	<div id="pokeball_div">
 		<label for="pokeball">Pokeball</label>
 		<input type="number" name="pokeball" id="pokeball" value="0">
-		<span>25 poke$</span>
+		<span><?php echo $pokeball_price; ?> poke$</span>
 	</div>
 	<div id="submit_div">
 		<input type="submit" name="submit" value="buy">
@@ -17,5 +17,6 @@
 	</div>
 	<div id="total">Total : 0 poke$</div>
 </form>
+<?php echo validation_errors(); ?>
 <a href="<?php echo site_url('user/home/') ?>">Home</a>
 <script src="<?php echo js_url('shop') ?>"></script>

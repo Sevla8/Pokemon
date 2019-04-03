@@ -6,7 +6,7 @@ var pokeball = 0;
 
 function getResults(potion, pokeball) { // Effectue une requête et récupère les résultats
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'http://dwarves.iut-fbleau.fr/~dasilvaa/Pokemon/index.php/shop/ajax/');
+	xhr.open('POST', 'http://localhost/Pokemon/shop/total/');
 	xhr.addEventListener('readystatechange', function() {
 		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 			displayResults(xhr.responseText);

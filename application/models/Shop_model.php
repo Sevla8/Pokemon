@@ -46,6 +46,5 @@ class Shop_model extends CI_Model {
 				 ->set('potion', $old_potion + $potion)
 				 ->where('id', $id)
 				 ->update($this->trainer_table);
-	} 
-
+	}
 }

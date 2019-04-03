@@ -12,6 +12,7 @@ class Shop extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('link');
 		$this->load->library('session');
+		$this->load->library('form_validation');
 		$this->load->model('Shop_model', 'shop_model');
 		$this->load->model('User_model', 'user_model');
 		if (!$this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
@@ -20,27 +21,29 @@ class Shop extends CI_Controller {
 	}
 
 	public function index() {
-		$data['pseudo'] = $this->session->userdata('pseudo');
-		$this->load->view('Shop/shop', $data);
+		redirect('Shop/basket/');
 	}
 
-	public function ajax() {
-		if (isset($_POST['potion']) && isset($_POST['pokeball'])) {
-			$_POST['potion'] = filter_var($_POST['potion'], FILTER_SANITIZE_NUMBER_INT);
-			$_POST['pokeball'] = filter_var($_POST['pokeball'], FILTER_SANITIZE_NUMBER_INT);
-			$result = $_POST['potion'] * $this->potion_price + $_POST['pokeball'] * $this->pokeball_price;
-			echo $result;
-		}
-	}
+	public function basket() {	// main function
+		// control form
+		$this->form_validation->set_rules('potion', 'Potion', 'trim|required|is_natural')
+							  ->set_rules('pokeball', 'Pokeball', 'trim|required|is_natural');
 
-	public function basket() {
-		if (isset($_POST['potion']) && isset($_POST['pokeball']) && $_POST['potion'] != 0 && $_POST['pokeball'] != 0) {
-			$_POST['potion'] = filter_var($_POST['potion'], FILTER_SANITIZE_NUMBER_INT);
-			$_POST['pokeball'] = filter_var($_POST['pokeball'], FILTER_SANITIZE_NUMBER_INT);
-			$total = $_POST['potion'] * $this->potion_price + $_POST['pokeball'] * $this->pokeball_price;
-			$data = [ 'pseudo' => $this->session->userdata('pseudo')];
+		$data = ['pseudo' => $this->session->userdata('pseudo'),
+				 'potion_price' => $this->potion_price, 
+				 'pokeball_price' => $this->pokeball_price];
+
+		if ($this->form_validation->run() && !($this->input->post('potion') == 0 && $this->input->post('pokeball') == 0)) {
+
+			$total = $this->input->post('potion') * $this->potion_price + 
+					 $this->input->post('pokeball') * $this->pokeball_price;
+
 			if ($this->shop_model->get_pokedollar($this->session->userdata('id')) >= $total) {
-				$this->shop_model->debit($this->session->userdata('id'), $total, $_POST['potion'], $_POST['pokeball']);
+				$this->shop_model->debit($this->session->userdata('id'), 
+										 $total, 
+										 $this->input->post('potion'), 
+										 $this->input->post('pokeball'));
+				$this->load->view('Shop/shop', $data);
 				$this->load->view('Shop/thank_you', $data);
 			}
 			else {
@@ -48,5 +51,18 @@ class Shop extends CI_Controller {
 				$this->load->view('Shop/lack_money', $data);
 			}
 		}
+		else
+			$this->load->view('Shop/shop', $data);
+	}
+
+	public function total() {	// ajax
+		if (isset($_POST['potion']) && isset($_POST['pokeball'])) {
+			$_POST['potion'] = filter_var($_POST['potion'], FILTER_SANITIZE_NUMBER_INT);
+			$_POST['pokeball'] = filter_var($_POST['pokeball'], FILTER_SANITIZE_NUMBER_INT);
+			$result = $_POST['potion'] * $this->potion_price + $_POST['pokeball'] * $this->pokeball_price;
+			echo $result;
+		}
+		else
+			show_404();
 	}
 }

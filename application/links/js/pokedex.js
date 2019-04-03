@@ -7,7 +7,7 @@ var previousValue = searchElement.value; // On fait de même avec la précédent
 function getResults(keywords) { // Effectue une requête et récupère les résultats
 
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "http://dwarves.iut-fbleau.fr/~dasilvaa/Pokemon/index.php/pokedex/ajax/");
+	xhr.open('POST', "http://localhost/Pokemon/pokedex/autocomplete_pokedex/");
 
 	xhr.addEventListener('readystatechange', function() {
 		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
