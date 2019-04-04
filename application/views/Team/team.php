@@ -13,15 +13,6 @@
 	<tbody>
 
 		<?php 
-		for ($i = 0; $i < sizeof($id); $i += 1) {
-			echo '<tr>';
-			echo '<td>'.img($i.'.png', $name[$i]).'</td>';
-			echo '<td>'.$id[$i].'</td>';
-			echo '<td>'.$level[$i].'</td>';
-			echo '<td>'.$xp[$i].'</td>';
-			echo '<td>'.$hp[$i].'</td>';
-			echo '</tr>';
-		}
 		?>
 
 	</tbody>
