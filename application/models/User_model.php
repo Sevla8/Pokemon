@@ -202,4 +202,16 @@ class User_model extends CI_Model {
 				 ->where('id', $id)
 				 ->update($this->member_table);
 	}
+
+	public function online($id) {
+		$this->db->set('online', 1)
+				 ->where('id', $id)
+				 ->update($this->member_table);
+	}
+
+	public function offline($id) {
+		$this->db->set('online', 0)
+				 ->where('id', $id)
+				 ->update($this->member_table);
+	}
 }

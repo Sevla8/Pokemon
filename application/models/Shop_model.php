@@ -4,8 +4,6 @@ if (!defined('BASEPATH'))
 
 class Shop_model extends CI_Model {
 
-	private $table_pokemon = 'pokemon';
-	private $table_pokedex = 'pokedex';
 	private $trainer_table = 'trainer';
 
 	public function __construct() {

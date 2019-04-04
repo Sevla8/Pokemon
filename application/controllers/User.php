@@ -13,6 +13,7 @@ class User extends CI_Controller {
 		$this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->model('User_model', 'user_model');
+		$this->load->model('Fight_model', 'fight_model');
 	}
 
 	public function index() {
@@ -23,8 +24,6 @@ class User extends CI_Controller {
 		// control session
 		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
 			$this->load->view('User/home');
-			// save id
-			$this->session->set_userdata('id', $this->user_model->get_id($this->session->userdata('pseudo')));
 			// new day
 			if ($this->user_model->get_day($this->session->userdata('id')) != date('Y-m-d')) {
 				$this->user_model->new_day($this->session->userdata('id'));
@@ -55,7 +54,7 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|max_length[50]|encode_php_tags|matches[passwordConfirmation]');
 		$this->form_validation->set_rules('pokemon', 'Starting Pokemon', 'required|in_list[bulbizarre,salameche,carapuce]');
 
-		if ($this->form_validation->run() && 
+		if ($this->form_validation->run() && 	// form ok
 			!$this->user_model->pseudo_exists($this->input->post('pseudo')) && 
 			!$this->user_model->email_exists($this->input->post('email'))) {
 			
@@ -74,7 +73,7 @@ class User extends CI_Controller {
 
 			$this->load->view('User/account_created', $data);
 		}
-		else {
+		else {	// form ko
 			$this->load->view('User/form_inscription');	// basic form
 			if ($this->user_model->pseudo_exists($this->input->post('pseudo')))
 				$this->load->view('User/pseudo_exists');	// error psuedo
@@ -102,7 +101,7 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'required|encode_php_tags');
 		$this->form_validation->set_rules('password', 'Password', 'required|encode_php_tags');
 
-		if ($this->form_validation->run() && 
+		if ($this->form_validation->run() && 	// form ok
 			$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
 			$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
 			// create cookie for pseudo
@@ -110,12 +109,15 @@ class User extends CI_Controller {
 							'value' => $this->input->post('pseudo'),
 							'expire' => '604800');
 			$this->input->set_cookie($cookie, true);
-			// save pseudo & password in session
+			// save pseudo & password & id in session 
 			$this->session->set_userdata('pseudo', $this->input->post('pseudo'));
 			$this->session->set_userdata('password', sha1($this->input->post('password')));
+			$this->session->set_userdata('id', $this->user_model->get_id($this->session->userdata('pseudo')));
+			// db member.online update
+			$this->user_model->online($this->session->userdata('id'));
 			redirect('user/home/');
 		}
-		else {
+		else {	// form ko
 			$this->load->view('User/form_connection');
 			// member do not exists error
 			if ($this->input->post('pseudo') != null &&
@@ -134,6 +136,8 @@ class User extends CI_Controller {
 	}
 
 	public function disconnection() {
+		$this->fight_model->stop_challenge($this->session->userdata('id'));
+		$this->user_model->offline($this->session->userdata('id'));
 		$this->session->sess_destroy();
 		redirect('user/connection/');
 	}
