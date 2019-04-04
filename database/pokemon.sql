@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.2
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Apr 03, 2019 at 09:56 AM
--- Server version: 10.1.34-MariaDB
--- PHP Version: 7.2.7
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  jeu. 04 avr. 2019 à 07:37
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,16 +19,17 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `dasilvaa`
+-- Base de données :  `pokemon`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `capacity`
+-- Structure de la table `capacity`
 --
 
-CREATE TABLE `capacity` (
+DROP TABLE IF EXISTS `capacity`;
+CREATE TABLE IF NOT EXISTS `capacity` (
   `id` int(11) NOT NULL,
   `name` varchar(25) NOT NULL,
   `id_type` int(11) NOT NULL,
@@ -36,11 +37,13 @@ CREATE TABLE `capacity` (
   `puis` int(11) DEFAULT NULL,
   `prec` int(11) DEFAULT NULL,
   `pp` int(11) NOT NULL,
-  `eff_sec` varchar(255) DEFAULT NULL
+  `eff_sec` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_type` (`id_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `capacity`
+-- Déchargement des données de la table `capacity`
 --
 
 INSERT INTO `capacity` (`id`, `name`, `id_type`, `class`, `puis`, `prec`, `pp`, `eff_sec`) VALUES
@@ -213,18 +216,21 @@ INSERT INTO `capacity` (`id`, `name`, `id_type`, `class`, `puis`, `prec`, `pp`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ci_session`
+-- Structure de la table `ci_session`
 --
 
-CREATE TABLE `ci_session` (
+DROP TABLE IF EXISTS `ci_session`;
+CREATE TABLE IF NOT EXISTS `ci_session` (
   `id` varchar(40) NOT NULL,
   `ip_address` varchar(45) NOT NULL,
   `timestamp` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `data` blob NOT NULL
+  `data` blob NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `ci_session`
+-- Déchargement des données de la table `ci_session`
 --
 
 INSERT INTO `ci_session` (`id`, `ip_address`, `timestamp`, `data`) VALUES
@@ -244,39 +250,65 @@ INSERT INTO `ci_session` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('e46ec199e83b48807ba6ab83e716303b347bf91e', '193.48.143.177', 1554276493, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343237363439333b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
 ('0957e81b8e381912000aff5c352d78a3f31c555a', '193.48.143.177', 1554276847, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343237363834373b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
 ('5f9b0a4781b0fbbe2ac3bd95bd13c4092c9f0acd', '193.48.143.177', 1554277479, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343237373437393b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
-('dc872ca4e7052496ea0b451202b71ebb0e1353a3', '193.48.143.177', 1554277862, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343237373836323b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b);
+('dc872ca4e7052496ea0b451202b71ebb0e1353a3', '193.48.143.177', 1554277862, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343237373836323b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('uadk6bdace9q3vsf35jn1k1b2vfc2t8d', '::1', 1554303083, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330333038333b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('eu0tdlo32mtqjqhhg7j89d8sskrfb1sc', '::1', 1554303552, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330333535323b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('f6copfn2q07n3boag2lhn1cr35fopg45', '::1', 1554303855, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330333835353b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('jcecbtd1kn7k9uiv2hgosvbrbnk4tcvr', '::1', 1554304253, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330343235333b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('mdjdqmc780iondqeehqgq09fra00rk03', '::1', 1554304976, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330343937363b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('hr2936e9gjlc0q02po72om6pj3626o8n', '::1', 1554305534, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330353533343b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('bof1tm5pt3b9d4jdlgs85l3pkhsuhs5i', '::1', 1554305842, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330353834323b70736575646f7c733a353a225365766c61223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223134223b),
+('qbhh8k1c0b9t08f5n7tk4v3fv8i37ami', '::1', 1554306417, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330363431373b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('o6bs2uuullqu3gdlq95091gs9cndj1in', '::1', 1554306742, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330363734323b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('j37pegv52meffu2v3urgdt7sht09m4ah', '::1', 1554307056, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330373035363b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('2cjk0s8lu6tsrr82kl4fgs1dnn7daecd', '::1', 1554307421, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330373432313b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('spgno41hcosirjn0vrq2q85e5npllimj', '::1', 1554307726, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330373732363b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('92q5665du7lofa84mnlccjqch8jl4f3d', '::1', 1554308975, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330383937353b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('b06k37u9quqjm9goik8ma00vh60cl49p', '::1', 1554309289, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330393238393b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('4cksi67hu3vupb218n20qepkj1i93fkl', '::1', 1554309590, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343330393539303b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('34n1rflrdd0clg7u87h3pkr7m471kg8o', '::1', 1554310057, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331303035373b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('3pui44si84tmq4sctdp34u9291it0g5a', '::1', 1554310531, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331303533313b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('lvheq4s1rlfv33ev0kregp555rlg1q7i', '::1', 1554311104, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331313130343b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('hiuhhff0fek6qg5m84uo47lk50o833i0', '::1', 1554311535, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331313533353b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('ircckhgdeh34f8rl6hm5c2d3vqbs30d2', '::1', 1554311856, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331313835363b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('medeb85m21shfa1usfjk3g4otaqju79a', '::1', 1554312194, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331323139343b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('aq2ai08acmqmknd3m1g0a70qatr4ssjh', '::1', 1554312535, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331323533353b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b),
+('l501rnapcfhce0hc3s8eb17fil3hl9p8', '::1', 1554312556, 0x5f5f63695f6c6173745f726567656e65726174657c693a313535343331323533353b70736575646f7c733a363a224b6579736572223b70617373776f72647c733a34303a2237633232326662323932376438323861663232663539323133346538393332343830363337633064223b69647c733a323a223133223b);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `member`
+-- Structure de la table `member`
 --
 
-CREATE TABLE `member` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `member`;
+CREATE TABLE IF NOT EXISTS `member` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` text NOT NULL,
   `email_validation_key` text NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
-  `last_activity` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `last_activity` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `member`
+-- Déchargement des données de la table `member`
 --
 
 INSERT INTO `member` (`id`, `pseudo`, `email`, `password`, `email_validation_key`, `active`, `last_activity`) VALUES
-(14, 'Sevla', 'dasilvaalvesb@gmail.com', '7c222fb2927d828af22f592134e8932480637c0d', '9c50023acb07dc3cd5f7653f0cdec28fbc0efd19', 1, '2019-04-03 09:48:18'),
-(13, 'Keyser', 'dasilvaalvesb@hotmail.fr', '7c222fb2927d828af22f592134e8932480637c0d', '5f8a6e17ede4abd83878190b587a1b1e47a61c24', 1, '2019-04-02 19:42:44');
+(14, 'Sevla', 'dasilvaalvesb@gmail.com', '7c222fb2927d828af22f592134e8932480637c0d', '9c50023acb07dc3cd5f7653f0cdec28fbc0efd19', 1, '2019-04-03 15:37:48'),
+(13, 'Keyser', 'dasilvaalvesb@hotmail.fr', '7c222fb2927d828af22f592134e8932480637c0d', '5f8a6e17ede4abd83878190b587a1b1e47a61c24', 1, '2019-04-03 17:29:16');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pokedex`
+-- Structure de la table `pokedex`
 --
 
-CREATE TABLE `pokedex` (
+DROP TABLE IF EXISTS `pokedex`;
+CREATE TABLE IF NOT EXISTS `pokedex` (
   `id` int(11) NOT NULL,
   `name` varchar(25) NOT NULL,
   `hp` int(11) NOT NULL,
@@ -285,11 +317,12 @@ CREATE TABLE `pokedex` (
   `sp_attack` int(11) NOT NULL,
   `sp_defense` int(11) NOT NULL,
   `speed` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL
+  `description` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pokedex`
+-- Déchargement des données de la table `pokedex`
 --
 
 INSERT INTO `pokedex` (`id`, `name`, `hp`, `attack`, `defense`, `sp_attack`, `sp_defense`, `speed`, `description`) VALUES
@@ -306,17 +339,20 @@ INSERT INTO `pokedex` (`id`, `name`, `hp`, `attack`, `defense`, `sp_attack`, `sp
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pokedex_capacity`
+-- Structure de la table `pokedex_capacity`
 --
 
-CREATE TABLE `pokedex_capacity` (
+DROP TABLE IF EXISTS `pokedex_capacity`;
+CREATE TABLE IF NOT EXISTS `pokedex_capacity` (
   `id_pokedex` int(11) NOT NULL,
   `id_capacity` int(11) NOT NULL,
-  `level` int(11) NOT NULL
+  `level` int(11) NOT NULL,
+  PRIMARY KEY (`id_pokedex`,`id_capacity`),
+  KEY `id_capacity` (`id_capacity`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pokedex_capacity`
+-- Déchargement des données de la table `pokedex_capacity`
 --
 
 INSERT INTO `pokedex_capacity` (`id_pokedex`, `id_capacity`, `level`) VALUES
@@ -328,17 +364,20 @@ INSERT INTO `pokedex_capacity` (`id_pokedex`, `id_capacity`, `level`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pokedex_evolution`
+-- Structure de la table `pokedex_evolution`
 --
 
-CREATE TABLE `pokedex_evolution` (
+DROP TABLE IF EXISTS `pokedex_evolution`;
+CREATE TABLE IF NOT EXISTS `pokedex_evolution` (
   `id_from` int(11) NOT NULL,
   `id_to` int(11) NOT NULL,
-  `level` int(11) NOT NULL
+  `level` int(11) NOT NULL,
+  PRIMARY KEY (`id_from`,`id_to`),
+  KEY `id_to` (`id_to`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pokedex_evolution`
+-- Déchargement des données de la table `pokedex_evolution`
 --
 
 INSERT INTO `pokedex_evolution` (`id_from`, `id_to`, `level`) VALUES
@@ -352,16 +391,19 @@ INSERT INTO `pokedex_evolution` (`id_from`, `id_to`, `level`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pokedex_type`
+-- Structure de la table `pokedex_type`
 --
 
-CREATE TABLE `pokedex_type` (
+DROP TABLE IF EXISTS `pokedex_type`;
+CREATE TABLE IF NOT EXISTS `pokedex_type` (
   `id_pokedex` int(11) NOT NULL,
-  `id_type` int(11) NOT NULL
+  `id_type` int(11) NOT NULL,
+  PRIMARY KEY (`id_pokedex`,`id_type`),
+  KEY `id_type` (`id_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pokedex_type`
+-- Déchargement des données de la table `pokedex_type`
 --
 
 INSERT INTO `pokedex_type` (`id_pokedex`, `id_type`) VALUES
@@ -382,41 +424,49 @@ INSERT INTO `pokedex_type` (`id_pokedex`, `id_type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pokemon`
+-- Structure de la table `pokemon`
 --
 
-CREATE TABLE `pokemon` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `pokemon`;
+CREATE TABLE IF NOT EXISTS `pokemon` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `level` int(11) NOT NULL,
   `xp` int(11) NOT NULL,
   `%_hp` float NOT NULL,
   `id_trainer` int(11) NOT NULL,
   `id_pokedex` int(11) NOT NULL,
-  `in_team` tinyint(1) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `in_team` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_trainer` (`id_trainer`),
+  KEY `id_pokedex` (`id_pokedex`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pokemon`
+-- Déchargement des données de la table `pokemon`
 --
 
 INSERT INTO `pokemon` (`id`, `level`, `xp`, `%_hp`, `id_trainer`, `id_pokedex`, `in_team`) VALUES
 (11, 1, 0, 100, 14, 1, 1),
-(10, 1, 0, 100, 13, 4, 1);
+(10, 1, 0, 100, 13, 4, 1),
+(12, 23, 56, 76, 13, 3, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pokemon_capacity`
+-- Structure de la table `pokemon_capacity`
 --
 
-CREATE TABLE `pokemon_capacity` (
+DROP TABLE IF EXISTS `pokemon_capacity`;
+CREATE TABLE IF NOT EXISTS `pokemon_capacity` (
   `id_pokemon` int(11) NOT NULL,
   `id_capacity` int(11) NOT NULL,
-  `pp` int(11) NOT NULL
+  `pp` int(11) NOT NULL,
+  PRIMARY KEY (`id_pokemon`,`id_capacity`),
+  KEY `id_capacity` (`id_capacity`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pokemon_capacity`
+-- Déchargement des données de la table `pokemon_capacity`
 --
 
 INSERT INTO `pokemon_capacity` (`id_pokemon`, `id_capacity`, `pp`) VALUES
@@ -427,38 +477,42 @@ INSERT INTO `pokemon_capacity` (`id_pokemon`, `id_capacity`, `pp`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `trainer`
+-- Structure de la table `trainer`
 --
 
-CREATE TABLE `trainer` (
+DROP TABLE IF EXISTS `trainer`;
+CREATE TABLE IF NOT EXISTS `trainer` (
   `id` int(11) NOT NULL,
   `name` varchar(25) NOT NULL,
   `pokedollar` int(11) NOT NULL DEFAULT '50',
   `pokeball` int(11) NOT NULL DEFAULT '5',
-  `potion` int(11) NOT NULL DEFAULT '1'
+  `potion` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `trainer`
+-- Déchargement des données de la table `trainer`
 --
 
 INSERT INTO `trainer` (`id`, `name`, `pokedollar`, `pokeball`, `potion`) VALUES
 (14, 'Sevla', 500, 13, 6),
-(13, 'Keyser', 50, 5, 1);
+(13, 'Keyser', 9450, 28, 21);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `type`
+-- Structure de la table `type`
 --
 
-CREATE TABLE `type` (
+DROP TABLE IF EXISTS `type`;
+CREATE TABLE IF NOT EXISTS `type` (
   `id` int(11) NOT NULL,
-  `name` varchar(10) DEFAULT NULL
+  `name` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `type`
+-- Déchargement des données de la table `type`
 --
 
 INSERT INTO `type` (`id`, `name`) VALUES
@@ -477,100 +531,6 @@ INSERT INTO `type` (`id`, `name`) VALUES
 (13, 'ground'),
 (14, 'ghost'),
 (15, 'fly');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `capacity`
---
-ALTER TABLE `capacity`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_type` (`id_type`);
-
---
--- Indexes for table `ci_session`
---
-ALTER TABLE `ci_session`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `ci_sessions_timestamp` (`timestamp`);
-
---
--- Indexes for table `member`
---
-ALTER TABLE `member`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `pokedex`
---
-ALTER TABLE `pokedex`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `pokedex_capacity`
---
-ALTER TABLE `pokedex_capacity`
-  ADD PRIMARY KEY (`id_pokedex`,`id_capacity`),
-  ADD KEY `id_capacity` (`id_capacity`);
-
---
--- Indexes for table `pokedex_evolution`
---
-ALTER TABLE `pokedex_evolution`
-  ADD PRIMARY KEY (`id_from`,`id_to`),
-  ADD KEY `id_to` (`id_to`);
-
---
--- Indexes for table `pokedex_type`
---
-ALTER TABLE `pokedex_type`
-  ADD PRIMARY KEY (`id_pokedex`,`id_type`),
-  ADD KEY `id_type` (`id_type`);
-
---
--- Indexes for table `pokemon`
---
-ALTER TABLE `pokemon`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_trainer` (`id_trainer`),
-  ADD KEY `id_pokedex` (`id_pokedex`);
-
---
--- Indexes for table `pokemon_capacity`
---
-ALTER TABLE `pokemon_capacity`
-  ADD PRIMARY KEY (`id_pokemon`,`id_capacity`),
-  ADD KEY `id_capacity` (`id_capacity`);
-
---
--- Indexes for table `trainer`
---
-ALTER TABLE `trainer`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `type`
---
-ALTER TABLE `type`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `member`
---
-ALTER TABLE `member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `pokemon`
---
-ALTER TABLE `pokemon`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
