@@ -13,7 +13,7 @@ class Team extends CI_Controller {
 	}
 
 	public function index() {
-		redirect('team/pc/');
+		redirect('team/team/');
 	}
 
 	public function team() {
@@ -21,7 +21,7 @@ class Team extends CI_Controller {
 	}
 
 	public function pc() {
-		$data = ['pokemon' => $this->team_model->get_pokemon($this->session->userdata('id'))];
+		$data = ['pokemon' => $this->team_model->get_pc($this->session->userdata('id'))];
 		$this->load->view('Team/pc', $data);
 		$this->output->enable_profiler(true);
 	}
