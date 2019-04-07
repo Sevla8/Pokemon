@@ -13,16 +13,30 @@ class Team extends CI_Controller {
 	}
 
 	public function index() {
-		redirect('team/team/');
+		$data = ['pseudo' => $this->session->userdata('pseudo')];
+		$this->load->view('Team/team_pc', $data);
 	}
 
 	public function team() {
-
+		$data = ['pokemon' => $this->team_model->get_team($this->session->userdata('id'))];
+		$this->load->view('Team/team', $data);
+		$this->output->enable_profiler(true);
 	}
 
 	public function pc() {
 		$data = ['pokemon' => $this->team_model->get_pc($this->session->userdata('id'))];
 		$this->load->view('Team/pc', $data);
 		$this->output->enable_profiler(true);
+	}
+
+	public function potion($id) {
+		if (!$this->team_model->full_hp($id)) {
+			$this->team_model->potion($id, $this->session->userdata('id'));
+			redirect('team/team');
+		}
+		else {
+			$this->load->view('Team/pokemon_full_hp');
+			$this->team();
+		}
 	}
 }

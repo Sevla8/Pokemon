@@ -1,4 +1,4 @@
-<h1>PC</h1>
+<h1>Pc</h1>
 <table>
 	<caption>PC</caption>
 	<thead>
@@ -25,7 +25,7 @@
 	</thead>
 	<tbody>
 
-		<?php print_r($pokemon);
+		<?php
 		$tmp_id = '';
 		$tmp_type = '';
 		$tmp_capacity = '';
@@ -39,7 +39,7 @@
 			echo '<tr>';
 			echo '<td>';
 			if ($poke['id_pokemon'] != $tmp_id)
-				echo img($poke['id_pokemon'].'.png', $poke['name_pokemon']);
+				echo img($poke['id_pokedex'].'.png', $poke['name_pokemon']);
 			echo '</td>';
 			echo '<td>';
 			if ($poke['id_pokemon'] != $tmp_id)
@@ -109,6 +109,7 @@
 				echo $poke['pp'].'/'.$poke['pp_max'];
 				echo '</td>';
 			}
+			echo '</tr>';
 			$tmp_capacity = $poke['capacity_name'];
 			$capacity_couter += 1;
 			
