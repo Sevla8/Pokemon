@@ -39,4 +39,14 @@ class Team extends CI_Controller {
 			$this->team();
 		}
 	}
+
+	public function move_up($id) {
+		$this->team_model->move_up($id, $this->session->userdata('id'));
+		redirect('team/team');
+	}
+
+	public function move_down($id) {
+		$this->team_model->move_down($id, $this->session->userdata('id'));
+		redirect('team/team');
+	}
 }

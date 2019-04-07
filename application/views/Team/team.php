@@ -22,6 +22,7 @@
 			<th>Side Effect</th>
 			<th>PP</th>
 			<th>Potion</th>
+			<th>Postion</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,6 +33,7 @@
 		$tmp_capacity = '';
 		$type_counter = 0;
 		$capacity_counter = 0;
+		$move_counter = 0;
 		foreach ($pokemon as $row => $poke) {
 			if ($tmp_id != $poke['id_pokemon']) {
 				$type_counter = 0;
@@ -91,31 +93,53 @@
 			echo '</td>';
 			echo '<td>';
 			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
-					$poke['id_pokemon'] != $tmp_id) {
+					$poke['id_pokemon'] != $tmp_id)
 				echo $poke['capacity_name'];
-				echo '</td>';
-				echo '<td>';
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
+					$poke['id_pokemon'] != $tmp_id)
 				echo $poke['class'];
-				echo '</td>';
-				echo '<td>';
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
+					$poke['id_pokemon'] != $tmp_id)
 				echo $poke['puis'];
-				echo '</td>';
-				echo '<td>';
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
+					$poke['id_pokemon'] != $tmp_id)
 				echo $poke['prec'];
-				echo '</td>';
-				echo '<td>';
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
+					$poke['id_pokemon'] != $tmp_id)
 				echo $poke['eff_sec'];
-				echo '</td>';
-				echo '<td>';
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
+					$poke['id_pokemon'] != $tmp_id)
 				echo $poke['pp'].'/'.$poke['pp_max'];
-				echo '</td>';
-			}
+			echo '</td>';
 			$tmp_capacity = $poke['capacity_name'];
 			$capacity_couter += 1;
 			echo '<td>';
 			if ($poke['id_pokemon'] != $tmp_id)
 				echo '<a href="'.site_url('team/potion/'.$poke['id_pokemon']).'">use</a>';
 			echo '</td>';
+			// echo '<td>';
+			// if ($move_counter == 0) {
+			// 	echo '<a href="'.site_url('team/move_up/'.$poke['id_pokemon']).'">move up</a>';
+			// }
+			// if ($move_counter == 1) {
+			// 	echo '<a href="'.site_url('team/move_down/'.$poke['id_pokemon']).'">move down</a>';
+			// }
+			// echo '</td>';
+			
+			// $move_counter += 1;
+			// if ($move_counter == 4)
+			// 	$move_counter = 0;
+			
 			echo '</tr>';
 			
 			$tmp_id = $poke['id_pokemon'];

@@ -26,7 +26,8 @@ class Team_Model extends CI_Model {
 						->join($this->pokedex_type_table.' e', 'b.id = e.id_pokedex')
 						->join($this->type_table.' f', 'e.id_type = f.id')
 						->where('a.id_trainer', $id)
-						->where('a.in_team', 1)
+						->where('a.in_team <>', 0)
+						->order_by('a.in_team', 'ASC')
 						->get()
 						->result_array();
 	}
@@ -71,5 +72,57 @@ class Team_Model extends CI_Model {
 		if ($hp == 100)
 			return true;
 		return false;
+	}
+
+	public function move_up($id, $id_trainer) {
+		$position = $this->db->select('in_team')
+							 ->from($this->pokemon_table)
+							 ->where('id', $id)
+							 ->where('id_trainer', $id_trainer)
+							 ->get()
+							 ->result_array()[0]['in_team'];
+
+		$id_position_plus_1 = $this->db->select('id')
+									   ->from($this->pokemon_table)
+									   ->where('id_trainer', $id_trainer)
+									   ->where('in_team', $position + 1)
+									   ->get()
+									   ->result_array()[0]['id'];
+
+		$this->db->set('in_team', $position + 1)
+				 ->where('id', $id)
+				 ->where('id_trainer', $id_trainer)
+				 ->update($this->pokemon_table);
+
+		$this->db->set('in_team', $position)
+				 ->where('id', $id_position_plus_1)
+				 ->where('id_trainer', $id_trainer)
+				 ->update($this->pokemon_table);		
+	}
+
+	public function move_down($id, $id_trainer) {
+		$position = $this->db->select('in_team')
+							 ->from($this->pokemon_table)
+							 ->where('id', $id)
+							 ->where('id_trainer', $id_trainer)
+							 ->get()
+							 ->result_array()[0]['in_team'];
+
+		$id_position_minus_1 = $this->db->select('id')
+										->from($this->pokemon_table)
+										->where('id_trainer', $id_trainer)
+										->where('in_team', $position - 1)
+										->get()
+										->result_array()[0]['id'];
+
+		$this->db->set('in_team', $position - 1)
+				 ->where('id', $id)
+				 ->where('id_trainer', $id_trainer)
+				 ->update($this->pokemon_table);
+
+		$this->db->set('in_team', $position)
+				 ->where('id', $id_position_minus_1)
+				 ->where('id_trainer', $id_trainer)
+				 ->update($this->pokemon_table);		
 	}
 }
