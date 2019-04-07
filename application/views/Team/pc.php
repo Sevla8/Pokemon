@@ -27,87 +27,92 @@
 
 		<?php print_r($pokemon);
 		$tmp_id = '';
+		$tmp_type = '';
+		$tmp_capacity = '';
+		$type_counter = 0;
+		$capacity_counter = 0;
 		foreach ($pokemon as $row => $poke) {
-			if ($poke['id_pokemon'] != $tmp_id) {
-				$tmp_id = $poke['id_pokemon'];
-				echo '<tr>';
-				echo '<td>'.img($poke['id_pokemon'].'.png', $poke['name_pokemon']).'</td>';
-				echo '<td>'.$poke['name_pokemon'].'</td>';
-				echo '<td>'.$poke['name_type'];
-				if ($poke['id_pokemon'] == $pokemon[$row+1]['id_pokemon'])
-					echo '/'.$pokemon[$row+1]['name_type'];
+			if ($tmp_id != $poke['id_pokemon']) {
+				$type_counter = 0;
+				$capacity_couter = 0;
+			}
+			echo '<tr>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo img($poke['id_pokemon'].'.png', $poke['name_pokemon']);
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['name_pokemon'];
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_type != $poke['name_type'] && $type_counter < 2) ||
+					$poke['id_pokemon'] != $tmp_id)
+				echo $poke['name_type'];
+			$tmp_type = $poke['name_type'];
+			$type_counter += 1;
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['level'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['xp'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['%_hp']/100*$poke['hp'].'/'.$poke['hp'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['attack'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['defense'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['sp_attack'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['sp_defense'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['speed'];
+			echo '</td>';
+			echo '<td>';
+			if ($poke['id_pokemon'] != $tmp_id)
+				echo $poke['description'];
+			echo '</td>';
+			echo '<td>';
+			if (($poke['id_pokemon'] == $tmp_id && $tmp_capacity != $poke['capacity_name'] && $capacity_counter < 4) ||
+					$poke['id_pokemon'] != $tmp_id) {
+				echo $poke['capacity_name'];
 				echo '</td>';
-				echo '<td>'.$poke['level'].'</td>';
-				echo '<td>'.$poke['xp'].'</td>';
-				echo '<td>'.$poke['%_hp']/100*$poke['hp'].'/'.$poke['hp'].'</td>';
-				echo '<td>'.$poke['attack'].'</td>';
-				echo '<td>'.$poke['defense'].'</td>';
-				echo '<td>'.$poke['sp_attack'].'</td>';
-				echo '<td>'.$poke['sp_defense'].'</td>';
-				echo '<td>'.$poke['speed'].'</td>';
-				echo '<td>'.$poke['description'].'</td>';
-				echo '<td>'.$poke['capacity_name'];
-				$tmp_capa = $poke['capacity_name'];
-				for ($i = 1; $i <= 8; $i += 1) {
-					if (isset($pokemon[$row+$i])) {
-						if ($poke['id_pokemon'] == $pokemon[$row+$i]['id_pokemon'] && $tmp_capa != $pokemon[$row+$i]['capacity_name']) {
-							echo '<br>'.$pokemon[$row+$i]['capacity_name'];
-							$tmp_capa = $pokemon[$row+$i]['capacity_name'];
-						}
-					}
-				}
+				echo '<td>';
+				echo $poke['class'];
 				echo '</td>';
-				echo '<td>'.$poke['class'];
-				for ($i = 1; $i <= 8; $i += 1) {
-					if (isset($pokemon[$row+$i])) {
-						if ($poke['id_pokemon'] == $pokemon[$row+$i]['id_pokemon'] && $tmp_capa != $pokemon[$row+$i]['capacity_name']) {
-							echo '<br>'.$pokemon[$row+$i]['class'];
-							$tmp_capa = $pokemon[$row+$i]['capacity_name'];
-						}
-					}
-				}
+				echo '<td>';
+				echo $poke['puis'];
 				echo '</td>';
-				echo '<td>'.$poke['puis'];
-				for ($i = 1; $i <= 8; $i += 1) {
-					if (isset($pokemon[$row+$i])) {
-						if ($poke['id_pokemon'] == $pokemon[$row+$i]['id_pokemon'] && $tmp_capa != $pokemon[$row+$i]['capacity_name']) {
-							echo '<br>'.$pokemon[$row+$i]['puis'];
-							$tmp_capa = $pokemon[$row+$i]['capacity_name'];
-						}
-					}
-				}
+				echo '<td>';
+				echo $poke['prec'];
 				echo '</td>';
-				echo '<td>'.$poke['prec'];
-				for ($i = 1; $i <= 8; $i += 1) {
-					if (isset($pokemon[$row+$i])) {
-						if ($poke['id_pokemon'] == $pokemon[$row+$i]['id_pokemon'] && $tmp_capa != $pokemon[$row+$i]['capacity_name']) {
-							echo '<br>'.$pokemon[$row+$i]['prec'];
-							$tmp_capa = $pokemon[$row+$i]['capacity_name'];
-						}
-					}
-				}
+				echo '<td>';
+				echo $poke['eff_sec'];
 				echo '</td>';
-				echo '<td>'.$poke['eff_sec'];
-				for ($i = 1; $i <= 8; $i += 1) {
-					if (isset($pokemon[$row+$i])) {
-						if ($poke['id_pokemon'] == $pokemon[$row+$i]['id_pokemon'] && $tmp_capa != $pokemon[$row+$i]['capacity_name']) {
-							echo '<br>'.$pokemon[$row+$i]['eff_sec'];
-							$tmp_capa = $pokemon[$row+$i]['capacity_name'];
-						}
-					}
-				}
-				echo '</td>';
-				echo '<td>'.$poke['pp'].'/'.$poke['pp_max'];
-				for ($i = 1; $i <= 8; $i += 1) {
-					if (isset($pokemon[$row+$i])) {
-						if ($poke['id_pokemon'] == $pokemon[$row+$i]['id_pokemon'] && $tmp_capa != $pokemon[$row+$i]['capacity_name']) {
-							echo '<br>'.$poke['pp'].'/'.$poke['pp_max'];
-							$tmp_capa = $pokemon[$row+$i]['capacity_name'];
-						}
-					}
-				}
+				echo '<td>';
+				echo $poke['pp'].'/'.$poke['pp_max'];
 				echo '</td>';
 			}
+			$tmp_capacity = $poke['capacity_name'];
+			$capacity_couter += 1;
+			
+			$tmp_id = $poke['id_pokemon'];
 		}
 		?>
 
