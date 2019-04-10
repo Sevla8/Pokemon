@@ -19,7 +19,21 @@ class Trainer_Model extends CI_Model {
 						->result_array()[0];
 	}
 
-	public function set_trainer($name, $pokedollar, $pokeball, $potion) {
+	public function set_trainer($id, $name, $pokedollar, $pokeball, $potion) {
+		$this->db->set('id', $id)
+				 ->set('name', $name)
+				 ->set('pokedollar', $pokedollar)
+				 ->set('pokeball', $pokeball)
+				 ->set('potion', $potion)
+				 ->insert($this->table);
+	}
 
+	public function update_trainer($id, $name, $pokedollar, $pokeball, $potion) {
+		$this->db->set('name', $name)
+				 ->set('pokedollar', $pokedollar)
+				 ->set('pokeball', $pokeball)
+				 ->set('potion', $potion)
+				 ->where('id', $id)
+				 ->update($this->table);
 	}
 }
