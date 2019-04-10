@@ -18,6 +18,13 @@ class Pokedex_Model extends CI_Model {
 						 ->where('id', $id)
 						 ->get()
 						 ->result_array()[0];
-		$data['type'] = $this->type_model->get_type()
+	}
+
+	public function fct($id_pokedex) {
+		return $this->db->select('*')
+						->from('pokedex_type')
+						->where('id_pokedex', $id_pokedex)
+						->get()
+						->result_array();
 	}
 }

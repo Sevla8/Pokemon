@@ -1,108 +1,3 @@
-
-CREATE TABLE member (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  pseudo varchar(255) NOT NULL,
-  email varchar(255) NOT NULL,
-  password text NOT NULL,
-  email_validation_key text NOT NULL,
-  active tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE trainer (
-	id int(11) NOT NULL,
-	name varchar(25) NOT NULL,
-	credit int(11) NOT NULL DEFAULT 500,
-	PRIMARY KEY (id),
-	FOREIGN KEY (id) REFERENCES member(id)
-);
-
-CREATE TABLE pokedex (
-	id int NOT NULL,
-	name varchar(25) NOT NULL,
-	hp int NOT NULL, 
-	attack int NOT NULL, 
-	defense int NOT NULL,
-	sp_attack int NOT NULL,
-	sp_defense int NOT NULL,
-	speed int NOT NULL,
-	description varchar(255) NOT NULL,
-	PRIMARY KEY(id)
-);
-
-CREATE TABLE pokemon (
-	id int(11) NOT NULL AUTO_INCREMENT, 
-	level int(11) NOT NULL,
-	xp int(11) NOT NULL,
-	id_trainer int(11) NOT NULL,
-	id_pokedex int(11) NOT NULL,
-	PRIMARY KEY (id), 
-	FOREIGN KEY (id_trainer) REFERENCES trainer(id),
-	FOREIGN KEY (id_pokedex) REFERENCES pokedex(id)
-);
-
-CREATE TABLE type (
-	id int(11) NOT NULL,
-	name varchar(10),
-	PRIMARY KEY(id)
-);
-
-CREATE TABLE capacity (
-	id int NOT NULL,
-	name varchar(25) NOT NULL,
-	id_type int(11) NOT NULL,
-	class enum('physical', 'special'),
-	puis int,
-	prec int,
-	pp int NOT NULL,
-	eff_sec varchar(255),
-	PRIMARY KEY (id),
-	FOREIGN KEY (id_type) REFERENCES type(id)
-);
-
-CREATE TABLE pokedex_type (
-	id_pokedex int(11) NOT NULL,
-	id_type int(11) NOT NULL,
-	PRIMARY KEY (id_pokedex, id_type),
-	FOREIGN KEY (id_pokedex) REFERENCES pokedex(id),
-	FOREIGN KEY (id_type) REFERENCES type(id)		
-);
-
-CREATE TABLE pokemon_capacity (
-	id_pokemon int(11) NOT NULL,
-	id_capacity int(11) NOT NULL,
-	pp int NOT NULL,
-	PRIMARY KEY (id_pokemon, id_capacity),
-	FOREIGN KEY (id_pokemon) REFERENCES pokemon(id),
-	FOREIGN KEY (id_capacity) REFERENCES capacity(id)	
-);
-
-CREATE TABLE pokemon_status (
-	id_pokemon int(11) NOT NULL,
-	hp int(11) NOT NULL DEFAULT 100,
-	xp int NOT NULL DEFAULT 0,
-	PRIMARY KEY (id_pokemon),
-	FOREIGN KEY (id_pokemon) REFERENCES pokemon(id)
-);
-
-CREATE TABLE pokedex_capacity (
-	id_pokedex int(11) NOT NULL,
-	id_capacity int(11) NOT NULL,
-	level int(11) NOT NULL,
-	PRIMARY KEY (id_pokedex, id_capacity),
-	FOREIGN KEY (id_pokedex) REFERENCES pokedex(id),
-	FOREIGN KEY (id_capacity) REFERENCES capacity(id)	
-);
-
-CREATE TABLE pokedex_evolution (
-	id_from int(11) NOT NULL,
-	id_to int(11) NOT NULL,
-	level int(11) NOT NULL,
-	PRIMARY KEY (id_from, id_to),
-	FOREIGN KEY (id_from) REFERENCES pokedex(id),
-	FOREIGN KEY (id_to) REFERENCES pokedex(id)
-);
-
 --
 -- DATA
 --
@@ -117,89 +12,87 @@ INSERT INTO pokedex (id, name, hp, attack, defense, sp_attack, sp_defense, speed
 	(7, 'Carapuce', 44, 48, 65, 50, 64, 43, "Il se réfugie dans sa carapace et réplique en éclaboussant l'ennemi à la première occasion."),
 	(8, 'Carabaffe', 59, 63, 80, 65, 80, 58, "Attaqué, il cache sa tête dans sa carapace, mais son corps trop gros ne peut y tenir en entier."),
 	(9, 'Tortank', 79, 83, 100, 85, 105, 78, "Il écrase ses adversaires de tout son poids pour leur faire perdre connaissance. Il rentre dans sa carapace s'il se sent en danger."),
-	/*(10, 'Chenipan'),
-	(11, 'Chrysacier'),
-	(12, 'Papilusion'),
-	(13, 'Aspicot'),
-	(14, 'Coconfort'),
-	(15, 'Dardargnan'),
-	(16, 'Roucool'),
-	(17, 'Roucoups'),
-	(18, 'Roucarnage'),
-	(19, 'Rattata'),
-	(20, 'Rattatac'),
-	(21, 'Piafabec'),
-	(22, 'Rapasdepic'),
-	(23, 'Abo'),
-	(24, 'Arbok'),
-	(25, 'Pikachu'),
-	(26, 'Raichu'),
-	(27, 'Sabelette'),
-	(28, 'Sablaireau'),
-	-- ( 29, 'Nidoran♀'),
-	(29, 'NidoranF'),
-	(30, 'Nidorina'),
-	(31, 'Nidoqueen'),
-	-- ( 32, 'Nidoran♂'),
-	(32, 'NidoranM'),
-	(33, 'Nidorino'),
-	(34, 'Nidoking'),
-	(35, 'Melofee'),
-	(36, 'Melodelfe'),
-	(37, 'Goupix'),
-	(38, 'Feunard'),
-	(39, 'Rondoudou'),
-	(40, 'Grodoudou'),
-	(41, 'Nosferapti'),
-	(42, 'Nosferalto'),
-	(43, 'Mystherbe'),
-	(44, 'Ortide'),
-	(45, 'Rafflesia'),
-	(46, 'Paras'),
-	(47, 'Parasect'),
-	(48, 'Mimitoss'),
-	(49, 'Aeromite'),
-	(50, 'Taupiqueur'),
-	(51, 'Triopikeur'),
-	(52, 'Miaouss'),
-	(53, 'Persian'),
-	(54, 'Psykokwak'),
-	(55, 'Akwakwak'),
-	(56, 'Ferosinge'),
-	(57, 'Colossinge'),
-	(58, 'Caninos'),
-	(59, 'Arcanin'),
-	(60, 'Ptitard'),
-	(61, 'Tetarte'),
-	(62, 'Tartard'),
-	(63, 'Abra'),
-	(64, 'Kadabra'),
-	(65, 'Alakazam'),
-	(66, 'Machoc'),
-	(67, 'Machopeur'),
-	(68, 'Mackogneur'),
-	(69, 'Chetiflor'),
-	(70, 'Boustiflor'),
-	(71, 'Empiflor'),
-	(72, 'Tentacool'),
-	(73, 'Tentacruel'),
-	(74, 'Racaillou'),
-	(75, 'Gravalanch'),
-	(76, 'Grolem'),
-	(77, 'Ponyta'),
-	(78, 'Galopa'),
-	(79, 'Ramoloss'),
-	(80, 'Flagadoss'),
-	(81, 'Magneti'),
-	(82, 'Magneton'),
-	(83, 'Canarticho'),
-	(84, 'Doduo'),
-	(85, 'Dodrio'),
-	(86, 'Otaria'),
-	(87, 'Lamantine'),
-	(88, 'Tadmorv'),
-	(89, 'Grotadmorv'),
-	(90, 'Kokiyas'),
+	(10, 'Chenipan', 45, 30, 35, 20, 20, 45, ""),
+	(11, 'Chrysacier', 50,20, 55, 25, 25, 30, ""),
+	(12, 'Papilusion', 60, 45, 50, 90, 80, 70, ""),
+	(13, 'Aspicot', 40, 35, 30, 20, 20, 50, ""),
+	(14, 'Coconfort', 45, 25, 50, 25, 25, 35, ""),
+	(15, 'Dardargnan', 65, 90, 40, 45, 80, 75, ""),
+	(16, 'Roucool', 40, 45, 40, 35, 35, 56, ""),
+	(17, 'Roucoups', 63, 60, 55, 50, 50, 71, ""),
+	(18, 'Roucarnage', 83, 80, 75, 70, 70, 101, ""),
+	(19, 'Rattata', 30, 56, 35, 25, 35, 72, ""),
+	(20, 'Rattatac', 55, 81, 60, 50, 70, 97, ""),
+	(21, 'Piafabec', 40, 60, 30, 31, 31, 70, ""),
+	(22, 'Rapasdepic', 65, 90, 65 , 61, 61, 100, ""),
+	(23, 'Abo', 35, 60, 44, 40, 54, 55, ""),
+	(24, 'Arbok', 60, 95, 69, 65, 79, 80, ""),
+	(25, 'Pikachu', 35, 55, 40, 50, 50, 90, ""),
+	(26, 'Raichu', 60, 90, 55, 90, 80, 110, ""),
+	(27, 'Sabelette', 50, 75, 85, 20, 30, 40, ""),
+	(28, 'Sablaireau', 75, 100, 110, 45, 55, 65, ""),
+	(29, 'Nidoran♀', 55, 47, 52, 40, 40, 41, ""),
+	(30, 'Nidorina', 70, 62, 67, 55, 55, 56, ""),
+	(31, 'Nidoqueen', 90, 92, 87, 75, 85, 76, ""),
+	(32, 'Nidoran♂', 46, 57, 40, 40, 40, 50, ""),
+	(33, 'Nidorino', 61, 72, 57, 50, 55, 65, ""),
+	(34, 'Nidoking', 81, 102, 77, 85, 75, 85, ""),
+	(35, 'Melofee', 70, 45, 48, 60, 65, 35, ""),
+	(36, 'Melodelfe', 95, 70, 73, 95, 90, 60, ""),
+	(37, 'Goupix', 38, 41, 40, 50, 65, 65, ""),
+	(38, 'Feunard', 73, 76, 75, 81, 100, 100, ""),
+	(39, 'Rondoudou', 115, 45, 20, 45, 25, 20, ""),
+	(40, 'Grodoudou', 140, 70, 45, 85, 50, 45, ""),
+	(41, 'Nosferapti', 40, 45, 35, 30, 40, 55, ""),
+	(42, 'Nosferalto', 75, 80, 70, 65, 75, 90, ""),
+	(43, 'Mystherbe', 45, 50, 55, 75, 65, 30, ""),
+	(44, 'Ortide', 60, 65, 70, 85, 75, 40, ""),
+	(45, 'Rafflesia', 75, 80, 85, 110, 90, 50, ""),
+	(46, 'Paras', 35, 70, 55, 45, 55, 25, ""),
+	(47, 'Parasect', 60, 95, 80, 60, 80, 30, ""),
+	(48, 'Mimitoss', 60, 55, 50, 40, 55, 45, ""),
+	(49, 'Aeromite', 70, 65, 60, 90, 75, 90, ""),
+	(50, 'Taupiqueur', 40, 55, 25, 35, 45, 95, ""),
+	(51, 'Triopikeur', 30, 100, 50, 50, 70, 120, ""),
+	(52, 'Miaouss', 40, 45, 35, 40, 40, 90, ""),
+	(53, 'Persian', 65, 70, 60, 65, 65, 115, ""),
+	(54, 'Psykokwak', 50, 52, 48, 65, 50, 55, ""),
+	(55, 'Akwakwak', 80, 82, 78, 95, 80, 95, ""),
+	(56, 'Ferosinge', 40, 80, 35, 35, 45, 70, ""),
+	(57, 'Colossinge', 65, 105, 60, 60, 70, 95, ""),
+	(58, 'Caninos', 55, 70, 45, 70, 50, 60, ""),
+	(59, 'Arcanin', 90, 110, 80, 100, 80, 95, ""),
+	(60, 'Ptitard', 40, 50, 40, 40, 40, 90, ""),
+	(61, 'Tetarte', 65, 65, 65, 50, 50, 90, ""),
+	(62, 'Tartard', 90, 95, 95, 70, 90, 70, ""),
+	(63, 'Abra', 25, 20, 15, 105, 55, 90, ""),
+	(64, 'Kadabra', 40, 35, 30, 120, 70, 105, ""),
+	(65, 'Alakazam', 55, 50, 45, 135, 95, 120, ""),
+	(66, 'Machoc', 70, 80, 50, 35, 35, 35, ""),
+	(67, 'Machopeur', 80, 100, 70, 50, 60, 45, ""),
+	(68, 'Mackogneur', 90, 130, 80, 65, 85, 55, ""),
+	(69, 'Chetiflor', 50, 75, 35, 70, 30, 40, ""),
+	(70, 'Boustiflor', 65, 90, 50, 85, 45, 55, ""),
+	(71, 'Empiflor', 80, 105, 65, 100, 70, 70, ""),
+	(72, 'Tentacool', 40, 40, 35, 50, 100, 70, ""),
+	(73, 'Tentacruel', 80, 70, 65, 80, 120, 100, ""),
+	(74, 'Racaillou', 40, 80, 100, 30, 30, 20, ""),
+	(75, 'Gravalanch', 55, 95, 115, 45, 45, 35, ""),
+	(76, 'Grolem', 80, 120, 130, 55, 65, 45, ""),
+	(77, 'Ponyta', 50, 85, 55, 65, 65, 90, ""),
+	(78, 'Galopa', 65, 100, 70, 80, 80, 105, ""),
+	(79, 'Ramoloss', 90, 65, 65, 40, 40, 15, ""),
+	(80, 'Flagadoss', 95, 75, 110, 100, 80, 30, ""),
+	(81, 'Magneti', 25, 35, 70, 95, 55, 45, ""),
+	(82, 'Magneton', 50, 60, 95, 120, 70, 70, ""),
+	(83, 'Canarticho', 52, 90, 55, 58, 62, 60, ""),
+	(84, 'Doduo', 35, 85, 45, 35, 35, 75, ""),
+	(85, 'Dodrio', 60, 110, 70, 60, 60, 110, ""),
+	(86, 'Otaria', 65, 45, 55, 45, 70, 45, ""),
+	(87, 'Lamantine', 90, 70, 80, 70, 95, 70, ""),
+	(88, 'Tadmorv', 80, 80, 50, 40, 50, 25, ""),
+	(89, 'Grotadmorv', 105, 105, 75, 65, 100, 50, ""),
+	(90, 'Kokiyas', ),
 	(91, 'Crustabri'),
 	(92, 'Fantominus'),
 	(93, 'Spectrum'),
@@ -260,24 +153,8 @@ INSERT INTO pokedex (id, name, hp, attack, defense, sp_attack, sp_defense, speed
 	(148, 'Draco'),
 	(149, 'Dracolosse'),
 	(150, 'Mewtwo'),
-	(151, 'Mew')*/;
+	(151, 'Mew');
 
-INSERT INTO type(id, name) VALUES
-	(1, 'fight'),
-	(2, 'dragon'),
-	(3, 'water'),
-	(4, 'electric'),
-	(5, 'fire'),
-	(6, 'ice'),
-	(7, 'insect'),
-	(8, 'normal'),
-	(9, 'grass'),
-	(10, 'poison'),
-	(11, 'psychic'),
-	(12, 'rock'),
-	(13, 'ground'),
-	(14, 'ghost'),
-	(15, 'fly');
 
 INSERT INTO capacity(id, name, id_type, class, puis, prec, pp, eff_sec) VALUES 
 	(1, 'Riposte', 1, 'physical', null, 100, 20, "Inflige le double des dégâts subis par une attaque de type Normal ou Combat durant le tour, échoue sinon"),
@@ -663,7 +540,7 @@ INSERT INTO pokedex_type(id_pokedex, id_type) VALUES
 
 INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(1, 107, 53), #riposte
-	(1, 4, -1),
+/*	(1, 4, -1),
 	(1, 8, -1),
 	(1, 35, -1),
 	(1, 54, -1),
@@ -708,14 +585,14 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(1, 104, -1),
 	(1, 108, -1),
 	(1, 122, -1),
-	(1, 143, -1),
+	(1, 143, -1),*/
 	(2, 56, 33), #frappe atlas
 	(2, 57, 37), 
 	(2, 66, 39), 
 	(2, 67, 44), 
 	(2, 68, 44), 
 	(2, 127, 25), 
-	(2, 4, -1),  
+/*	(2, 4, -1),  
 	(2, 8, -1),  
 	(2, 27, -1),  
 	(2, 35, -1),  
@@ -768,7 +645,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(2, 108, -1),   
 	(2, 122, -1),   
 	(2, 127, -1),   
-	(2, 143, -1),         
+	(2, 143, -1), */        
 	(3, 29, 12), #double pied
 	(3, 30, 12), 
 	(3, 31, 12), 
@@ -787,7 +664,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(7, 66, 46), #sacrifice
 	(7, 67, 52),
 	(7, 68, 52),
-	(7, 4, -1),
+/*	(7, 4, -1),
 	(7, 5, -1),
 	(7, 6, -1),
 	(7, 7, -1),
@@ -839,13 +716,13 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(7, 141, -1),
 	(7, 143, -1),
 	(7, 150, -1),
-	(7, 151, -1),
+	(7, 151, -1),*/
 	(8, 106, 48),#pied voltige
 	(9, 130, 25), #draco-rage
 	(9, 147, 40), 
 	(9, 148, 45), 
 	(9, 149, 45), 
-	(9, 4, -1), 
+/*	(9, 4, -1), 
 	(9, 5, -1), 
 	(9, 6, -1), 
 	(9, 58, -1), 
@@ -856,7 +733,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(9, 147, -1), 
 	(9, 148, -1), 
 	(9, 149, -1), 
-	(9, 151, -1),
+	(9, 151, -1),*/
 	(10, 7 ,28),#repli
 	(10, 8, 31),
 	(10, 9, 1),
@@ -895,7 +772,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(13,134	,16	),
 	(13,138	,1	),
 	(13,139	,1	),
-	(13,7	,-1	),
+/*	(13,7	,-1	),
 	(13,8	,-1	),
 	(13,9	,-1	),
 	(13,19	,-1	),
@@ -951,9 +828,9 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(13,148	,-1	),
 	(13,149	,-1	),
 	(13,150	,-1	),
-	(13,151	,-1	),
+	(13,151	,-1	),*/
 	
-	(14,7 ,-1), #bulle d'o 
+/*	(14,7 ,-1), #bulle d'o 
 	(14,8,-1),
 	(14,9,-1),
 	(14,19,-1),
@@ -1009,7 +886,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(14,148,-1),
 	(14,149,-1),
 	(14,150,-1),
-	(14,151,-1),
+	(14,151,-1),*/
 
 	(15,118,37),#cascade
 	(15,119,39),
@@ -1019,7 +896,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(16,98,35),#Pince-Masse
 	(16,99,42),
 
-	(17,7	,-1	), #surf
+/*	(17,7	,-1	), #surf
 	(17,8	,-1	),
 	(17,9	,-1),
 	(17,31	,-1	),
@@ -1059,7 +936,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(17,147	,-1	),
 	(17,148	,-1),
 	(17,149	,-1	),
-	(17,151	,-1	),
+	(17,151	,-1	),*/
 
 
 	(18,7,42),#Hydrocanon
@@ -1097,7 +974,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(19,147,10	),
 	(19,148	,10	),
 	(19,149	,10	),
-	(19,25	,-1),
+/*	(19,25	,-1),
 	(19,26	,-1),
 	(19,35	,-1),
 	(19,36	,-1),
@@ -1126,7 +1003,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(19,148	,-1),
 	(19,149	,-1),
 	(19,150	,-1),
-	(19,151	,-1),
+	(19,151	,-1),*/
 
 
 
@@ -1142,7 +1019,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 
 
 	(22	,25	,26	),#Tonerre
-	(22	,19	,-1	),
+	/*(22	,19	,-1	),
 	(22	,20,-1),
 	(22	,25	,-1	),
 	(22	,26,-1),
@@ -1191,7 +1068,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(22	,148,-1	),
 	(22	,149,-1	),
 	(22	,150,-1	),
-	(22	,151,-1	),
+	(22	,151,-1	),*/
 
 	(24,4,46),#Danseflamme
 	(24,5,56),
@@ -1206,16 +1083,16 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(26,107,33),#Poing de Feu
 	(26,126,43),
 
-	(33,7 ,-1), #Laser-Glace(non finie)
+/*	(33,7 ,-1), #Laser-Glace(non finie)
 	(33,8 ,-1),
-	(33,9 ,-1),
+	(33,9 ,-1),*/
 
-	(34,7,-1),#Blizzard(non finie)
+/*	(34,7,-1),#Blizzard(non finie)
 	(34,8,-1),
-	(34,9,-1),
+	(34,9,-1),*/
 
 
-	(45,1	,-1	), #Clonage(non finie)
+/*	(45,1	,-1	), #Clonage(non finie)
 	(45,2	,-1	),
 	(45,3	,-1	),
 	(45,4	,-1	),
@@ -1223,9 +1100,9 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(45,6	,-1	),
 	(45,7	,-1	),
 	(45,8	,-1	),
-	(45,9	,-1	),
+	(45,9	,-1	),*/
 
-	(46,1	,-1	),#Copie(non finie)
+/*	(46,1	,-1	),#Copie(non finie)
 	(46,2	,-1	),
 	(46,3	,-1	),
 	(46,4	,-1	),
@@ -1233,7 +1110,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(46,6	,-1	),
 	(46,7	,-1	),
 	(46,8	,-1	),
-	(46,9	,-1	),
+	(46,9	,-1	),*/
 
 	(61,7	,1	), #MiMiQueue
 	(61,19	,1	),
@@ -1254,7 +1131,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(61,135	,37	),
 	(61,136	,37	),
 
-	(64,1	,-1	),#Reflet
+/*	(64,1	,-1	),#Reflet
 	(64,2	,-1	),
 	(64,3	,-1),
 	(64,4	,-1),
@@ -1262,10 +1139,10 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(64,6	,-1),
 	(64,7	,-1),
 	(64,8	,-1),
-	(64,9	,-1),
+	(64,9	,-1),*/
 
 
-	(70,1	,-1	),#Patience
+/*	(70,1	,-1	),#Patience
 	(70,2	,-1	),
 	(70,3	,-1	),
 	(70,4	,-1	),
@@ -1273,12 +1150,12 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(70,6	,-1	),
 	(70,7	,-1	),
 	(70,8	,-1	),
-	(70,9	,-1	),
+	(70,9	,-1	),*/
 	
 	(82,4	,22	), #frenesie(non finie)
 	(82,5	,24	),
 	(82,6	,24),
-	(82,1	,-1	),
+/*	(82,1	,-1	),
 	(82,2	,-1	),
 	(82,3	,-1	),
 	(82,4	,-1	),
@@ -1286,7 +1163,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(82,6	,-1	),
 	(82,7	,-1	),
 	(82,8	,-1	),
-	(82,9	,-1	),
+	(82,9	,-1	),*/
 
 	(84,1	,1	), #charge
 	(84,2	,1	),
@@ -1328,12 +1205,12 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(84,136	,1	),
 	(84,137	,1	),
 
-	(93,4	,-1	), #Force (non finie)
+/*	(93,4	,-1	), #Force (non finie)
 	(93,5	,-1	),
 	(93,6	,-1	),
 	(93,7	,-1	),
 	(93,8	,-1	),
-	(93,9	,-1	),
+	(93,9	,-1	),*/
 
 
 	(95,7	,22	),#Morsure
@@ -1359,7 +1236,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(106,107,48	), #Ultimapoing
 	(106,115,36),
 	(106,151,20	),
-	(106,4	,-1	),
+/*	(106,4	,-1	),
 	(106,5	,-1	),
 	(106,6	,-1	),
 	(106,7	,-1	),
@@ -1406,7 +1283,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(106,126	,-1	),
 	(106,143	,-1	),
 	(106,150	,-1	),
-	(106,151	,-1	),
+	(106,151	,-1	),*/
 	
 	(107,31	,23	),#plaquage
 	(107,39	,34	),
@@ -1416,7 +1293,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(107,124,39	),
 	(107,131,25	),
 	(107,143,35	),
-	(107,1	,	-1),
+/*	(107,1	,	-1),
 	(107,2	,	-1),
 	(107,3	,	-1),
 	(107,4	,	-1),
@@ -1518,7 +1395,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(107,148	,	-1),
 	(107,149	,	-1),
 	(107,150	,	-1),
-	(107,151	,	-1),
+	(107,151	,	-1),*/
 	
 	(108,58	,30	),#Belier
 	(108,59	,1	),
@@ -1531,7 +1408,7 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(108,128,51	),
 	(108,133,42	),
 	(108,142,45	),
-	(108,1	,-1	),
+/*	(108,1	,-1	),
 	(108,2	,-1 ),
 	(108,3	,-1	),
 	(108,4	,-1 ),
@@ -1680,13 +1557,13 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(108,148	,-1 ),
 	(108,149	,-1	),
 	(108,150	,-1 ),
-	(108,151	,-1	),
+	(108,151	,-1	),*/
 	
 
 	(111,7	,35	),#CoudKrane
 	(111,8	,39	),
 	(111,9	,42	),
-	(111,4	,-1	),
+/*	(111,4	,-1	),
 	(111,5	,-1	),
 	(111,6	,-1	),
 	(111,7	,-1	),
@@ -1787,13 +1664,13 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(111,148	,-1	),
 	(111,149	,-1	),
 	(111,150	,-1	),
-	(111,151	,-1	),
+	(111,151	,-1	),*/
 	
 	(112,39	,39	),#damocles
 	(112,113,54	),
 	(112,143,48	),
 	(112,1	,-1	),
-	(112,2	,-1	),
+/*	(112,2	,-1	),
 	(112,3	,-1	),
 	(112,4	,-1	),
 	(112,5	,-1	),
@@ -1931,12 +1808,12 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(112,145	,-1	),
 	(112,146	,-1	),
 	(112,147	,-1	),
-	(112,148	,-1	),
+	(112,148	,-1	),*/
 
 
 
 	(113,106,53	),#Ultimawashi
-	(113,4	,-1	),
+/*	(113,4	,-1	),
 	(113,5	,-1	),
 	(113,6	,-1	),
 	(113,7	,-1	),
@@ -1985,10 +1862,10 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(113,141	,-1	),
 	(113,143	,-1	),
 	(113,150	,-1	),
-	(113,151	,-1	),
+	(113,151	,-1	),*/
 
 
-	(130,1	,-1),	#Toxik
+/*	(130,1	,-1),	#Toxik
 	(130,2	,-1),
 	(130,3	,-1),
 	(130,4	,-1),
@@ -2137,9 +2014,9 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(130,148	,-1),
 	(130,149	,-1),
 	(130,150	,-1),
-	(130,151	,-1),
+	(130,151	,-1),*/
 
-	(140,1	,-1), #Protection( non finie )
+/*	(140,1	,-1), #Protection( non finie )
 	(140,2	,-1),
 	(140,3	,-1),
 	(140,4	,-1),
@@ -2147,9 +2024,9 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(140,6	,-1),
 	(140,7	,-1),
 	(140,8	,-1),
-	(140,9	,-1),
+	(140,9	,-1),*/
 
-	(141,1	,-1	),	#Repos (non finie)
+/*	(141,1	,-1	),	#Repos (non finie)
 	(141,2	,-1	),
 	(141,3	,-1	),
 	(141,4	,-1	),
@@ -2157,14 +2034,14 @@ INSERT INTO pokedex_capacity(id_capacity, id_pokedex, level) VALUES
 	(141,6	,-1	),
 	(141,7	,-1	),
 	(141,8	,-1	),
-	(141,9	,-1	),
+	(141,9	,-1	),*/
 
-	(156,4	,-1	), #tunnel (non finie)
+/*	(156,4	,-1	), #tunnel (non finie)
 	(156,5	,-1	),
 	(156,6	,-1	),
 	(156,7	,-1	),
 	(156,8	,-1	),
-	(156,9	,-1	),
+	(156,9	,-1	),*/
 
 INSERT INTO pokedex_evolution (id_from, id_to, level) VALUES
 	(  1,   2, 16),

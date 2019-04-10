@@ -10,6 +10,7 @@ class Team extends CI_Controller {
 		$this->load->helper('link');
 		$this->load->library('session');
 		$this->load->model('Team_model', 'team_model');
+		$this->load->model('Capacity_model', 'capacity_model');
 	}
 
 	public function index() {
@@ -18,7 +19,9 @@ class Team extends CI_Controller {
 	}
 
 	public function team() {
-		$data = ['pokemon' => $this->team_model->get_team($this->session->userdata('id'))];
+		// $data = ['pokemon' => $this->team_model->get_team($this->session->userdata('id'))];
+		// $this->load->view('Team/team', $data);
+		$data = ['capacity' => $this->capacity_model->get_capacity(5)];
 		$this->load->view('Team/team', $data);
 		$this->output->enable_profiler(true);
 	}
