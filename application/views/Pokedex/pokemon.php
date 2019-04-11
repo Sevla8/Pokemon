@@ -6,6 +6,7 @@
 			<th>Appearance</th>
 			<th>Id</th>
 			<th>Name</th>
+			<th>Type</th>
 			<th>HP</th>
 			<th>Attack</th>
 			<th>Defense</th>
@@ -17,27 +18,26 @@
 		</tr>
 	</thead>
 	<tbody>
-
-		<?php 	
-		echo '<tr>';
-		echo '<td>'.img($pokemon['id'].'.png', $pokemon['name']).'</td>';
-		echo '<td>'.$pokemon['id'].'</td>';
-		echo '<td>'.$pokemon['name'].'</td>';
-		echo '<td>'.$pokemon['hp'].'</td>';
-		echo '<td>'.$pokemon['attack'].'</td>';
-		echo '<td>'.$pokemon['defense'].'</td>';
-		echo '<td>'.$pokemon['sp_attack'].'</td>';
-		echo '<td>'.$pokemon['sp_defense'].'</td>';
-		echo '<td>'.$pokemon['speed'].'</td>';
-		echo '<td>'.$pokemon['description'].'</td>';
-		echo '<td>';
-		foreach ($caught as $ball) {
-			if (in_array($pokemon['id'], $ball))
-				echo img('pokeball.png', 'pokeball').'</td>';
-		}
-		echo '</tr>';
-		?>
-
+		<tr>
+			<td rowspan="2"><?php echo img($pokemon['id'].'.png', $pokemon['name']); ?></td>
+			<td rowspan="2"><?php echo $pokemon['id']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['name']; ?></td>
+			<td rowspan="<?php if (sizeof($pokemon['type']) == 1) echo '2'; else echo '1' ?>"><?php echo $pokemon['type'][0]['name']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['hp']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['attack']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['defense']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['sp_attack']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['sp_defense']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['speed']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['description']; ?></td>
+			<td rowspan="2"><?php if ($pokemon['caught']) echo img('pokeball.png', 'pokeball'); ?></td>
+		</tr>
+		<tr>
+			<?php 
+			if (sizeof($pokemon['type']) == 2) 
+				echo '<td>'.$pokemon['type'][1]['name'].'</td>';
+			?>
+		</tr>
 	</tbody>
 </table>
 <a href="<?php echo site_url('pokedex/'); ?>">Pokedex</a>

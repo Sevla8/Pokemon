@@ -11,6 +11,14 @@ class Pokemon_Model extends CI_Model {
 		$this->load->database();
 	}
 
+	public function caught($id_pokedex, $id_trainer) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_pokedex', $id_pokedex)
+						 ->where('id_trainer', $id_trainer)
+						 ->count_all_results();
 
+		return $data > 0 ? true : false;
+	}
 
 }
