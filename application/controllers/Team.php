@@ -9,7 +9,8 @@ class Team extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('link');
 		$this->load->library('session');
-		$this->load->model('Team_model', 'team_model');
+		$this->load->model('Trainer_model', 'trainer_model');
+		$this->load->model('Pokemon_model', 'pokemon_model');
 		$this->load->model('Capacity_model', 'capacity_model');
 	}
 
@@ -19,22 +20,21 @@ class Team extends CI_Controller {
 	}
 
 	public function team() {
-		// $data = ['pokemon' => $this->team_model->get_team($this->session->userdata('id'))];
-		// $this->load->view('Team/team', $data);
-		$data = ['capacity' => $this->capacity_model->get_capacity(5)];
+		$data = ['pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
 		$this->load->view('Team/team', $data);
 		$this->output->enable_profiler(true);
 	}
 
 	public function pc() {
-		$data = ['pokemon' => $this->team_model->get_pc($this->session->userdata('id'))];
+		$data = ['pokemon' => $this->pokemon_model->get_pc($this->session->userdata('id'))];
 		$this->load->view('Team/pc', $data);
 		$this->output->enable_profiler(true);
 	}
 
 	public function potion($id) {
-		if (!$this->team_model->full_hp($id)) {
-			$this->team_model->potion($id, $this->session->userdata('id'));
+		if (!$this->pokemon_model->full_hp($id)) {
+			$this->pokemon_model->potion($id);
+			$this->trainer_model->potion($this->session->userdata('id'), -1);
 			redirect('team/team');
 		}
 		else {
@@ -44,12 +44,20 @@ class Team extends CI_Controller {
 	}
 
 	public function move_up($id) {
-		$this->team_model->move_up($id, $this->session->userdata('id'));
-		redirect('team/team');
+		if ($this->pokemon_model->correct_move($id, $this->session->userdata('id'), 'up')) {
+			$this->pokemon_model->move_up($id, $this->session->userdata('id'));
+			redirect('team/team');
+		}
+		else 
+			show_404();
 	}
 
 	public function move_down($id) {
-		$this->team_model->move_down($id, $this->session->userdata('id'));
-		redirect('team/team');
+		if ($this->pokemon_model->correct_move($id, $this->session->userdata('id'), 'down')) {
+			$this->pokemon_model->move_down($id, $this->session->userdata('id'));
+			redirect('team/team');
+		}
+		else 
+			show_404();
 	}
 }

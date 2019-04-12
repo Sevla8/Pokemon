@@ -20,6 +20,7 @@
 			<th>Special Attack</th>
 			<th>Special Defense</th>
 			<th>Speed</th>
+			<th>Evolution</th>
 			<th>Description</th>
 			<th>Caught</th>
 		</tr>
@@ -37,6 +38,7 @@
 				<td rowspan="2"><?php echo $poke['sp_attack']; ?></td>
 				<td rowspan="2"><?php echo $poke['sp_defense']; ?></td>
 				<td rowspan="2"><?php echo $poke['speed']; ?></td>
+				<td rowspan="2"><?php if (isset($poke['evolution'])) echo $poke['evolution'] ?></td>
 				<td rowspan="2"><?php echo $poke['description']; ?></td>
 				<td rowspan="2"><?php if ($poke['caught']) echo img('pokeball.png', 'pokeball'); ?></td>
 			</tr>

@@ -36,4 +36,16 @@ class Trainer_Model extends CI_Model {
 				 ->where('id', $id)
 				 ->update($this->table);
 	}
+
+	public function potion($id_trainer, $amount) {
+		$potion = $this->db->select('potion')
+						   ->from($this->table)
+						   ->where('id', $id_trainer)
+						   ->get()
+						   ->result_array()[0]['potion'];
+
+		$this->db->set('potion', $potion + $amount)
+				 ->where('id', $id_trainer)
+				 ->update($this->table);
+	}
 }

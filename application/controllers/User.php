@@ -34,7 +34,7 @@ class User extends CI_Controller {
 			$this->output->enable_profiler(true);
 		}
 		else
-			show_404();
+			redirect('user/connection/');
 	}
 
 	private function sendmail($pseudo, $key) {

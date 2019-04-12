@@ -1,11 +1,6 @@
 <h1>Team</h1>
-<?php
-print_r($capacity);
-?>
-
-<!-- 
 <table border="solid">
-	<caption>PC</caption>
+	<caption>Team</caption>
 	<thead>
 		<tr>
 			<th>Appearance</th>
@@ -19,7 +14,6 @@ print_r($capacity);
 			<th>Special Attack</th>
 			<th>Special Defense</th>
 			<th>Speed</th>
-			<th>Description</th>
 			<th>Capacity</th>
 			<th>Class</th>
 			<th>Puissance</th>
@@ -31,66 +25,70 @@ print_r($capacity);
 		</tr>
 	</thead>
 	<tbody>
+		<?php foreach ($pokemon as $poke) { ?>
 		<tr>
-			<td rowspan="4"><?php echo img($pokemon[0]['id_pokedex'].'.png', $pokemon[0]['name_pokemon']); ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['name_pokemon']; ?></td>
-			<td rowspan="2"><?php echo $pokemon[0]['name_type']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['level']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['xp'].'/100'; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['%_hp']/100*$pokemon[0]['hp'].'/'.$pokemon[0]['hp']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['attack']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['defense']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['sp_attack']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['sp_defense']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['speed']; ?></td>
-			<td rowspan="4"><?php echo $pokemon[0]['description']; ?></td>
-			<td><?php echo $pokemon[0]['capacity_name']; ?></td>
-			<td><?php echo $pokemon[0]['class']; ?></td>
-			<td><?php echo $pokemon[0]['puis']; ?></td>
-			<td><?php echo $pokemon[0]['prec']; ?></td>
-			<td><?php echo $pokemon[0]['eff_sec']; ?></td>
-			<td><?php echo $pokemon[0]['pp']; ?></td>
-			<td rowspan="4"><?php echo '<a href="'.site_url('team/potion/'.$pokemon[0]['id_pokemon']).'">use</a>'; ?></td>
-			<td rowspan="<?php if ($pokemon[0]['in_team'] == 1 || $pokemon[0]['id_pokemon'] == 6) echo '4'; else echo '2'; ?>">
-				<?php 
-				if ($pokemon[0]['in_team'] == 1) 
-					echo '<a href="'.site_url('team/move_down/'.$pokemon[0]['id_pokemon']).'">move down</a>'; 
-				else if ($pokemon[0]['in_team'] == 6)
-					echo '<a href="'.site_url('team/move_up/'.$pokemon[0]['id_pokemon']).'">move up</a>';
-				else 
-					echo '<a href="'.site_url('team/move_up/'.$pokemon[0]['id_pokemon']).'">move up</a>';
-				?></td>
+			<td rowspan="4"><?php echo img($poke['id_pokedex'].'.png', $poke['name']); ?></td>
+			<td rowspan="4"><?php echo $poke['name']; ?></td>
+			<td rowspan="<?php if (sizeof($poke['type']) == 1) echo '4'; else echo '2' ?>"><?php echo $poke['type'][0]['name']; ?></td>
+			<td rowspan="4"><?php echo $poke['level']; ?></td>
+			<td rowspan="4"><?php echo $poke['xp'].'/100'; ?></td>
+			<td rowspan="4"><?php echo $poke['%_hp']/100*$poke['hp']*(1+$poke['level']/100).'/'.$poke['hp']*(1+$poke['level']/100); ?></td>
+			<td rowspan="4"><?php echo $poke['attack']*(1+$poke['level']/100); ?></td>
+			<td rowspan="4"><?php echo $poke['defense']*(1+$poke['level']/100); ?></td>
+			<td rowspan="4"><?php echo $poke['sp_attack']*(1+$poke['level']/100); ?></td>
+			<td rowspan="4"><?php echo $poke['sp_defense']*(1+$poke['level']/100); ?></td>
+			<td rowspan="4"><?php echo $poke['speed']*(1+$poke['level']/100); ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['name']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['class']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['nb_pp'].'/'.$poke['capacity'][0]['pp']; ?></td>
+			<td rowspan="4"><?php echo '<a href="'.site_url('team/potion/'.$poke['id']).'">use</a>'; ?></td>
+			<td rowspan="<?php if ($poke['in_team'] == 1 || $poke['in_team'] == 6) echo '4'; else echo '2'; ?>">
+				<?php
+				if ($poke['in_team'] == 1)
+					echo '<a href="'.site_url('team/move_down/'.$poke['id']).'">move down</a>';
+				else if ($poke['in_team'] == 6)
+					echo '<a href="'.site_url('team/move_up/'.$poke['id']).'">move up</a>';
+				else
+					echo '<a href="'.site_url('team/move_up/'.$poke['id']).'">move up</a>';
+				?>
+			</td> 
 		</tr>
 		<tr>
-			<td><?php echo $pokemon[4]['capacity_name']; ?></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['name']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['class']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['nb_pp'].'/'.$poke['capacity'][1]['pp']; ?></td>
 		</tr>
 		<tr>
-			<td rowspan="2"><?php echo $pokemon[1]['name_type']; ?></td>
-			<td><?php echo $pokemon[8]['capacity_name']; ?></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
 			<?php 
-			if ($pokemon[0]['in_team'] != 1 && $pokemon[0]['id_pokemon'] != 6)
-				echo '<td rowspan="2"><a href="'.site_url('team/move_down/'.$pokemon[0]['id_pokemon']).'">move down</a></td>';
+			if (sizeof($poke['type']) == 2) 
+				echo '<td rowspan="2">'.$poke['type'][1]['name'].'</td>';
 			?>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['name']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['class']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['nb_pp'].'/'.$poke['capacity'][2]['pp']; ?></td>
+			<?php 
+			if ($poke['in_team'] != 1 && $poke['in_team'] != 6)
+				echo '<td rowspan="2"><a href="'.site_url('team/move_down/'.$poke['id']).'">move down</a></td>';
+			?> 
 		</tr>
 		<tr>
-			<td><?php echo $pokemon[12]['capacity_name']; ?></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['name']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['class']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['nb_pp'].'/'.$poke['capacity'][3]['pp']; ?></td>
 		</tr>
-
+		<?php } ?>
 	</tbody>
 </table>
- -->
+<a href="<?php echo site_url('user/home'); ?>">Home</a>

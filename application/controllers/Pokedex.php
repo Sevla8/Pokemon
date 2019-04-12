@@ -11,10 +11,10 @@ class Pokedex extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('link');
 		$this->load->library('session');
-		$this->load->library('form_validation');
 		$this->load->library('pagination');
-		$this->load->model('Pokedex_model', 'pokedex_model');
+		$this->load->library('form_validation');
 		$this->load->model('User_model', 'user_model');
+		$this->load->model('Pokedex_model', 'pokedex_model');
 		if (!$this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
 				redirect('user/connection/');
 		}
@@ -26,7 +26,7 @@ class Pokedex extends CI_Controller {
 
 		if ($this->form_validation->run() && $this->pokedex_model->pokemon_exists($this->input->post('name'))) {
 
-			$data = ['pokemon' => $this->pokedex_model->get_pokedex_by_name($this->input->post('name'))];
+			$data = ['pokemon' => $this->pokedex_model->get_pokemon_by_name($this->input->post('name'))];
 
 			$this->load->view('Pokedex/pokemon', $data);
 		}

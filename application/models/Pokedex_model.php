@@ -13,6 +13,7 @@ class Pokedex_model extends CI_Model {
 		$this->load->model('Type_model', 'type_model');
 		$this->load->model('Pokedex_Type_model', 'pokedex_type_model');
 		$this->load->model('Pokemon_model', 'pokemon_model');
+		$this->load->model('Pokedex_Evolution_model', 'pokedex_evolution_model');
 	}
 
 	public function count_pokedex() {
@@ -29,6 +30,11 @@ class Pokedex_model extends CI_Model {
 		for ($i = 0; $i < sizeof($data); $i += 1) {
 
 			$data[$i]['caught'] = $this->pokemon_model->caught($data[$i]['id'], $this->session->userdata('id'));
+
+			if ($this->pokedex_evolution_model->have_evolution($data[$i]['id']))
+				$data[$i]['evolution'] = $this->get_pokemon_by_id($this->pokedex_evolution_model->get_evolution($data[$i]['id'])['id_to'])['name'];
+			else 
+				$data[$i]['evolution'] = null;
 
 			$types = array();
 			$types = $this->pokedex_type_model->get_pokedex_type($data[$i]['id']);
@@ -56,15 +62,24 @@ class Pokedex_model extends CI_Model {
 						->result_array();
 	}
 
-	public function get_pokedex_by_id($id){
-		return $this->db->select('*')
-						->from($this->table)
-						->where('id', $id)
-						->get()
-						->result_array()[0];
+	public function get_pokemon_by_id($id){
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id', $id)
+						 ->get()
+						 ->result_array()[0];
+
+		$data['caught'] = $this->pokemon_model->caught($data['id'], $this->session->userdata('id'));
+
+		$types = array();
+		$types = $this->pokedex_type_model->get_pokedex_type($data['id']);
+		foreach ($types as $type)
+			$data['type'][] = $this->type_model->get_type($type['id_type']);
+
+		return $data;
 	}
 
-	public function get_pokedex_by_name($name) {
+	public function get_pokemon_by_name($name) {
 		$data = $this->db->select('*')
 						 ->from($this->table)
 						 ->where('name', $name)

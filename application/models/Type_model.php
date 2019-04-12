@@ -18,4 +18,5 @@ class Type_Model extends CI_Model {
 						->get()
 						->result_array()[0];
 	}
+
 }
