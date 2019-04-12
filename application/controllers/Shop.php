@@ -20,11 +20,7 @@ class Shop extends CI_Controller {
 		}
 	}
 
-	public function index() {
-		redirect('Shop/basket/');
-	}
-
-	public function basket() {	// main function
+	public function index() {	// main function
 		// control form
 		$this->form_validation->set_rules('potion', 'Potion', 'trim|required|is_natural')
 							  ->set_rules('pokeball', 'Pokeball', 'trim|required|is_natural');

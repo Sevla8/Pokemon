@@ -13,6 +13,7 @@
 			<th>Special Attack</th>
 			<th>Special Defense</th>
 			<th>Speed</th>
+			<th>Evolution</th>
 			<th>Description</th>
 			<th>Caught</th>
 		</tr>
@@ -29,6 +30,7 @@
 			<td rowspan="2"><?php echo $pokemon['sp_attack']; ?></td>
 			<td rowspan="2"><?php echo $pokemon['sp_defense']; ?></td>
 			<td rowspan="2"><?php echo $pokemon['speed']; ?></td>
+			<td rowspan="2"><?php echo $pokemon['evolution']; ?></td>
 			<td rowspan="2"><?php echo $pokemon['description']; ?></td>
 			<td rowspan="2"><?php if ($pokemon['caught']) echo img('pokeball.png', 'pokeball'); ?></td>
 		</tr>

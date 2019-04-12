@@ -44,15 +44,13 @@
 			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['prec']; ?></td>
 			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['eff_sec']; ?></td>
 			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['nb_pp'].'/'.$poke['capacity'][0]['pp']; ?></td>
-			<td rowspan="4"><?php echo '<a href="'.site_url('team/potion/'.$poke['id']).'">use</a>'; ?></td>
+			<td rowspan="4"><a href="<?php echo site_url('team/potion/'.$poke['id']); ?>"><?php echo img('potion.png', 'potion'); ?></a></td>
 			<td rowspan="<?php if ($poke['in_team'] == 1 || $poke['in_team'] == 6) echo '4'; else echo '2'; ?>">
 				<?php
 				if ($poke['in_team'] == 1)
-					echo '<a href="'.site_url('team/move_down/'.$poke['id']).'">move down</a>';
-				else if ($poke['in_team'] == 6)
-					echo '<a href="'.site_url('team/move_up/'.$poke['id']).'">move up</a>';
+					echo '<a href="'.site_url('team/move_down/'.$poke['id']).'">'.img('down.png', 'down').'</a>';
 				else
-					echo '<a href="'.site_url('team/move_up/'.$poke['id']).'">move up</a>';
+					echo '<a href="'.site_url('team/move_up/'.$poke['id']).'">'.img('up.png', 'up').'</a>';
 				?>
 			</td> 
 		</tr>
@@ -77,7 +75,7 @@
 			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['nb_pp'].'/'.$poke['capacity'][2]['pp']; ?></td>
 			<?php 
 			if ($poke['in_team'] != 1 && $poke['in_team'] != 6)
-				echo '<td rowspan="2"><a href="'.site_url('team/move_down/'.$poke['id']).'">move down</a></td>';
+				echo '<td rowspan="2"><a href="'.site_url('team/move_down/'.$poke['id']).'">'.img('down.png', 'down').'</a></td>';
 			?> 
 		</tr>
 		<tr>

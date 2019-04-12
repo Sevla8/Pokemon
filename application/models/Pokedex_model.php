@@ -88,6 +88,11 @@ class Pokedex_model extends CI_Model {
 
 		$data['caught'] = $this->pokemon_model->caught($data['id'], $this->session->userdata('id'));
 
+		if ($this->pokedex_evolution_model->have_evolution($data['id']))
+			$data['evolution'] = $this->get_pokemon_by_id($this->pokedex_evolution_model->get_evolution($data['id'])['id_to'])['name'];
+		else 
+			$data['evolution'] = null;
+
 		$types = array();
 		$types = $this->pokedex_type_model->get_pokedex_type($data['id']);
 		foreach ($types as $type)

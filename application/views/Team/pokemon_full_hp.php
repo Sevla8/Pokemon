@@ -1,1 +1,1 @@
-<p>This pokemon do not need a potion</p>
+<p>This pokemon does not need a potion</p>

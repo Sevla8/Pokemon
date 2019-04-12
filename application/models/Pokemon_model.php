@@ -55,6 +55,28 @@ class Pokemon_Model extends CI_Model {
 		return $data;
 	}
 
+	public function get_pc($id_trainer) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_trainer', $id_trainer)
+						 ->where('in_team', 0)
+						 ->order_by('id_pokedex', 'ASC')
+						 ->get()
+						 ->result_array();
+
+		for ($i = 0; $i < sizeof($data); $i += 1) {
+
+			$temp = $this->pokedex_model->get_pokemon_by_id($data[$i]['id_pokedex']);
+			$id_tmp = $data[$i]['id'];
+			foreach ($temp as $key => $value) {
+				$data[$i][''.$key] = $value;
+			}
+			$data[$i]['id'] = $id_tmp;	// 'id' de pokedex ecrase 'id' de pokemon
+		}
+
+		return $data;
+	}
+
 	public function full_hp($id) {
 		$hp = $this->db->select('%_hp')
 					   ->from($this->table)
@@ -140,5 +162,46 @@ class Pokemon_Model extends CI_Model {
 		if ($data < 1 || $data > 6)
 			return false;
 		return true;
+	}
+
+	public function pokemon_exists($id) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id', $id)
+						 ->count_all_results();
+
+		return $data > 0 ? true : false;
+	}
+
+	public function store($id) {
+		$this->db->set('in_team', 0)
+				 ->where('id', $id)
+				 ->update($this->table);
+	}
+
+	public function load($id, $id_trainer) {
+		for ($i = 1; $i <= 6; $i += 1) {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_trainer', $id_trainer)
+							 ->where('in_team', $i)
+							 ->count_all_results();
+			if ($data == 0) {
+				$this->db->set('in_team', $i)
+						 ->where('id', $id)
+						 ->update($this->table);
+				break;
+			}
+		}
+	}
+
+	public function full_team($id_trainer) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_trainer', $id_trainer)
+						 ->where('in_team <>', 0)
+						 ->count_all_results();
+
+		return $data == 6 ? true : false;
 	}
 }
