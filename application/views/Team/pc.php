@@ -86,4 +86,3 @@
 		<?php } ?>
 	</tbody>
 </table>
-<a href="<?php echo site_url('user/home'); ?>">Home</a>

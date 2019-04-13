@@ -18,7 +18,7 @@ class Layout {
 
 	public function set_title($title) {
 		if (is_string($title) && !empty($title)) {
-			$tis->var['title'] = $title;
+			$this->var['title'] = $title;
 			return true;
 		} 
 		return false;
@@ -56,16 +56,12 @@ class Layout {
 		return false;
 	}
 	
-	public function view($name, $data = array()) {
-		$this->var['output'] .= $this->CI->load->view($name, $data, true);
-		$this->CI->load->view('../themes/'.$this->theme, $this->var);
-	}
-	
-	public function views($name, $data = array()) {
+	public function add($name, $data = array()) {
 		$this->var['output'] .= $this->CI->load->view($name, $data, true);
 		return $this;
 	}
+	
+	public function view() {
+		$this->CI->load->view('../themes/'.$this->theme, $this->var);
+	}
 }
-
-/* End of file layout.php */
-/* Location: ./application/libraries/layout.php */

@@ -9,6 +9,7 @@ class Team extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('link');
 		$this->load->library('session');
+		$this->load->library('layout');
 		$this->load->model('Trainer_model', 'trainer_model');
 		$this->load->model('Pokemon_model', 'pokemon_model');
 		$this->load->model('Capacity_model', 'capacity_model');
@@ -18,18 +19,30 @@ class Team extends CI_Controller {
 
 	public function index() {
 		$data = ['pseudo' => $this->session->userdata('pseudo')];
-		$this->load->view('Team/team_pc', $data);
+		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->layout->add('header', $trainer_data)
+					 ->add('Team/team_pc', $data)
+					 ->add('footer')
+					 ->view();
 	}
 
 	public function team() {
 		$data = ['pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
-		$this->load->view('Team/team', $data);
+		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->layout->add('header', $trainer_data)
+					 ->add('Team/team', $data)
+					 ->add('footer')
+					 ->view();
 	}
 
 	public function pc() {
 		$data = ['pokemon_pc' => $this->pokemon_model->get_pc($this->session->userdata('id')),
 				 'pokemon_team' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
-		$this->load->view('Team/pc', $data);
+		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->layout->add('header', $trainer_data)
+					 ->add('Team/pc', $data)
+					 ->add('footer')
+					 ->view();
 	}
 
 	public function load($id) {
