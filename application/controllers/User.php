@@ -11,9 +11,13 @@ class User extends CI_Controller {
 		$this->load->helper('cookie');
 		$this->load->library('layout');
 		$this->load->library('session');
+		$this->load->library('encryption');
 		$this->load->library('form_validation');
-		$this->load->model('User_model', 'user_model');
-		$this->load->model('Fight_model', 'fight_model');
+		$this->load->model('Member_model', 'member_model');
+		$this->load->model('Trainer_model', 'trainer_model');
+		$this->load->model('Pokemon_model', 'pokemon_model');
+		$this->load->model('Challenge_model', 'challenge_model');
+		$this->load->model('Pokemon_Capacity_model', 'pokemon_capacity_model');
 	}
 
 	public function index() {
@@ -22,14 +26,15 @@ class User extends CI_Controller {
 
 	public function home() {
 		// control session
-		if ($this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
+		if ($this->member_model->member_exists($this->session->userdata('email'), $this->session->userdata('password'))) {
 			$this->load->view('User/home');
 			// new day
-			if ($this->user_model->get_day($this->session->userdata('id')) != date('Y-m-d')) {
-				$this->user_model->new_day($this->session->userdata('id'));
+			if ($this->member_model->get_last_activity($this->session->userdata('id')) != date('Y-m-d')) {
+				$this->trainer_model->new_day($this->session->userdata('id'));
+				$this->pokemon_model->new_day($this->session->userdata('id'));
 			}
 			// update last_activity
-			$this->user_model->set_last_activity($this->session->userdata('id'));
+			$this->member_model->set_last_activity($this->session->userdata('id'));
 
 			$this->output->enable_profiler(true);
 		}
@@ -37,11 +42,11 @@ class User extends CI_Controller {
 			redirect('user/connection/');
 	}
 
-	private function sendmail($pseudo, $key) {
-		$recipient = $_POST['email'];
+	private function sendmail($email, $key) {
+		$recipient = $this->input->post('email');
 		$topic = 'Account activation';
 		$header = array('From' => 'inscription@pokemon-wim.com');
-		$message = 'Welcome to Pokemon-WIM,'."\n\n".'To activate your account, please click on the link below or copy / paste it in your internet browser.'."\n".site_url(array('user', 'activation', $pseudo, $key))."\n\n".'---------------'."\n".'This is an automatic email, Thank you to do not answer.';
+		$message = 'Welcome to Pokemon-WIM,'."\n\n".'To activate your account, please click on the link below or copy / paste it in your internet browser.'."\n".site_url(array('user', 'activation', urlencode($email), $key))."\n\n".'---------------'."\n".'This is an automatic email, Thank you to do not answer.';
 		mail($recipient, $topic, $message, $header);
 	}
 
@@ -51,44 +56,74 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('emailConfirmation', 'E-mail Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email|encode_php_tags|matches[emailConfirmation]');
 		$this->form_validation->set_rules('passwordConfirmation', 'Password Confirmation', 'required');
-		$this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|max_length[50]|encode_php_tags|matches[passwordConfirmation]');
+		$this->form_validation->set_rules('password', 'Password', 'required|min_length[5]|max_length[50]|encode_php_tags|matches[passwordConfirmation]');
 		$this->form_validation->set_rules('pokemon', 'Starting Pokemon', 'required|in_list[bulbizarre,salameche,carapuce]');
 
 		if ($this->form_validation->run() && 	// form ok
-			!$this->user_model->pseudo_exists($this->input->post('pseudo')) && 
-			!$this->user_model->email_exists($this->input->post('email'))) {
+			!$this->trainer_model->pseudo_exists($this->input->post('pseudo')) && 
+			!$this->member_model->email_exists($this->input->post('email'))) {
 			
 			$key = sha1(time()); // generate random key
+			//	add member
+			$this->member_model->set_member($this->input->post('email'),
+											sha1($this->input->post('password')),
+											$key,
+											0,
+											date('Y-m-d G:i:s'),
+											0);
+			//	add trainer
+			$this->trainer_model->set_trainer($this->member_model->get_id($this->input->post('email')),
+											  $this->input->post('pseudo'),
+											  100,
+											  5,
+											  1);
+			//	add pokemon
+			$id_pokedex;
+			switch ($this->input->post('pokemon')) {
+				case 'bulbizarre':
+					$id_pokedex = 1;
+					break;
+				case 'salameche':
+					$id_pokedex = 4;
+					break;
+				case 'carapuce':
+					$id_pokedex = 7;
+					break;
+			}
+			$this->pokemon_model->set_pokemon(1,
+											  0,
+											  100,
+											  $this->member_model->get_id($this->input->post('email')),
+											  $id_pokedex,
+											  1);
+			//	add capacities
+			$this->pokemon_capacity_model->set_capacity($this->pokemon_model->get_starter($this->member_model->get_id($this->input->post('email'))),
+												  $id_pokedex,
+												  1);
 
-			$this->user_model->add_member($this->input->post('pseudo'),
-										$this->input->post('email'),
-										$this->input->post('password'),
-										$this->input->post('pokemon'),
-										$key);
+			$this->sendmail($this->input->post('email'), $key);
 
-			$this->sendmail($this->input->post('pseudo'),
-							$key);
-
-			$data['pseudo'] = $this->input->post('pseudo');
+			$data = ['pseudo' => ($this->trainer_model->get_trainer($this->member_model->get_id($this->input->post('email'))))['name']];
 
 			$this->load->view('User/account_created', $data);
 		}
 		else {	// form ko
 			$this->load->view('User/form_inscription');	// basic form
-			if ($this->user_model->pseudo_exists($this->input->post('pseudo')))
+			if ($this->trainer_model->pseudo_exists($this->input->post('pseudo')))
 				$this->load->view('User/pseudo_exists');	// error psuedo
-			if ($this->user_model->email_exists($this->input->post('email')))
+			if ($this->member_model->email_exists($this->input->post('email')))
 				$this->load->view('User/email_exists');	// error email
 		}
 	}
 
-	public function activation($pseudo = null, $key = null) {
-		if ($this->user_model->member_exists_0($pseudo, $key)) {
-			$data['pseudo'] = $pseudo;
-			if ($this->user_model->member_active_0($pseudo, $key))
+	public function activation($email = null, $key = null) {
+		$email = urldecode($email);
+		if ($this->member_model->member_exists_by_email_key($email, $key)) {
+			$data = ['pseudo' => $this->trainer_model->get_trainer($this->member_model->get_id($email))['name']];
+			if ($this->member_model->member_active_by_email_key($email, $key))
 				$this->load->view('User/member_already_active', $data);
 			else {
-				$this->user_model->active_member($pseudo, $key);
+				$this->member_model->active_member($email, $key);
 				$this->load->view('User/member_activated', $data);
 			}
 		}
@@ -98,46 +133,47 @@ class User extends CI_Controller {
 
 	public function connection() {
 		// control form
-		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'required|encode_php_tags');
+		$this->form_validation->set_rules('email', 'E-mail', 'required|valid_email|encode_php_tags');
 		$this->form_validation->set_rules('password', 'Password', 'required|encode_php_tags');
 
 		if ($this->form_validation->run() && 	// form ok
-			$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
-			$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
-			// create cookie for pseudo
-			$cookie = array('name' => 'pseudo',
-							'value' => $this->input->post('pseudo'),
+			$this->member_model->member_exists($this->input->post('email'), sha1($this->input->post('password'))) &&
+			$this->member_model->member_active($this->input->post('email'), sha1($this->input->post('password')))) {
+			// create cookie for email
+			$cookie = array('name' => 'email',
+							'value' => $this->input->post('email'),
 							'expire' => '604800');
 			$this->input->set_cookie($cookie, true);
-			// save pseudo & password & id in session 
-			$this->session->set_userdata('pseudo', $this->input->post('pseudo'));
+			// save email & password & id & pseudo in session 
+			$this->session->set_userdata('email', $this->input->post('email'));
 			$this->session->set_userdata('password', sha1($this->input->post('password')));
-			$this->session->set_userdata('id', $this->user_model->get_id($this->session->userdata('pseudo')));
+			$this->session->set_userdata('id', $this->member_model->get_id($this->session->userdata('email')));
+			$this->session->set_userdata('pseudo', $this->trainer_model->get_trainer($this->session->userdata('id'))['name']);
 			// db member.online update
-			$this->user_model->online($this->session->userdata('id'));
+			$this->member_model->set_online($this->session->userdata('id'));
 			redirect('user/home/');
 		}
 		else {	// form ko
 			$this->load->view('User/form_connection');
 			// member do not exists error
-			if ($this->input->post('pseudo') != null &&
+			if ($this->input->post('email') != null &&
 				$this->input->post('password') != null &&
-				!$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password')))) {
+				!$this->member_model->member_exists($this->input->post('email'), sha1($this->input->post('password')))) {
 				$this->load->view('User/member_not_exists');
 			}
 			// member not active error
-			if ($this->input->post('pseudo') != null &&
+			if ($this->input->post('email') != null &&
 				$this->input->post('password') != null &&
-				$this->user_model->member_exists($this->input->post('pseudo'), sha1($this->input->post('password'))) &&
-				!$this->user_model->member_active($this->input->post('pseudo'), sha1($this->input->post('password')))) {
+				$this->member_model->member_exists($this->input->post('email'), sha1($this->input->post('password'))) &&
+				!$this->member_model->member_active($this->input->post('email'), sha1($this->input->post('password')))) {
 				$this->load->view('User/member_not_active');
 			}
 		}
 	}
 
 	public function disconnection() {
-		$this->fight_model->stop_challenge($this->session->userdata('id'));
-		$this->user_model->offline($this->session->userdata('id'));
+		$this->challenge_model->stop_challenge($this->session->userdata('id'));
+		$this->member_model->set_offline($this->session->userdata('id'));
 		$this->session->sess_destroy();
 		redirect('user/connection/');
 	}

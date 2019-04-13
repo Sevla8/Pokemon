@@ -109,4 +109,12 @@ class Pokedex_model extends CI_Model {
 
 		return $data > 0 ? true : false;
 	}
+
+	public function wild_pokemon_appears($rand_id_pokedex, $rand_level) {	// to refine
+		return $this->db->select('*')
+						->from($this->table)
+						->where('id', $rand_id_pokedex)
+						->get()
+						->result_array()[0];
+	}
 }

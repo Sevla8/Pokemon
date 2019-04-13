@@ -13,11 +13,8 @@ class Shop extends CI_Controller {
 		$this->load->helper('link');
 		$this->load->library('session');
 		$this->load->library('form_validation');
-		$this->load->model('Shop_model', 'shop_model');
-		$this->load->model('User_model', 'user_model');
-		if (!$this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
-				redirect('user/connection/');
-		}
+		$this->load->model('Trainer_model', 'trainer_model');
+		// control
 	}
 
 	public function index() {	// main function
@@ -34,8 +31,8 @@ class Shop extends CI_Controller {
 			$total = $this->input->post('potion') * $this->potion_price + 
 					 $this->input->post('pokeball') * $this->pokeball_price;
 
-			if ($this->shop_model->get_pokedollar($this->session->userdata('id')) >= $total) {
-				$this->shop_model->debit($this->session->userdata('id'), 
+			if ($this->trainer_model->get_pokedollar($this->session->userdata('id')) >= $total) {
+				$this->trainer_model->debit($this->session->userdata('id'), 
 										 $total, 
 										 $this->input->post('potion'), 
 										 $this->input->post('pokeball'));

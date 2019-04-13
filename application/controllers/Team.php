@@ -12,6 +12,7 @@ class Team extends CI_Controller {
 		$this->load->model('Trainer_model', 'trainer_model');
 		$this->load->model('Pokemon_model', 'pokemon_model');
 		$this->load->model('Capacity_model', 'capacity_model');
+		// control
 	}
 
 	public function index() {

@@ -14,6 +14,24 @@ class Pokemon_Model extends CI_Model {
 		$this->load->model('Pokemon_Capacity_model', 'pokemon_capacity_model');
 	}
 
+	public function set_pokemon($level, $xp, $prct_hp, $id_trainer, $id_pokedex, $in_team) {
+		$this->db->set('level', $level)
+				 ->set('xp', $xp)
+				 ->set('%_hp', $prct_hp)
+				 ->set('id_trainer', $id_trainer)
+				 ->set('id_pokedex', $id_pokedex)
+				 ->set('in_team', $in_team)
+				 ->insert($this->table);
+	}
+
+	public function get_starter($id_trainer) {
+		return $this->db->select('id')
+						->from($this->table)
+						->where('id_trainer', $id_trainer)
+						->get()
+						->result_array()[0]['id'];
+	}
+
 	public function caught($id_pokedex, $id_trainer) {
 		$data = $this->db->select('*')
 						 ->from($this->table)
@@ -203,5 +221,11 @@ class Pokemon_Model extends CI_Model {
 						 ->count_all_results();
 
 		return $data == 6 ? true : false;
+	}
+
+	public function new_day($id) {
+		$this->db->set('%_hp', 100)
+				 ->where('id_trainer', $id)
+				 ->update($this->table);
 	}
 }

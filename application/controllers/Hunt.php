@@ -9,11 +9,8 @@ class Hunt extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('link');
 		$this->load->library('session');
-		$this->load->model('Hunt_model', 'hunt_model');
-		$this->load->model('User_model', 'user_model');
-		if (!$this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
-				redirect('user/connection/');
-		}
+		$this->load->model('Pokedex_model', 'pokedex_model');
+		// control
 	}
 
 	public function index() {
@@ -24,18 +21,21 @@ class Hunt extends CI_Controller {
 		$rand_id_pokedex = random_int(1, 9);
 		$rand_level = random_int(1, 30);
 		echo "string";
-		$data = $this->hunt_model->wild_pokemon_appears($rand_id_pokedex, $rand_level);
+		$data = $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level);
 		print_r($data);
-		$this->output->enable_profiler(true);
 		$this->load->view('Hunt/wild_pokemon_appears', $data);
+		$this->output->enable_profiler(true);
 	}
 
 	public function pokedex($id) {
-		$data = $this->hunt_model->get_pokedex($id);
-		$this->load->view('Hunt/pokedex', $data);
+		
 	}
 
 	public function pokeball($d, $prct_hp) {
 
+	}
+
+	public function run() {
+		
 	}
 }

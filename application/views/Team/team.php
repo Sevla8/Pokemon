@@ -38,12 +38,12 @@
 			<td rowspan="4"><?php echo $poke['sp_attack']*(1+$poke['level']/100); ?></td>
 			<td rowspan="4"><?php echo $poke['sp_defense']*(1+$poke['level']/100); ?></td>
 			<td rowspan="4"><?php echo $poke['speed']*(1+$poke['level']/100); ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['name']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['class']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['puis']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['prec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['eff_sec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][0]['nb_pp'].'/'.$poke['capacity'][0]['pp']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][0])) echo $poke['capacity'][0]['name']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][0])) echo $poke['capacity'][0]['class']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][0])) echo $poke['capacity'][0]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][0])) echo $poke['capacity'][0]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][0])) echo $poke['capacity'][0]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][0])) echo $poke['capacity'][0]['nb_pp'].'/'.$poke['capacity'][0]['pp']; ?></td>
 			<td rowspan="4"><a href="<?php echo site_url('team/potion/'.$poke['id']); ?>"><?php echo img('potion.png', 'potion'); ?></a></td>
 			<td rowspan="<?php if ($poke['in_team'] == 1 || $poke['in_team'] == 6) echo '4'; else echo '2'; ?>">
 				<?php
@@ -55,36 +55,36 @@
 			</td> 
 		</tr>
 		<tr>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['name']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['class']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['puis']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['prec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['eff_sec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][1]['nb_pp'].'/'.$poke['capacity'][1]['pp']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][1])) echo $poke['capacity'][1]['name']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][1])) echo $poke['capacity'][1]['class']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][1])) echo $poke['capacity'][1]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][1])) echo $poke['capacity'][1]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][1])) echo $poke['capacity'][1]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][1])) echo $poke['capacity'][1]['nb_pp'].'/'.$poke['capacity'][1]['pp']; ?></td>
 		</tr>
 		<tr>
 			<?php 
 			if (sizeof($poke['type']) == 2) 
 				echo '<td rowspan="2">'.$poke['type'][1]['name'].'</td>';
 			?>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['name']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['class']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['puis']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['prec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['eff_sec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][2]['nb_pp'].'/'.$poke['capacity'][2]['pp']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][2])) echo $poke['capacity'][2]['name']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][2])) echo $poke['capacity'][2]['class']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][2])) echo $poke['capacity'][2]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][2])) echo $poke['capacity'][2]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][2])) echo $poke['capacity'][2]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][2])) echo $poke['capacity'][2]['nb_pp'].'/'.$poke['capacity'][2]['pp']; ?></td>
 			<?php 
 			if ($poke['in_team'] != 1 && $poke['in_team'] != 6)
 				echo '<td rowspan="2"><a href="'.site_url('team/move_down/'.$poke['id']).'">'.img('down.png', 'down').'</a></td>';
 			?> 
 		</tr>
 		<tr>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['name']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['class']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['puis']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['prec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['eff_sec']; ?></td>
-			<td><?php if (isset($poke['capacity'])) echo $poke['capacity'][3]['nb_pp'].'/'.$poke['capacity'][3]['pp']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][3])) echo $poke['capacity'][3]['name']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][3])) echo $poke['capacity'][3]['class']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][3])) echo $poke['capacity'][3]['puis']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][3])) echo $poke['capacity'][3]['prec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][3])) echo $poke['capacity'][3]['eff_sec']; ?></td>
+			<td><?php if (isset($poke['capacity']) && isset($poke['capacity'][3])) echo $poke['capacity'][3]['nb_pp'].'/'.$poke['capacity'][3]['pp']; ?></td>
 		</tr>
 		<?php } ?>
 	</tbody>

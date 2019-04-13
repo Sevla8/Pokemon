@@ -9,21 +9,20 @@ class Fight extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('link');
 		$this->load->library('session');
-		$this->load->model('Fight_model', 'fight_model');
-		$this->load->model('User_model', 'user_model');
-		if (!$this->user_model->member_exists($this->session->userdata('pseudo'), $this->session->userdata('password'))) {
-				redirect('user/connection/');
-		}
+		$this->load->model('Member_model', 'member_model');
+		$this->load->model('Challenge_model', 'challenge_model');
+		// control
 	}
 
 	public function index() {
-		$data = ['online' => $this->fight_model->get_online()];
+		$data = ['online' => $this->member_model->get_online()];
 		$this->load->view('Fight/online', $data);
 	}
 
 	public function send_challenge($id_to) {
-		if (!$this->fight_model->challenge_already_send($this->session->userdata('id'), $id_to))
-			$this->fight_model->send_challenge($this->session->userdata('id'), $id_to);
+		// control on $id_to !!!
+		if (!$this->challenge_model->challenge_already_send($this->session->userdata('id'), $id_to))
+			$this->challenge_model->send_challenge($this->session->userdata('id'), $id_to);
 		redirect('fight/');
 	}
 }

@@ -1,8 +1,8 @@
 <h1>Connexion</h1>
 <form method="post">
-	<div id="pseudoDiv">
-		<label for="pseudo">Pseudo</label>
-		<input type="text" name="pseudo" id="pseudo" placeholder="Your pseudonym" value="<?php echo get_cookie('pseudo') ?>">
+	<div id="emailDiv">
+		<label for="email">Email</label>
+		<input type="text" name="email" id="email" placeholder="Your email" value="<?php echo get_cookie('email') ?>">
 	</div>
 	<div id="passwordDiv">
 		<label for="password">Password</label>

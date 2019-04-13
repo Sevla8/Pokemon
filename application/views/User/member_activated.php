@@ -1,6 +1,6 @@
 <h1>Welcome</h1>
 <p>
-	Welcome to Pokemon Wim <?php echo $pseudo; ?>
+	Welcome to Pokemon Wim <!-- <?php echo $pseudo; ?> -->
 </p>
 <p>
 	Your account has been activated. Please click on the link bellow to connect you.
