@@ -117,4 +117,17 @@ class Pokedex_model extends CI_Model {
 
 		return $data;
 	}
+
+	public function get_power() {
+		$poke = $this->db->select('*')
+						 ->from($this->table)
+						 ->get()
+						 ->result_array();
+
+		for ($i = 0; $i < sizeof($poke); $i += 1) {
+			$poke[$i]['power'] = $poke[$i]['hp'] + $poke[$i]['attack'] + $poke[$i]['defense'] + $poke[$i]['sp_attack'] + $poke[$i]['sp_defense'] + $poke[$i]['speed'];
+		}
+		
+		return $poke;
+	}
 }

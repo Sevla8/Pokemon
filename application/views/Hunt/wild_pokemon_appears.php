@@ -17,5 +17,3 @@
 	<div id="Pokedex"><a href="<?php echo site_url('hunt/pokedex/') ?>"><?php echo img('pokedex.png', 'pokedex') ?></a></div>
 	<div id="Run"><a href="<?php echo site_url('hunt/') ?>">Run</a></div>
 </div>
-
-<a href="<?php echo site_url('user/home/') ?>">Home</a>
