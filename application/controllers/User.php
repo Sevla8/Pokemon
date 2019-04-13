@@ -26,7 +26,7 @@ class User extends CI_Controller {
 
 	public function home() {
 		// control session
-		if ($this->member_model->member_exists($this->session->userdata('email'), $this->session->userdata('password'))) {
+		if ($this->session->has_userdata('id')) {
 			$this->load->view('User/home');
 			// new day
 			if ($this->member_model->get_last_activity($this->session->userdata('id')) != date('Y-m-d')) {
@@ -35,8 +35,6 @@ class User extends CI_Controller {
 			}
 			// update last_activity
 			$this->member_model->set_last_activity($this->session->userdata('id'));
-
-			$this->output->enable_profiler(true);
 		}
 		else
 			redirect('user/connection/');
@@ -52,12 +50,13 @@ class User extends CI_Controller {
 
 	public function inscription() {
 		// control form
-		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags');
-		$this->form_validation->set_rules('emailConfirmation', 'E-mail Confirmation', 'required');
-		$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email|encode_php_tags|matches[emailConfirmation]');
-		$this->form_validation->set_rules('passwordConfirmation', 'Password Confirmation', 'required');
-		$this->form_validation->set_rules('password', 'Password', 'required|min_length[5]|max_length[50]|encode_php_tags|matches[passwordConfirmation]');
-		$this->form_validation->set_rules('pokemon', 'Starting Pokemon', 'required|in_list[bulbizarre,salameche,carapuce]');
+		$this->form_validation->set_rules('pseudo', 'Pseudonym', 'trim|required|min_length[3]|max_length[21]|alpha_dash|encode_php_tags')
+							  ->set_rules('emailConfirmation', 'E-mail Confirmation', 'required')
+							  ->set_rules('email', 'E-mail', 'trim|required|valid_email|encode_php_tags|matches[emailConfirmation]')
+							  ->set_rules('passwordConfirmation', 'Password Confirmation', 'required')
+							  ->set_rules('password', 'Password', 'required|min_length[5]|max_length[50]|encode_php_tags|matches[passwordConfirmation]')
+							  ->set_rules('pokemon', 'Starting Pokemon', 'required|in_list[bulbizarre,salameche,carapuce]')
+							  ->set_rules('avatar', 'Avatar', 'required|in_list[1,2,3,4,5,6,7,8,9,10,11,12,13]');
 
 		if ($this->form_validation->run() && 	// form ok
 			!$this->trainer_model->pseudo_exists($this->input->post('pseudo')) && 
@@ -74,6 +73,7 @@ class User extends CI_Controller {
 			//	add trainer
 			$this->trainer_model->set_trainer($this->member_model->get_id($this->input->post('email')),
 											  $this->input->post('pseudo'),
+											  $this->input->post('avatar'),
 											  100,
 											  5,
 											  1);

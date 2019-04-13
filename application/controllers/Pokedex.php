@@ -14,7 +14,8 @@ class Pokedex extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->library('form_validation');
 		$this->load->model('Pokedex_model', 'pokedex_model');
-		// control
+		if (!$this->session->has_userdata('id'))
+			redirect('user/connection');
 	}
 
 	public function index($start_index = 0) {	// main function

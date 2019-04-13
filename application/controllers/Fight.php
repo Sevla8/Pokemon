@@ -11,7 +11,8 @@ class Fight extends CI_Controller {
 		$this->load->library('session');
 		$this->load->model('Member_model', 'member_model');
 		$this->load->model('Challenge_model', 'challenge_model');
-		// control
+		if (!$this->session->has_userdata('id'))
+			redirect('user/connection');
 	}
 
 	public function index() {

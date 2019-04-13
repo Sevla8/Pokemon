@@ -14,7 +14,8 @@ class Shop extends CI_Controller {
 		$this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->model('Trainer_model', 'trainer_model');
-		// control
+		if (!$this->session->has_userdata('id'))
+			redirect('user/connection');
 	}
 
 	public function index() {	// main function

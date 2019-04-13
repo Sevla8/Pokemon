@@ -12,7 +12,8 @@ class Team extends CI_Controller {
 		$this->load->model('Trainer_model', 'trainer_model');
 		$this->load->model('Pokemon_model', 'pokemon_model');
 		$this->load->model('Capacity_model', 'capacity_model');
-		// control
+		if (!$this->session->has_userdata('id'))
+			redirect('user/connection');
 	}
 
 	public function index() {
@@ -23,14 +24,12 @@ class Team extends CI_Controller {
 	public function team() {
 		$data = ['pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
 		$this->load->view('Team/team', $data);
-		$this->output->enable_profiler(true);
 	}
 
 	public function pc() {
 		$data = ['pokemon_pc' => $this->pokemon_model->get_pc($this->session->userdata('id')),
 				 'pokemon_team' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
 		$this->load->view('Team/pc', $data);
-		$this->output->enable_profiler(true);
 	}
 
 	public function load($id) {
