@@ -19,6 +19,7 @@ https://www.copier-coller.com/envoyer-des-mails-en-local-avec-wamp/
 - https://github.com/fanzeyi/pokemon.json
 - https://www.pokebip.com/page/jeuxvideo/rbvj/version_jaune/index
 - https://www.pokepedia.fr/Portail:Accueil
+- http://sprites.pokecheck.org/
 
 ## Authors
 - Raizens (aghilesferrat@hotmail.fr)
