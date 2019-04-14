@@ -52,5 +52,3 @@
 	</tbody>
 </table>
 <div id="pagination"><?php echo $pagination; ?></div>
-<a href="<?php echo site_url('user/home'); ?>">Home</a>
-<script src="<?php echo js_url('pokedex') ?>"></script>

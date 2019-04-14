@@ -19,4 +19,3 @@
 </form>
 <?php echo validation_errors(); ?>
 <a href="<?php echo site_url('user/home/') ?>">Home</a>
-<script src="<?php echo js_url('shop') ?>"></script>

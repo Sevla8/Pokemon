@@ -19,7 +19,7 @@ class Layout {
 	public function set_title($title) {
 		if (is_string($title) && !empty($title)) {
 			$this->var['title'] = $title;
-			return true;
+			return $this;
 		} 
 		return false;
 	}
@@ -27,23 +27,23 @@ class Layout {
 	public function set_charset($charset) {
 		if (is_string($charset) && !empty($charset)) {
 			$this->var['charset'] = $charset;
-			return true;
+			return $this;
 		}
 		return false;
 	}
 
 	public function link_css($css) {
-		if (is_string($css) && !empty($css) && file_exists('../link/css/'.$css.'.css')) {
+		if (is_string($css) && !empty($css)/* && file_exists('../links/css/'.$css.'.css')*/) {
 			$this->var['css'][] = css_url($css);
-			return true;
+			return $this;
 		}
 		return false;
 	}
 
 	public function link_js($js) {
-		if (is_string($js) && !empty($js) && file_exists('../link/js/'.$js.'.js')) {
+		if (is_string($js) && !empty($js)/* && file_exists('../links/js/'.$js.'.js')*/) {
 			$this->var['js'][] = js_url($js);
-			return true;
+			return $this;
 		}
 		return false;
 	}
@@ -51,17 +51,17 @@ class Layout {
 	public function set_theme($theme) {
 		if (is_string($theme) && !empty($theme) && file_exists('../themes/'.$theme.'.php')) {
 			$this->theme = $theme;
-			return true;
+			return $this;
 		}
 		return false;
 	}
 	
-	public function add($name, $data = array()) {
+	public function view($name, $data = array()) {
 		$this->var['output'] .= $this->CI->load->view($name, $data, true);
 		return $this;
 	}
 	
-	public function view() {
+	public function print() {
 		$this->CI->load->view('../themes/'.$this->theme, $this->var);
 	}
 }

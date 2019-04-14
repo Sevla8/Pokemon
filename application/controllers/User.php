@@ -27,11 +27,14 @@ class User extends CI_Controller {
 	public function home() {
 		// control session
 		if ($this->session->has_userdata('id')) {
-			$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
-			$this->layout->add('header', $trainer_data)
-						 ->add('User/home')
-						 ->add('footer')
-						 ->view();
+			$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+			$this->layout->view('header', $data)
+						 ->link_css('header')
+						 ->view('User/home')
+						 ->view('footer')
+						 ->link_css('footer')
+						 ->set_title('Home')
+						 ->print();
 			// new day
 			if ($this->member_model->get_last_activity($this->session->userdata('id')) != date('Y-m-d')) {
 				$this->trainer_model->new_day($this->session->userdata('id'));

@@ -18,31 +18,40 @@ class Team extends CI_Controller {
 	}
 
 	public function index() {
-		$data = ['pseudo' => $this->session->userdata('pseudo')];
-		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
-		$this->layout->add('header', $trainer_data)
-					 ->add('Team/team_pc', $data)
-					 ->add('footer')
-					 ->view();
+		$data = ['pseudo' => $this->session->userdata('pseudo'),
+				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Team/team_pc')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Team-Pc')
+					 ->print();
 	}
 
 	public function team() {
-		$data = ['pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
-		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
-		$this->layout->add('header', $trainer_data)
-					 ->add('Team/team', $data)
-					 ->add('footer')
-					 ->view();
+		$data = ['pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
+				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Team/team')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Team')
+					 ->print();
 	}
 
 	public function pc() {
 		$data = ['pokemon_pc' => $this->pokemon_model->get_pc($this->session->userdata('id')),
-				 'pokemon_team' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
-		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
-		$this->layout->add('header', $trainer_data)
-					 ->add('Team/pc', $data)
-					 ->add('footer')
-					 ->view();
+				 'pokemon_team' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
+				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Team/pc')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Pc')
+					 ->print();
 	}
 
 	public function load($id) {

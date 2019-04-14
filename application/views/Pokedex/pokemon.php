@@ -43,4 +43,3 @@
 	</tbody>
 </table>
 <a href="<?php echo site_url('pokedex/'); ?>">Pokedex</a>
-<a href="<?php echo site_url('user/home'); ?>">Home</a>

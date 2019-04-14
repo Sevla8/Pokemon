@@ -33,13 +33,16 @@ class Hunt extends CI_Controller {
 		$rand_id_pokedex = $array[0];
 		$rand_level = random_int(1, 30);
 		$data = ['wild' => $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level),
-				 'team' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
-		$trainer_data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+				 'team' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
+				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
 
-		$this->layout->add('header', $trainer_data)
-					 ->add('Hunt/wild_pokemon_appears', $data)
-					 ->add('footer')
-					 ->view();
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Hunt/wild_pokemon_appears')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Hunt')
+					 ->print();
 	}
 
 	public function pokedex($id) {

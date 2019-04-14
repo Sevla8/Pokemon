@@ -1,0 +1,27 @@
+header {
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 100px;
+	background-color: #DCDCDC;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+#item {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+#pseudo {
+	font-family: fantasy;
+	font-size: 50px;
+}
+
+#pokedollar, #pokeball, #potion {
+	font-family: fantasy;
+	font-size: 20px;
+}

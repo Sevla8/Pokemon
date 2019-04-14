@@ -1,7 +1,9 @@
 <header>
 	<div id="trainer">
-		<div id="pseudo"><?= $trainer['name'] ?></div>
 		<div id="avatar"><?= img($trainer['avatar'].'_trainer.gif', $trainer['avatar'].'_avatar') ?></div>
+	</div>
+	<div id="name">
+		<div id="pseudo"><?= $trainer['name'] ?></div>
 	</div>
 	<div id="item">
 		<div id="pokedollar">Pokedollars : <?= $trainer['pokedollar'] ?></div>

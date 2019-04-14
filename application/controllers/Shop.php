@@ -11,6 +11,7 @@ class Shop extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->helper('link');
+		$this->load->library('layout');
 		$this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->model('Trainer_model', 'trainer_model');
@@ -25,7 +26,8 @@ class Shop extends CI_Controller {
 
 		$data = ['pseudo' => $this->session->userdata('pseudo'),
 				 'potion_price' => $this->potion_price, 
-				 'pokeball_price' => $this->pokeball_price];
+				 'pokeball_price' => $this->pokeball_price,
+				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
 
 		if ($this->form_validation->run() && !($this->input->post('potion') == 0 && $this->input->post('pokeball') == 0)) {
 
@@ -34,19 +36,41 @@ class Shop extends CI_Controller {
 
 			if ($this->trainer_model->get_pokedollar($this->session->userdata('id')) >= $total) {
 				$this->trainer_model->debit($this->session->userdata('id'), 
-										 $total, 
-										 $this->input->post('potion'), 
-										 $this->input->post('pokeball'));
-				$this->load->view('Shop/shop', $data);
-				$this->load->view('Shop/thank_you', $data);
+											$total, 
+											$this->input->post('potion'), 
+											$this->input->post('pokeball'));
+
+				$this->layout->view('header', $data)
+							 ->link_css('header')
+							 ->view('Shop/shop')
+							 ->link_js('shop')
+							 ->view('Shop/thank_you')
+							 ->view('footer')
+							 ->link_css('footer')
+							 ->set_title('Shop')
+							 ->print();
 			}
 			else {
-				$this->load->view('Shop/shop', $data);
-				$this->load->view('Shop/lack_money', $data);
+				$this->layout->view('header', $data)
+							 ->link_css('header')
+							 ->view('Shop/shop')
+							 ->link_js('shop')
+							 ->view('Shop/lack_money')
+							 ->view('footer')
+							 ->link_css('footer')
+							 ->set_title('Shop')
+							 ->print();
 			}
 		}
 		else
-			$this->load->view('Shop/shop', $data);
+			$this->layout->view('header', $data)
+						 ->link_css('header')
+						 ->view('Shop/shop', $data)
+						 ->link_js('shop')
+						 ->view('footer')
+						 ->link_css('footer')
+						 ->set_title('Shop')
+						 ->print();
 	}
 
 	public function total() {	// ajax
