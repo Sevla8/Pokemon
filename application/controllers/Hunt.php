@@ -21,18 +21,48 @@ class Hunt extends CI_Controller {
 
 	public function index() {
 		$array = array();
-		$pokemon = $this->pokedex_model->get_power();
+		$pokemon = $this->pokedex_model->get_pokedex(151, 0);
 		$i = 0;
 		foreach ($pokemon as $key => $poke) {
-			for ($j = 0; $j < 700-$poke['power']; $j += 1) {
-				$array[$i] = $poke['id'];
-				$i += 1;
+			switch ($poke['rarity']) {
+				case 1:
+					for ($j = 0; $j < 10000; $j += 1) {
+						$array[$i] = $poke['id'];
+						$i += 1;
+					}
+					break;
+				case 2:
+					for ($j = 0; $j < 1000; $j += 1) {
+						$array[$i] = $poke['id'];
+						$i += 1;
+					}
+					break;
+				case 3:
+					for ($j = 0; $j < 100; $j += 1) {
+						$array[$i] = $poke['id'];
+						$i += 1;
+					}
+					break;
+				case 4:
+					for ($j = 0; $j < 10; $j += 1) {
+						$array[$i] = $poke['id'];
+						$i += 1;
+					}
+					break;
+					case 5:
+						for ($j = 0; $j < 1; $j += 1) {
+						$array[$i] = $poke['id'];
+						$i += 1;
+					}
+						break;
+				default:
+					break;
 			}
 		}
 		shuffle($array);
 		$rand_id_pokedex = $array[0];
 		$rand_level = random_int(1, 30);
-		$data = ['wild' => $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level),
+		$data = ['wild' => $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level, 100),
 				 'team' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
 				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
 

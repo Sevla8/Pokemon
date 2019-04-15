@@ -110,24 +110,11 @@ class Pokedex_model extends CI_Model {
 		return $data > 0 ? true : false;
 	}
 
-	public function wild_pokemon_appears($rand_id_pokedex, $rand_level) {
+	public function wild_pokemon_appears($rand_id_pokedex, $rand_level, $prct_hp) {
 		$data = $this->get_pokemon_by_id($rand_id_pokedex);
 		$data['level'] = $rand_level;
-		$data['%_hp'] = 100;
+		$data['%_hp'] = $prct_hp;
 
 		return $data;
-	}
-
-	public function get_power() {
-		$poke = $this->db->select('*')
-						 ->from($this->table)
-						 ->get()
-						 ->result_array();
-
-		for ($i = 0; $i < sizeof($poke); $i += 1) {
-			$poke[$i]['power'] = $poke[$i]['hp'] + $poke[$i]['attack'] + $poke[$i]['defense'] + $poke[$i]['sp_attack'] + $poke[$i]['sp_defense'] + $poke[$i]['speed'];
-		}
-		
-		return $poke;
 	}
 }
