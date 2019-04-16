@@ -42,8 +42,9 @@ class Member_Model extends CI_Model {
 	}
 
 	public function get_online() {
-		return $this->db->select('id, pseudo')
-						->from($this->table)
+		return $this->db->select('*')
+						->from($this->table.' m')
+						->join('trainer t', 't.id = m.id')
 						->where('online', 1)
 						->get()
 						->result_array();
