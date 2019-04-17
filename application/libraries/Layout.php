@@ -33,6 +33,7 @@ class Layout {
 	}
 
 	public function link_css($css) {
+		//if (is_string($css) && !empty($css) && $css in array("header.css", "footer.css")
 		if (is_string($css) && !empty($css)/* && file_exists('../links/css/'.$css.'.css')*/) {
 			$this->var['css'][] = css_url($css);
 			return $this;

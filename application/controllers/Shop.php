@@ -75,8 +75,8 @@ class Shop extends CI_Controller {
 
 	public function total() {	// ajax
 		if (isset($_POST['potion']) && isset($_POST['pokeball'])) {
-			$_POST['potion'] = filter_var($_POST['potion'], FILTER_SANITIZE_NUMBER_INT);
-			$_POST['pokeball'] = filter_var($_POST['pokeball'], FILTER_SANITIZE_NUMBER_INT);
+			$_POST['potion'] = intval(filter_var($_POST['potion'], FILTER_SANITIZE_NUMBER_INT));
+			$_POST['pokeball'] = intval(filter_var($_POST['pokeball'], FILTER_SANITIZE_NUMBER_INT));
 			$result = $_POST['potion'] * $this->potion_price + $_POST['pokeball'] * $this->pokeball_price;
 			echo $result;
 		}

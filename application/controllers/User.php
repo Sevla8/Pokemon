@@ -34,6 +34,7 @@ class User extends CI_Controller {
 						 ->view('footer')
 						 ->link_css('footer')
 						 ->set_title('Home')
+						 ->link_js('challenge')
 						 ->print();
 			// new day
 			if ($this->member_model->get_last_activity($this->session->userdata('id')) != date('Y-m-d')) {

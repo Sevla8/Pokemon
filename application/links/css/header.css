@@ -9,19 +9,19 @@ header {
 	align-items: center;
 }
 
-#item {
+.item {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: flex-end;
 }
 
-#pseudo {
-	font-family: fantasy;
+.pseudo {
+/*	font-family: fantasy;*/
 	font-size: 50px;
 }
 
-#pokedollar, #pokeball, #potion {
-	font-family: fantasy;
+.pokedollar, .pokeball, .potion {
+	/*font-family: fantasy;*/
 	font-size: 20px;
 }
