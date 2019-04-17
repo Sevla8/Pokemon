@@ -61,10 +61,14 @@ class Hunt extends CI_Controller {
 		}
 		shuffle($array);
 		$rand_id_pokedex = $array[0];
-		$rand_level = random_int(1, 30);
+		$rand_level = random_int(1, 70);
 		$data = ['wild' => $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level, 100),
 				 'team' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
 				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+
+		$this->session->set_userdata('wild_id', $rand_id_pokedex);
+		$this->session->set_userdata('wild_level', $rand_level);
+		$this->session->set_userdata('wild_hp', 100);
 
 		$this->layout->view('header', $data)
 					 ->link_css('header')

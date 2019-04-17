@@ -22,15 +22,13 @@ class Pokemon_Capacity_Model extends CI_Model {
 	}
 
 	public function set_capacity($id_pokemon, $id_pokedex, $level) {
-		$data = $this->pokedex_capacity_model->get_capacity($id_pokedex);
+		$data = $this->pokedex_capacity_model->get_capacity($id_pokedex, $level);
 
 		foreach ($data as $key => $capacity) {
-			if ($capacity['level'] <= $level) {
-				$this->db->set('id_pokemon', $id_pokemon)
-						 ->set('id_capacity', $capacity['id_capacity'])
-						 ->set('pp', $this->capacity_model->get_capacity($capacity['id_capacity'])['pp'])
-						 ->insert($this->table);
-			}
+			$this->db->set('id_pokemon', $id_pokemon)
+					 ->set('id_capacity', $capacity['id_capacity'])
+					 ->set('pp', $this->capacity_model->get_capacity($capacity['id_capacity'])['pp'])
+					 ->insert($this->table);
 		}
 	}
 

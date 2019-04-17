@@ -11,10 +11,13 @@ class Pokedex_Capacity_Model extends CI_Model {
 		$this->load->database();
 	}
 
-	public function get_capacity($id_pokedex) {
+	public function get_capacity($id_pokedex, $level) {
 		return $this->db->select('*')
 						->from($this->table)
 						->where('id_pokedex', $id_pokedex)
+						->where('level <=', $level)
+						->where('level <>', -1)
+						->limit(4, 0)
 						->get()
 						->result_array();
 	}

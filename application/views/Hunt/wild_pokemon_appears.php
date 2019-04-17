@@ -1,9 +1,12 @@
-<h1>A wild Pokemon appears !</h1>
+<h1>A wild Pokemon appears !</h1>								<?php print_r($wild) ?>
 <p>A wild <?php echo $wild['name'].' appears !' ?></p>
-<div id="enemy">
+<div class="enemy">
+	<?php echo $wild['name']; ?>
 	<p><?php echo img($wild['id'].'_front.gif', $wild['name']) ?></p>
+	<p>hp : <?php echo $wild['%_hp']; ?></p>
+	<p>lvl : <?php echo $wild['level']; ?></p>
 </div>
-<div id="team">
+<div class="team">
 	<?php 
 	$i = 0;
 	while (!isset($team[$i]))
@@ -11,31 +14,21 @@
 	echo img($team[$i]['id_pokedex'].'_back.gif', $team[$i]['name']);
 	?>
 </div>
-<div id="controls">
-	<div id="Attack"><a href="<?php echo site_url('fight/') ?>">Fight</a></div>
-	<div id="capacity" hidden>
-		<div id="capacity_1">
-			<?php
-			if (isset($team[$i]['capacity']) && isset($team[$i]['capacity'][$i])) echo $team[$i]['capacity'][$i]['name'];
-			?>
-		</div>
-		<div id="capacity_2">
-			<?php
-
-			?>
-		</div>
-		<div id="capacity_3">
-			<?php
-
-			?>
-		</div>
-		<div id="capacity_4">
-			<?php
-
-			?>
-		</div>
+<div class="controls">
+	<div>
+		<input class="capacity" type="button" name="capacity_1" value="<?php if (isset($team[$i]['capacity']) && isset($team[$i]['capacity'][0])) echo $team[$i]['capacity'][0]['name']; ?>">
+		<input class="capacity" type="button" name="capacity_2" value="<?php if (isset($team[$i]['capacity']) && isset($team[$i]['capacity'][1])) echo $team[$i]['capacity'][1]['name']; ?>">
+		<input class="capacity" type="button" name="capacity_3" value="<?php if (isset($team[$i]['capacity']) && isset($team[$i]['capacity'][2])) echo $team[$i]['capacity'][2]['name']; ?>">
+		<input class="capacity" type="button" name="capacity_4" value="<?php if (isset($team[$i]['capacity']) && isset($team[$i]['capacity'][3])) echo $team[$i]['capacity'][3]['name']; ?>">
 	</div>
-	<div id="Pokeball"><a href="<?php echo site_url('hunt/pokeball') ?>"><?php echo img('pokeball.png', 'pokeball') ?></a></div>
-	<div id="Pokedex"><a href="<?php echo site_url('hunt/pokedex/') ?>"><?php echo img('pokedex.png', 'pokedex') ?></a></div>
-	<div id="Run"><a href="<?php echo site_url('hunt/') ?>">Run</a></div>
+	<div class="Pokeball">
+		<?php echo img('pokeball.png', 'pokeball') ?>
+	</div>
+	<div class="Pokedex">
+		<?php echo img('pokedex.png', 'pokedex') ?>
+		<p hidden="true">
+			<?php echo $wild['description']; ?>
+		</p>
+	</div>
+	<div class="Run"><a href="<?php echo site_url('hunt/') ?>">Run</a></div>
 </div>

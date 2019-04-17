@@ -14,6 +14,7 @@ class Pokedex_model extends CI_Model {
 		$this->load->model('Pokedex_Type_model', 'pokedex_type_model');
 		$this->load->model('Pokemon_model', 'pokemon_model');
 		$this->load->model('Pokedex_Evolution_model', 'pokedex_evolution_model');
+		//$this->load->model('Pokedex_capacity_model', 'pokedex_capacity_model');
 	}
 
 	public function count_pokedex() {
@@ -42,13 +43,6 @@ class Pokedex_model extends CI_Model {
 				$pokemon['type'][] = $this->type_model->get_type($type['id_type']);
 		}
 		
-		/*foreach ($data as $pokemon) { 	// why ?
-			$types = array();
-			$types = $this->pokedex_type_model->get_pokedex_type($pokemon['id']);
-			foreach ($types as $type)
-				$pokemon['type'][] = $this->type_model->get_type($type['id_type']);
-		}*/
-
 		return $data;
 	}
 
@@ -114,6 +108,12 @@ class Pokedex_model extends CI_Model {
 		$data = $this->get_pokemon_by_id($rand_id_pokedex);
 		$data['level'] = $rand_level;
 		$data['%_hp'] = $prct_hp;
+
+		$capacity = $this->pokedex_capacity_model->get_capacity($rand_id_pokedex, $rand_level);
+
+		foreach ($capacity as $capa) {
+		 	$data['capacity'][] = $this->capacity_model->get_capacity($capa['id_capacity']);
+		}
 
 		return $data;
 	}
