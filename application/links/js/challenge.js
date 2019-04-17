@@ -1,7 +1,7 @@
 function getResults(keywords) { // Effectue une requête et récupère les résultats
 
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "http://dwarves.iut-fbleau.fr/~dasilvaa/Pokemon/index.php/fight/exists_challenge/");
+	xhr.open('POST', "http://localhost/Pokemon/fight/exists_new_challenge/");
 
 	xhr.addEventListener('readystatechange', function() {
 		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200 && xhr.responseText != '') {

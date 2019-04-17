@@ -31,4 +31,5 @@ function getValues() {
 	}
 }
 
-setInterval(getValues, 100);
+potionElement.addEventListener('input', getValues);
+pokeballElement.addEventListener('input', getValues);

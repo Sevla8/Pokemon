@@ -18,7 +18,7 @@ class Challenge_model extends CI_Model {
 				 ->update($this->table);
 	}
 
-	public function exists_challenge($id_to) {
+	public function exists_new_challenge($id_to) {
 		$data = $this->db->select('*')
 						 ->from($this->table)
 						 ->where('id_to', $id_to)
@@ -28,8 +28,16 @@ class Challenge_model extends CI_Model {
 		return $data > 0 ? true : false;
 	}
 
+	public function exists_challenge($id_to) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_to', $id_to)
+						 ->count_all_results();
+
+		return $data > 0 ? true : false;
+	}
+
 	public function get_all_challenge($id_to) {
-		if ($this->exists_challenge($id_to)) {
 			$data = $this->db->select('*')
 							 ->from($this->table)
 							 ->where('id_to', $id_to)
@@ -43,10 +51,9 @@ class Challenge_model extends CI_Model {
 			}
 
 			return $result;
-		}
 	}
 
-	public function get_challenge($id_to) {
+	public function get_new_challenge($id_to) {
 		return $this->db->select('*')
 						->from($this->table)
 						->where('id_to', $id_to)
@@ -70,7 +77,7 @@ class Challenge_model extends CI_Model {
 		$this->db->set('id_from', $id_from)
 				 ->set('id_to', $id_to)
 				 ->set('checked', 0)
-				 ->set('timestamp', 'NOW()')
+				// ->set('timestamp', time()) ?? (ne fonctionne pas)
 				 ->insert($this->table);
 	}
 

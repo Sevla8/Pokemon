@@ -18,4 +18,3 @@
 	<div id="total">Total : 0 poke$</div>
 </form>
 <?php echo validation_errors(); ?>
-<a href="<?php echo site_url('user/home/') ?>">Home</a>

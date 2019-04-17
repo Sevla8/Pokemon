@@ -17,11 +17,10 @@ header {
 }
 
 .pseudo {
-/*	font-family: fantasy;*/
 	font-size: 50px;
+	font-weight: bold;
 }
 
 .pokedollar, .pokeball, .potion {
-	/*font-family: fantasy;*/
 	font-size: 20px;
 }
