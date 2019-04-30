@@ -40,6 +40,7 @@ class User extends CI_Controller {
 			if ($this->member_model->get_last_activity($this->session->userdata('id')) != date('Y-m-d')) {
 				$this->trainer_model->new_day($this->session->userdata('id'));
 				$this->pokemon_model->new_day($this->session->userdata('id'));
+				$this->pokemon_capacity_model->new_day($this->session->userdata('id'));
 			}
 			// update last_activity
 			$this->member_model->set_last_activity($this->session->userdata('id'));
@@ -98,16 +99,21 @@ class User extends CI_Controller {
 					$id_pokedex = 7;
 					break;
 			}
-			$this->pokemon_model->set_pokemon(1,
+			$this->pokemon_model->set_pokemon(0,
 											  0,
 											  100,
 											  $this->member_model->get_id($this->input->post('email')),
 											  $id_pokedex,
 											  1);
 			//	add capacities
-			$this->pokemon_capacity_model->set_capacity($this->pokemon_model->get_starter($this->member_model->get_id($this->input->post('email'))),
-												  $id_pokedex,
-												  1);
+			$id_starter = $this->pokemon_model->get_starter($this->member_model->get_id($this->input->post('email')));
+			$capa = $this->pokedex_capacity_model->get_capacity($id_pokedex, 0);
+			foreach ($capa as $capacity) {
+				$this->pokemon_capacity_model->set_capacity($id_starter,
+															$capacity['id_capacity'],
+															$this->capacity_model->get_capacity($capacity['id_capacity'])['pp']);
+			}
+			
 
 			$this->sendmail($this->input->post('email'), $key);
 

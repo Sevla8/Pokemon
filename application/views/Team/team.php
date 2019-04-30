@@ -89,3 +89,4 @@
 		<?php } ?>
 	</tbody>
 </table>
+<a href="<?= site_url('team/') ?>">Back</a>

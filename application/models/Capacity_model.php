@@ -13,13 +13,11 @@ class Capacity_Model extends CI_Model {
 	}
 
 	public function get_capacity($id) {
-		$data = $this->db->select('c.*, t.name AS type')
-						 ->from($this->table.' c')
-						 ->join('type t', 'c.id_type = t.id')
-						 ->where('c.id', $id)
-						 ->get()
-						 ->result_array()[0];
-
-		return $data;
+		return $this->db->select('c.*, t.name AS type')
+						->from($this->table.' c')
+						->join('type t', 'c.id_type = t.id')
+						->where('c.id', $id)
+						->get()
+						->result_array()[0];
 	}
 }

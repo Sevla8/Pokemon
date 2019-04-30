@@ -14,3 +14,4 @@
 	</div>
 <?php echo validation_errors(); ?>
 </form>
+<a href="<?= site_url('user/inscription/') ?>">Inscription</a>

@@ -21,23 +21,30 @@ class Pokemon_Capacity_Model extends CI_Model {
 						->result_array();
 	}
 
-	public function set_capacity($id_pokemon, $id_pokedex, $level) {
-		$data = $this->pokedex_capacity_model->get_capacity($id_pokedex, $level);
+	public function set_capacity($id_pokemon, $id_capacity, $pp) {
+		$this->db->set('id_pokemon', $id_pokemon)
+				 ->set('id_capacity', $id_capacity)
+				 ->set('pp', $pp)
+				 ->insert($this->table);
+	}
 
-		foreach ($data as $key => $capacity) {
-			$this->db->set('id_pokemon', $id_pokemon)
-					 ->set('id_capacity', $capacity['id_capacity'])
-					 ->set('pp', $this->capacity_model->get_capacity($capacity['id_capacity'])['pp'])
-					 ->insert($this->table);
-		}
+	public function update_capacity($id_pokemon, $id_capacity, $pp) {
+		$this->db->set('id_pokemon', $id_pokemon)
+				 ->set('id_capacity', $id_capacity)
+				 ->set('pp', $pp)
+				 ->update($this->table);
 	}
 
 	public function get_pp($id_capacity, $id_pokemon) {
-		return $this->db->select('pp')
+		return $this->db->select('*')
 						->from($this->table)
 						->where('id_capacity', $id_capacity)
 						->where('id_pokemon', $id_pokemon)
 						->get()
 						->result_array()[0]['pp'];
 	}
+
+	// public function new_day($id_trainer) {
+	// 	$pokemon = $this->capacity_model->get_capacity()
+	// }
 }

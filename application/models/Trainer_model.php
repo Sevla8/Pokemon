@@ -39,6 +39,18 @@ class Trainer_Model extends CI_Model {
 				 ->update($this->table);
 	}
 
+	public function pokeball($id_trainer, $amount) {
+		$pokeball = $this->db->select('pokeball')
+							 ->from($this->table)
+							 ->where('id', $id_trainer)
+							 ->get()
+							 ->result_array()[0]['pokeball'];
+
+		$this->db->set('pokeball', $pokeball + $amount)
+				 ->where('id', $id_trainer)
+				 ->update($this->table);
+	}
+
 	public function potion($id_trainer, $amount) {
 		$potion = $this->db->select('potion')
 						   ->from($this->table)
