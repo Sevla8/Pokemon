@@ -94,7 +94,7 @@ class Hunt extends CI_Controller {
 					 ->set_title('Hunt')
 					 ->print();
 
-		$this->output->enable_profiler(true);
+		$this->output->enable_profiler(true); print_r($data['team']);
 	}
 
 	public function pokedex() {
@@ -153,11 +153,20 @@ class Hunt extends CI_Controller {
 		if ($id_capa < 0 || $id_capa > 3)
 			show_404();
 		else {
+
 			$team = $this->pokemon_model->get_in_team($this->session->userdata('id'));
-			if (isset($team[$this->session->userdata('in_fight')]['capacity'][$id_capa])) {
+			if (isset($team[$this->session->userdata('in_fight')]['capacity'][$id_capa]) && $team[$this->session->userdata('in_fight')]['capacity'][$id_capa]['nb_pp'] > 0) {
+
+				$this->pokemon_capacity_model->update_capacity($team[$this->session->userdata('in_fight')]['id'],
+															   $team[$this->session->userdata('in_fight')]['capacity'][$id_capa]['id'],
+					$this->pokemon_capacity_model->get_pp($team[$this->session->userdata('in_fight')]['capacity'][$id_capa]['id'],
+													$team[$this->session->userdata('in_fight')]['id']) - 1);
+
 				if (isset($team[$this->session->userdata('in_fight')]['capacity'][$id_capa]['puis'])) {
 					$damage = $this->get_damage($team[$this->session->userdata('in_fight')]['capacity'][$id_capa]['puis'],
-												$team[$this->session->userdata('in_fight')]['level']);
+												$team[$this->session->userdata('in_fight')]['level'],
+											    $this->session->userdata('wild')['defense'],
+											    $this->session->userdata('wild')['level']);
 
 					$wild = $this->session->userdata('wild');
 					$wild['%_hp'] = $wild['%_hp'] - $damage;
@@ -176,19 +185,22 @@ class Hunt extends CI_Controller {
 	}
 
 	private function robot() {
-		$rand = random_int(0, 4);
-		$capa = $this->session->userdata('wild')['capacity'][$rand];
-		while (!isset($capa)) {
-			$rand = random_int(0, 4);
-			$capa = $this->session->userdata('wild')['capacity'][$rand];
+		$rand = random_int(0, 3);
+		while (!isset($this->session->userdata('wild')['capacity'][$rand])) {
+			$rand = random_int(0, 3);
 		}
+		$capa = $this->session->userdata('wild')['capacity'][$rand];
 		if (isset($this->session->userdata('wild')['capacity'][$rand]['puis'])) {
-			$damage = $this->get_damage($this->session->userdata('wild')['capacity'][$rand]['puis'],
-										$this->session->userdata('wild')['level']);
 
-			if ($this->pokemon_model->pokemon_exists($this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')]['id'])) {
+			 if ($this->pokemon_model->pokemon_exists($this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')]['id'])) {
 
-				$poke = $this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')];
+			 	$poke = $this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')];
+
+				$damage = $this->get_damage($this->session->userdata('wild')['capacity'][$rand]['puis'],
+											$this->session->userdata('wild')['level'],
+											$poke['defense'],
+											$poke['level']);
+				
 				$hp = $poke['%_hp'] - $damage;
 				if ($hp < 0)
 					$hp = 0;
@@ -212,7 +224,7 @@ class Hunt extends CI_Controller {
 		redirect('hunt/hunt');
 	}
 
-	private function get_damage($puis, $level) {
-		return $puis * $level / 100;
+	private function get_damage($puis_att, $level_att, $def_def, $level_def) {
+		return $puis_att * $level_att / $def_def / $level_def * 10;
 	}
 }

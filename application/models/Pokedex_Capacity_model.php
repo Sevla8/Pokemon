@@ -17,6 +17,7 @@ class Pokedex_Capacity_Model extends CI_Model {
 						->where('id_pokedex', $id_pokedex)
 						->where('level <=', $level)
 						->where('level <>', -1)
+						->order_by('level', 'DESC')
 						->limit(4, 0)
 						->get()
 						->result_array();
