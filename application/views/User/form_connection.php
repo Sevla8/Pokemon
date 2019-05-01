@@ -1,4 +1,4 @@
-<h1>Connexion</h1>
+<h1>Connection</h1>
 <form method="post">
 	<div id="emailDiv">
 		<label for="email">Email</label>
