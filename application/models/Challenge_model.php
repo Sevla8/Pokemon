@@ -95,6 +95,7 @@ class Challenge_model extends CI_Model {
 
 	public function accept_challenge($id_from, $id_to) {
 		$this->db->set('accepted', 1)
+				 ->set('turn', $id_to)
 				 ->where('id_from', $id_from)
 				 ->where('id_to', $id_to)
 				 ->update($this->table);
@@ -123,5 +124,27 @@ class Challenge_model extends CI_Model {
 						->or_where('id_to', $id)
 						->get()
 						->result_array()[0];
+	}
+
+	public function get_turn($id) {
+		$data = $this->db->select('turn')
+						->from($this->table)
+						->where('id_from', $id)
+						->where('accepted', 1)
+						->count_all_results();
+		if ($data > 0) {
+			return $this->db->select('turn')
+							->from($this->table)
+							->where('id_from', $id)
+							->where('accepted', 1)
+							->get()
+							->result_array()[0]['turn'];
+		}
+		return $this->db->select('turn')
+							->from($this->table)
+							->where('id_to', $id)
+							->where('accepted', 1)
+							->get()
+							->result_array()[0]['turn'];
 	}
 }

@@ -28,7 +28,8 @@ class Fight extends CI_Controller {
 			$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id')),
 					 'enemy_trainer' => $this->trainer_model->get_trainer($enemy),
 					 'team' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
-					 'enemy_team' => $this->pokemon_model->get_in_team($enemy)];
+					 'enemy_team' => $this->pokemon_model->get_in_team($enemy),
+					 'turn' => $this->challenge_model->get_turn($this->session->userdata('id'))];
 
 			$i;
 			for ($i = 0; $i < 6; $i += 1) {
@@ -47,7 +48,7 @@ class Fight extends CI_Controller {
 				}
 			}
 			if ($i == 6)
-				echo "no more healthy pokemon noob";
+				redirect('team/team');
 
 			$this->layout->view('header', $data)
 						 ->link_css('header')
@@ -56,6 +57,8 @@ class Fight extends CI_Controller {
 						 ->link_css('footer')
 						 ->set_title('Fight')
 						 ->print();
+
+			$this->output->enable_profiler(true);
 		}
 	}
 

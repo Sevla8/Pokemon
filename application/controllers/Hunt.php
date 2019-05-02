@@ -93,8 +93,6 @@ class Hunt extends CI_Controller {
 					 ->link_css('footer')
 					 ->set_title('Hunt')
 					 ->print();
-
-		$this->output->enable_profiler(true); print_r($data['team']);
 	}
 
 	public function pokedex() {

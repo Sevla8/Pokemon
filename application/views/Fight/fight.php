@@ -20,9 +20,6 @@
 	</div>
 </div>
 <div class="controls">
-	<div class="Pokeball">
-		<?php echo img('pokeball.png', 'pokeball') ?>
-	</div>
 	<div class="Pokedex">
 		<?php echo img('pokedex.png', 'pokedex') ?>
 	</div>
@@ -30,4 +27,9 @@
 		<?php echo img('potion.png', 'potion') ?>
 	</div>
 </div>
-</div>
+
+<script>
+	if (<?php $turn == $trainer['id'] ?>) {
+		
+	}
+</script>
