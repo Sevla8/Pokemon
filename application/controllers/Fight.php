@@ -19,47 +19,16 @@ class Fight extends CI_Controller {
 	}
 
 	public function index() {
-		$data = ['online' =>  $this->member_model->get_online(), 
-				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
-		if ($this->challenge_model->exists_challenge($this->session->userdata('id')))
-			$data['challenge_from'] = $this->challenge_model->get_all_challenge($this->session->userdata('id'));
-		$this->layout->view('header', $data)
-					 ->link_css('header')
-					 ->view('Fight/challenges')
-					 ->view('footer')
-					 ->link_css('footer')
-					 ->set_title('Challenge')
-					 ->print();
-	}
-
-	public function send_challenge($id_to) {
-		// control on $id_to !!!
-		if (!$this->challenge_model->challenge_already_send($this->session->userdata('id'), $id_to))
-			$this->challenge_model->send_challenge($this->session->userdata('id'), $id_to);
-		redirect('fight/');
-	}
-
-	public function accept_challenge($id_from) {
-		$this->session->set_userdata('id_from', $id_from);
-		redirect('fight/fight/');
-	}
-
-	public function exists_new_challenge() {	// ajax
-		if ($this->challenge_model->exists_new_challenge($this->session->userdata('id'))) {
-			$id_from = $this->challenge_model->get_new_challenge($this->session->userdata('id'));
-			$this->challenge_model->check($id_from, $this->session->userdata('id'));
-			echo $this->trainer_model->get_trainer($id_from)['name'];
-		}
-	}
-
-	public function fight() {
-		if ($this->session->userdata('id_from') === null)
-			show_404();
+		if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
+			redirect('fight/challenge/');
 		else {
+			$chall = $this->challenge_model->get_fight($this->session->userdata('id'));
+			$enemy = $this->session->userdata('id') == $chall['id_from'] ? $chall['id_to'] : $chall['id_from'];
+
 			$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id')),
-					 'enemy_trainer' => $this->trainer_model->get_trainer($this->session->userdata('id_from')),
+					 'enemy_trainer' => $this->trainer_model->get_trainer($enemy),
 					 'team' => $this->pokemon_model->get_in_team($this->session->userdata('id')),
-					 'enemy_team' => $this->pokemon_model->get_in_team($this->session->userdata('id_from'))];
+					 'enemy_team' => $this->pokemon_model->get_in_team($enemy)];
 
 			$i;
 			for ($i = 0; $i < 6; $i += 1) {
@@ -88,6 +57,46 @@ class Fight extends CI_Controller {
 						 ->set_title('Fight')
 						 ->print();
 		}
+	}
+
+	public function challenge() {
+		$data = ['online' =>  $this->member_model->get_online(), 
+				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		if ($this->challenge_model->exists_challenge($this->session->userdata('id')))
+			$data['challenge_from'] = $this->challenge_model->get_all_challenge($this->session->userdata('id'));
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Fight/challenges')
+					 ->link_js('time_to_fight')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Challenge')
+					 ->print();
+	}
+
+	public function send_challenge($id_to) {
+		// control on $id_to !!!
+		if (!$this->challenge_model->challenge_already_send($this->session->userdata('id'), $id_to))
+			$this->challenge_model->send_challenge($this->session->userdata('id'), $id_to);
+		redirect('fight/');
+	}
+
+	public function accept_challenge($id_from) {
+		$this->challenge_model->accept_challenge($id_from, $this->session->userdata('id'));
+		redirect('fight/');
+	}
+
+	public function exists_new_challenge() {	// ajax
+		if ($this->challenge_model->exists_new_challenge($this->session->userdata('id'))) {
+			$id_from = $this->challenge_model->get_new_challenge($this->session->userdata('id'));
+			$this->challenge_model->check($id_from, $this->session->userdata('id'));
+			echo $this->trainer_model->get_trainer($id_from)['name'];
+		}
+	}
+
+	public function time_to_fight() {	// ajax
+		if ($this->challenge_model->exists_fight($this->session->userdata('id')))
+			echo 'do_it';
 	}
 	
 }
