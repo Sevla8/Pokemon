@@ -27,9 +27,13 @@
 		<a href="<?php echo site_url('fight/potion/'.$team[$in_fight]['id']) ?>"><?php echo img('potion.png', 'potion') ?></a>
 	</div>
 </div>
+<div class="turn">
+	<?php 
+	if ($turn != $trainer['id'])
+		echo "Waiting for your opponent...";
+	?>
+</div>
 
 <script>
-	if (<?php $turn == $trainer['id'] ?>) {
-		
-	}
+	
 </script>

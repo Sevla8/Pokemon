@@ -1,7 +1,7 @@
 function getResults() { // Effectue une requête et récupère les résultats
 
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "http://localhost/Pokemon/fight/time_to_fight/");
+	xhr.open('POST', "http://localhost/Pokemon/fight/refresh/");
 
 	xhr.addEventListener('readystatechange', function() {
 		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200 && xhr.responseText == 'do_it') {

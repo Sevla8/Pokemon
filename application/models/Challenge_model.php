@@ -174,11 +174,11 @@ class Challenge_model extends CI_Model {
 
 	public function turn_over($id) {
 		$count = $this->db->select('*')
-						 ->from($this->table)
-						 ->where('id_from', $id)
-						 ->where('accepted', 1)
-						 ->where('closed', 0)
-						 ->count_all_results();
+						  ->from($this->table)
+						  ->where('id_from', $id)
+						  ->where('accepted', 1)
+						  ->where('closed', 0)
+						  ->count_all_results();
 
 		if ($count > 0) {
 			$data = $this->db->select('*')
@@ -192,6 +192,7 @@ class Challenge_model extends CI_Model {
 			$turn = $this->get_turn($id) == $data[0]['id_from'] ? $data[0]['id_to'] : $data[0]['id_from'];
 			
 			$this->db->set('turn', $turn)
+					 ->set('refresh', 1)
 					 ->where('id_from', $id)
 					 ->where('accepted', 1)
 					 ->where('closed', 0)
@@ -209,10 +210,69 @@ class Challenge_model extends CI_Model {
 			$turn = $this->get_turn($id) == $data[0]['id_from'] ? $data[0]['id_to'] : $data[0]['id_from'];
 			
 			$this->db->set('turn', $turn)
+					 ->set('refresh', 1)
 					 ->where('id_to', $id)
 					 ->where('accepted', 1)
 					 ->where('closed', 0)
 					 ->update($this->table);	
 		}
+	}
+
+	public function update_refresh($id) {
+		$count = $this->db->select('*')
+						  ->from($this->table)
+						  ->where('id_from', $id)
+						  ->where('accepted', 1)
+						  ->where('closed', 0)
+						  ->where('refresh', 1)
+						  ->count_all_results();
+
+		if ($count > 0) {
+			$this->db->set('refresh', 0)
+					 ->where('id_from', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->where('turn', $id)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('refresh', 0)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->where('turn', $id)
+					 ->update($this->table);	
+		}
+	}
+
+	public function have_to_refresh($id) {
+		$count = $this->db->select('*')
+						  ->from($this->table)
+						  ->where('id_from', $id)
+						  ->where('accepted', 1)
+						  ->where('closed', 0)
+						  ->count_all_results();
+
+		if ($count > 0) {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_from', $id)
+							 ->where('accepted', 1)
+							 ->where('closed', 0)
+							 ->where('refresh', 1)
+							 ->count_all_results();
+
+			return $data > 0 ? true : false;
+		}
+
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_to', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->where('refresh', 1)
+						 ->count_all_results();
+
+		return $data > 0 ? true : false;
 	}
 }

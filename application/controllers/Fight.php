@@ -57,6 +57,7 @@ class Fight extends CI_Controller {
 						 ->link_css('header')
 						 ->view('Fight/fight')
 						 ->view('footer')
+						 ->link_js('refresh')
 						 ->link_css('footer')
 						 ->set_title('Fight')
 						 ->print();
@@ -206,5 +207,14 @@ class Fight extends CI_Controller {
 
 	private function turn_over() {
 		$this->challenge_model->turn_over($this->session->userdata('id'));
+	}
+
+	public function refresh() { 	// ajax
+		if ($this->session->userdata('id') == $this->challenge_model->get_turn($this->session->userdata('id')) && 
+			$this->challenge_model->have_to_refresh($this->session->userdata('id'))) {
+			
+			$this->challenge_model->update_refresh($this->session->userdata('id'));
+			echo "do_it";
+		}
 	}
 }
