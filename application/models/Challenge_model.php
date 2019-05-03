@@ -11,7 +11,7 @@ class Challenge_model extends CI_Model {
 		$this->load->database();
 	}
 
-	public function check($id_from, $id_to) {
+	public function set_checked($id_from, $id_to) {
 		$this->db->set('checked', 1)
 				 ->where('id_from', $id_from)
 				 ->where('id_to', $id_to)
@@ -32,6 +32,7 @@ class Challenge_model extends CI_Model {
 		$data = $this->db->select('*')
 						 ->from($this->table)
 						 ->where('id_to', $id_to)
+						 ->where('closed', 0)
 						 ->count_all_results();
 
 		return $data > 0 ? true : false;
@@ -41,6 +42,8 @@ class Challenge_model extends CI_Model {
 			$data = $this->db->select('*')
 							 ->from($this->table)
 							 ->where('id_to', $id_to)
+							 ->where('closed', 0)
+							 ->where('accepted', 0)
 							 ->order_by('timestamp', 'DESC')
 							 ->get()
 							 ->result_array();
@@ -58,6 +61,7 @@ class Challenge_model extends CI_Model {
 						->from($this->table)
 						->where('id_to', $id_to)
 						->where('checked', 0)
+						->where('accepted', 0)
 						->order_by('timestamp', 'DESC')
 						->get()
 						->result_array()[0]['id_from'];
@@ -68,17 +72,21 @@ class Challenge_model extends CI_Model {
 						 ->from($this->table)
 						 ->where('id_from', $id_from)
 						 ->where('id_to', $id_to)
+						 ->where('closed', 0)
 						 ->count_all_results();
 
 		return $data > 0 ? true : false;
 	}
 
-	public function send_challenge($id_from, $id_to) {
+	public function set_challenge($id_from, $id_to) {
 		$this->db->set('id_from', $id_from)
 				 ->set('id_to', $id_to)
-				// ->set('timestamp', time()) ?? (ne fonctionne pas) 
+				// ->set('timestamp', time()) ?? (ne fonctionne pas) pas grave -> default
 				 ->set('checked', 0)
 				 ->set('accepted', 0)
+				 ->set('turn', $id_to)
+				 ->set('refresh', 0)
+				 ->set('closed', 0)
 				 ->insert($this->table);
 	}
 
@@ -95,7 +103,6 @@ class Challenge_model extends CI_Model {
 
 	public function accept_challenge($id_from, $id_to) {
 		$this->db->set('accepted', 1)
-				 ->set('turn', $id_to)
 				 ->where('id_from', $id_from)
 				 ->where('id_to', $id_to)
 				 ->update($this->table);
@@ -106,37 +113,53 @@ class Challenge_model extends CI_Model {
 						   ->from($this->table)
 						   ->where('id_from', $id)
 						   ->where('accepted', 1)
+						   ->where('closed', 0)
 						   ->count_all_results();
 
 		$data_2 = $this->db->select('*')
 						   ->from($this->table)
 						   ->where('id_to', $id)
 						   ->where('accepted', 1)
+						   ->where('closed', 0)
 						   ->count_all_results();
 
 		return $data_1 > 0 || $data_2 > 0 ? true : false;
 	}
 
-	public function get_fight($id) {
+	public function get_current_fight($id) {
 		return $this->db->select('*')
 						->from($this->table)
 						->where('id_from', $id)
-						->or_where('id_to', $id)
-						->get()
-						->result_array()[0];
+						->where('accepted', 1)
+						->where('closed', 0)
+						->count_all_results() > 0 ? $this->db->select('*')
+															 ->from($this->table)
+															 ->where('id_from', $id)
+															 ->where('accepted', 1)
+															 ->where('closed', 0)
+															 ->get()
+															 ->result_array()[0] : $this->db->select('*')
+																							->from($this->table)
+																							->where('id_to', $id)
+																							->where('accepted', 1)
+																							->where('closed', 0)
+																							->get()
+																							->result_array()[0];
 	}
 
 	public function get_turn($id) {
 		$data = $this->db->select('turn')
-						->from($this->table)
-						->where('id_from', $id)
-						->where('accepted', 1)
-						->count_all_results();
+						 ->from($this->table)
+						 ->where('id_from', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
 		if ($data > 0) {
 			return $this->db->select('turn')
 							->from($this->table)
 							->where('id_from', $id)
 							->where('accepted', 1)
+							->where('closed', 0)
 							->get()
 							->result_array()[0]['turn'];
 		}
@@ -144,7 +167,52 @@ class Challenge_model extends CI_Model {
 							->from($this->table)
 							->where('id_to', $id)
 							->where('accepted', 1)
+							->where('closed', 0)
 							->get()
 							->result_array()[0]['turn'];
+	}
+
+	public function turn_over($id) {
+		$count = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
+
+		if ($count > 0) {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_from', $id)
+							 ->where('accepted', 1)
+							 ->where('closed', 0)
+							 ->get()
+							 ->result_array();
+
+			$turn = $this->get_turn($id) == $data[0]['id_from'] ? $data[0]['id_to'] : $data[0]['id_from'];
+			
+			$this->db->set('turn', $turn)
+					 ->where('id_from', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+		else {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_to', $id)
+							 ->where('accepted', 1)
+							 ->where('closed', 0)
+							 ->get()
+							 ->result_array();
+
+			$turn = $this->get_turn($id) == $data[0]['id_from'] ? $data[0]['id_to'] : $data[0]['id_from'];
+			
+			$this->db->set('turn', $turn)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);	
+		}
 	}
 }

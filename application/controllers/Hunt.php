@@ -62,11 +62,9 @@ class Hunt extends CI_Controller {
 		}
 		$rand = random_int(0, $i-1);
 		$rand_id_pokedex = $array[$rand];
-		$rand_level = random_int(1, 70);
-
-		$this->session->set_userdata('wild', $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level, 100));
 
 		$team = $this->pokemon_model->get_in_team($this->session->userdata('id'));
+
 		$i;
 		for ($i = 0; $i < 6; $i += 1) {
 			if (isset($team[$i]) && $team[$i]['%_hp'] > 0) {
@@ -76,8 +74,15 @@ class Hunt extends CI_Controller {
 		}
 		if ($i == 6)
 			redirect('team/team/');
+		
+		$rand_level = random_int($team[$this->session->userdata('in_fight')]['level'] - 1, $team[$this->session->userdata('in_fight')]['level'] + 10);
+		if ($rand_level < 0)
+			$rand_level = 0;
+
+		$this->session->set_userdata('wild', $this->pokedex_model->wild_pokemon_appears($rand_id_pokedex, $rand_level, 100));
 
 		redirect('hunt/hunt');
+
 	}
 
 	public function hunt() {
@@ -223,6 +228,6 @@ class Hunt extends CI_Controller {
 	}
 
 	private function get_damage($puis_att, $level_att, $def_def, $level_def) {
-		return $puis_att * $level_att / $def_def / $level_def * 10;
+		return $puis_att * ($level_att+1) / $def_def / ($level_def+1) * 10;
 	}
 }
