@@ -22,6 +22,14 @@ class Fight extends CI_Controller {
 		if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
 			redirect('fight/challenge/');
 		else {
+			redirect('fight/team/');
+		}
+	}
+
+	public function fight() {
+		if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
+			redirect('fight/challenge/');
+		else {
 			$chall = $this->challenge_model->get_current_fight($this->session->userdata('id'));
 			$enemy = $this->session->userdata('id') == $chall['id_from'] ? $chall['id_to'] : $chall['id_from']; 
 
@@ -39,7 +47,7 @@ class Fight extends CI_Controller {
 				}
 			}
 			if ($i == 6)
-				redirect('team/team');
+				redirect('fight/lose');
 
 			for ($i = 0; $i < 6; $i += 1) {
 				if (isset($data['enemy_team'][$i]) && $data['enemy_team'][$i]['%_hp'] > 0) {
@@ -48,7 +56,7 @@ class Fight extends CI_Controller {
 				}
 			}
 			if ($i == 6)
-				redirect('user/home');
+				redirect('fight/win');
 
 			$this->session->set_userdata('in_fight', $data['in_fight']);
 			$this->session->set_userdata('enemy_in_fight', $data['enemy_in_fight']);
@@ -56,8 +64,9 @@ class Fight extends CI_Controller {
 			$this->layout->view('header', $data)
 						 ->link_css('header')
 						 ->view('Fight/fight')
-						 ->view('footer')
 						 ->link_js('refresh')
+						 ->link_js('ready')
+						 ->view('footer')
 						 ->link_css('footer')
 						 ->set_title('Fight')
 						 ->print();
@@ -66,19 +75,66 @@ class Fight extends CI_Controller {
 		}
 	}
 
+	public function team() {
+		if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
+			redirect('fight/challenge/');
+		else {
+			$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id')),
+					 'pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
+
+			$this->layout->view('header', $data)
+						 ->link_css('header')
+						 ->view('Fight/team')
+						 ->view('footer')
+						 ->link_css('footer')
+						 ->set_title('Fight-Team')
+						 ->print();
+		}
+	}
+
+	public function move_up($id) {
+		if ($this->pokemon_model->pokemon_exists($id)) {
+			if ($this->pokemon_model->correct_move($id, $this->session->userdata('id'), 'up')) {
+				$this->pokemon_model->move_up($id, $this->session->userdata('id'));
+				redirect('fight/team');
+			}
+			else 
+				show_404();
+		}
+		else 
+			redirect('fight/team');
+	}
+
+	public function move_down($id) {
+		if ($this->pokemon_model->pokemon_exists($id)) {
+			if ($this->pokemon_model->correct_move($id, $this->session->userdata('id'), 'down')) {
+				$this->pokemon_model->move_down($id, $this->session->userdata('id'));
+				redirect('fight/team');
+			}
+			else 
+				show_404();
+		}
+		else 
+			redirect('fight/team');
+	}
+
 	public function challenge() {
-		$data = ['online' =>  $this->member_model->get_online(), 
-				 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
-		if ($this->challenge_model->exists_challenge($this->session->userdata('id')))
-			$data['challenge_from'] = $this->challenge_model->get_all_challenge($this->session->userdata('id'));
-		$this->layout->view('header', $data)
-					 ->link_css('header')
-					 ->view('Fight/challenges')
-					 ->link_js('time_to_fight')
-					 ->view('footer')
-					 ->link_css('footer')
-					 ->set_title('Challenge')
-					 ->print();
+		if ($this->challenge_model->exists_fight($this->session->userdata('id')))
+			redirect('fight/');
+		else {
+			$data = ['online' =>  $this->member_model->get_online(), 
+					 'trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+			if ($this->challenge_model->exists_challenge($this->session->userdata('id')))
+				$data['challenge_from'] = $this->challenge_model->get_all_challenge($this->session->userdata('id'));
+			$this->layout->view('header', $data)
+						 ->link_css('header')
+						 ->view('Fight/challenges')
+						 ->link_js('time_to_fight')
+						 ->view('footer')
+						 ->link_css('footer')
+						 ->set_title('Challenge')
+						 ->print();
+		}
 	}
 
 	public function send_challenge($id_to) {
@@ -131,16 +187,16 @@ class Fight extends CI_Controller {
 					$this->trainer_model->potion($this->session->userdata('id'), -1);
 					
 					$this->turn_over();
-					redirect('fight/');
+					redirect('fight/fight');
 				}
 				else 
-					redirect('fight/');
+					redirect('fight/fight');
 			}
 			else 
-				redirect('fight/');
+				redirect('fight/fight');
 		}
 		else
-			redirect('fight/');
+			redirect('fight/fight');
 	}
 
 	public function attack($id_capa) {
@@ -188,17 +244,17 @@ class Fight extends CI_Controller {
 						}
 
 						$this->turn_over();
-						redirect('fight/');
+						redirect('fight/fight');
 					}
 					$this->turn_over();
-					redirect('fight/');
+					redirect('fight/fight');
 				}
 				else 
-					redirect('fight/');
+					redirect('fight/fight');
 			}
 		}
 		else 
-			redirect('fight/');
+			redirect('fight/fight');
 	}
 
 	private function get_damage($puis_att, $level_att, $def_def, $level_def) {
@@ -216,5 +272,25 @@ class Fight extends CI_Controller {
 			$this->challenge_model->update_refresh($this->session->userdata('id'));
 			echo "do_it";
 		}
+	}
+
+	public function ready() { 	// ajax
+		if ($this->challenge_model->enemy_ready($this->session->userdata('id'))) {
+			$this->challenge_model->ready_off($this->session->userdata('id'));
+			echo "do_it";
+		}
+	}
+
+	public function set_ready() {
+		$this->challenge_model->ready($this->session->userdata('id'));
+		redirect('fight/fight');
+	}
+
+	public function win() {
+		echo "win";
+	}
+
+	public function lose() {
+		echo "lose";
 	}
 }

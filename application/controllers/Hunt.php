@@ -75,7 +75,7 @@ class Hunt extends CI_Controller {
 		if ($i == 6)
 			redirect('team/team/');
 		
-		$rand_level = random_int($team[$this->session->userdata('in_fight')]['level'] - 1, $team[$this->session->userdata('in_fight')]['level'] + 10);
+		$rand_level = random_int($team[$this->session->userdata('in_fight')]['level'] - 10, $team[$this->session->userdata('in_fight')]['level'] + 10);
 		if ($rand_level < 0)
 			$rand_level = 0;
 

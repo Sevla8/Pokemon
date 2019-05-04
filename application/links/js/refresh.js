@@ -6,7 +6,7 @@ function getResults() { // Effectue une requête et récupère les résultats
 	xhr.addEventListener('readystatechange', function() {
 		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200 && xhr.responseText == 'do_it') {
 
-			document.location.href="http://localhost/Pokemon/fight/";
+			document.location.href="http://localhost/Pokemon/fight/fight";
 
 		}
 	});

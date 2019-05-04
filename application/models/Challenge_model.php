@@ -275,4 +275,83 @@ class Challenge_model extends CI_Model {
 
 		return $data > 0 ? true : false;
 	}
+
+	public function ready($id) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
+
+		if ($data > 0) {
+			$this->db->set('ready_from', 1)
+					 ->where('id_from', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('ready_to', 1)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+	}
+
+	public function enemy_ready($id) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
+
+		if ($data > 0) {
+			$count = $this->db->select('*')
+							  ->from($this->table)
+							  ->where('id_from', $id)
+							  ->where('accepted', 1)
+							  ->where('closed', 0)
+							  ->where('ready_to', 1)
+							  ->count_all_results();
+
+			return $count > 0 ? true : false;
+		}
+
+		$count = $this->db->select('*')
+						  ->from($this->table)
+						  ->where('id_to', $id)
+						  ->where('accepted', 1)
+						  ->where('closed', 0)
+						  ->where('ready_from', 1)
+						  ->count_all_results();
+
+		return $count > 0 ? true : false;
+	}
+
+	public function ready_off($id) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
+
+		if ($data > 0) {
+			$this->db->set('ready_to', 0)
+					 ->where('id_from', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('ready_from', 0)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+	}
 }

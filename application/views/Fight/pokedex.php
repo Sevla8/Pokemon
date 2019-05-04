@@ -42,4 +42,4 @@
 		</tr>
 	</tbody>
 </table>
-<a href="<?php echo site_url('fight/'); ?>">Back</a>
+<a href="<?php echo site_url('fight/fight'); ?>">Back</a>
