@@ -26,6 +26,9 @@
 	<div class="Potion">
 		<a href="<?php echo site_url('fight/potion/'.$team[$in_fight]['id']) ?>"><?php echo img('potion.png', 'potion') ?></a>
 	</div>
+	<div class="Team">
+		<a href="<?php echo site_url('fight/team/') ?>">Team</a>
+	</div>
 </div>
 <div class="turn">
 	<?php 
