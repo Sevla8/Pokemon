@@ -84,7 +84,6 @@ class Challenge_model extends CI_Model {
 				// ->set('timestamp', time()) ?? (ne fonctionne pas) pas grave -> default
 				 ->set('checked', 0)
 				 ->set('accepted', 0)
-				 ->set('turn', $id_to)
 				 ->set('refresh', 0)
 				 ->set('closed', 0)
 				 ->insert($this->table);
@@ -146,6 +145,155 @@ class Challenge_model extends CI_Model {
 																							->get()
 																							->result_array()[0];
 	}
+
+	public function is_ready($id_from, $id_to, $id) {
+		if ($id == $id_from) {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_from', $id_from)
+							 ->where('id_to', $id_to)
+							 ->where('ready_from', 1)
+							 ->count_all_results();
+			return $data > 0 ? true : false;
+		}
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id_from)
+						 ->where('id_to', $id_to)
+						 ->where('ready_to', 1)
+						 ->count_all_results();
+		return $data > 0 ? true : false;
+	}
+
+	public function set_ready($id_from, $id_to, $id) {
+		if ($id == $id_from) {
+			$this->db->set('ready_from', 1)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id_to)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('ready_to', 1)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+	}
+
+	public function enemy_has_played($id_from, $id_to, $id) {
+		if ($id == $id_from) {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_from', $id_from)
+							 ->where('id_to', $id_to)
+							 ->where('played_to', 1)
+							 ->count_all_results();
+			return $data > 0 ? true : false;
+		}
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id_from)
+						 ->where('id_to', $id_to)
+						 ->where('played_from', 1)
+						 ->count_all_results();
+		return $data > 0 ? true : false;
+	}
+
+	public function set_played($id_from, $id_to, $id) {
+		if ($id == $id_from) {
+			$this->db->set('played_from', 1)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id_to)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('played_to', 1)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+	}
+
+	public function set_refresh($id_from, $id_to, $id) {
+		if ($id == $id_from) {
+			$this->db->set('refresh_from', 1)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id_to)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('refresh_to', 1)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->update($this->table);
+		}
+	}
+
+	public function completed($id_from, $id_to, $id) {
+		if ($id_from == $id) {
+			$data = $this->db->select('*')
+							 ->from($this->table)
+							 ->where('id_from', $id_from)
+							 ->where('id_to', $id_to)
+							 ->where('ready_from', 1)
+							 ->where('played_from', 1)
+							 ->where('accepted', 1)
+							 ->where('closed', 0)
+							 ->count_all_results();
+			return $data > 0 ? true : false;
+		}
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id_from)
+						 ->where('id_to', $id_to)
+						 ->where('ready_to', 1)
+						 ->where('played_to', 1)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
+		return $data > 0 ? true : false;
+	}
+
+	public function new_turn($id_from, $id_to, $id) {
+		if ($id_from == $id) {
+			$this->db->set('ready_from', 0)
+					 ->set('played_from', 0)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id_to)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->where('ready_from', 1)
+					 ->where('played_from', 1)
+					 ->update($this->table);
+		}
+		else {
+			$this->db->set('ready_to', 0)
+					 ->set('played_to', 0)
+					 ->where('id_from', $id_from)
+					 ->where('id_to', $id_to)
+					 ->where('accepted', 1)
+					 ->where('closed', 0)
+					 ->where('ready_to', 1)
+					 ->where('played_to', 1)
+					 ->update($this->table);
+		}
+	}
+
+
+
+
 
 	public function get_turn($id) {
 		$data = $this->db->select('turn')
@@ -276,29 +424,7 @@ class Challenge_model extends CI_Model {
 		return $data > 0 ? true : false;
 	}
 
-	public function ready($id) {
-		$data = $this->db->select('*')
-						 ->from($this->table)
-						 ->where('id_from', $id)
-						 ->where('accepted', 1)
-						 ->where('closed', 0)
-						 ->count_all_results();
-
-		if ($data > 0) {
-			$this->db->set('ready_from', 1)
-					 ->where('id_from', $id)
-					 ->where('accepted', 1)
-					 ->where('closed', 0)
-					 ->update($this->table);
-		}
-		else {
-			$this->db->set('ready_to', 1)
-					 ->where('id_to', $id)
-					 ->where('accepted', 1)
-					 ->where('closed', 0)
-					 ->update($this->table);
-		}
-	}
+	
 
 	public function enemy_ready($id) {
 		$data = $this->db->select('*')

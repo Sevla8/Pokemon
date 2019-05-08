@@ -1,12 +1,10 @@
 function getResults2() { // Effectue une requête et récupère les résultats
 
 	var xhr2 = new XMLHttpRequest();
-	xhr2.open('POST', "http://localhost/Pokemon/fight/ready/");
+	xhr2.open('POST', "http://localhost/Pokemon/fight/make_attack/");
 
 	xhr2.addEventListener('readystatechange', function() {
 		if (xhr2.readyState == XMLHttpRequest.DONE && xhr2.status == 200 && xhr2.responseText == 'do_it') {
-
-			document.location.href="http://localhost/Pokemon/fight/fight";
 
 		}
 	});

@@ -13,10 +13,10 @@
 	<p>lvl : <?php echo $team[$in_fight]['level']; ?></p>
 	<p>xp : <?php echo $team[$in_fight]['xp']; ?></p>
 	<div>
-		<a href="<?= site_url('fight/attack/0') ?>"><input class="capacity" type="button" name="capacity_1" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][0])) echo $team[$in_fight]['capacity'][0]['name'].' '.$team[$in_fight]['capacity'][0]['nb_pp'].'/'.$team[$in_fight]['capacity'][0]['pp']; ?>"></a>
-		<a href="<?= site_url('fight/attack/1') ?>"><input class="capacity" type="button" name="capacity_2" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][1])) echo $team[$in_fight]['capacity'][1]['name'].' '.$team[$in_fight]['capacity'][1]['nb_pp'].'/'.$team[$in_fight]['capacity'][1]['pp']; ?>"></a>
-		<a href="<?= site_url('fight/attack/2') ?>"><input class="capacity" type="button" name="capacity_3" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][2])) echo $team[$in_fight]['capacity'][2]['name'].' '.$team[$in_fight]['capacity'][2]['nb_pp'].'/'.$team[$in_fight]['capacity'][2]['pp']; ?>"></a>
-		<a href="<?= site_url('fight/attack/3') ?>"><input class="capacity" type="button" name="capacity_4" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][3])) echo $team[$in_fight]['capacity'][3]['name'].' '.$team[$in_fight]['capacity'][3]['nb_pp'].'/'.$team[$in_fight]['capacity'][3]['pp']; ?>"></a>
+		<a href="<?= site_url('fight/temp/0') ?>"><input class="capacity" type="button" name="capacity_1" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][0])) echo $team[$in_fight]['capacity'][0]['name'].' '.$team[$in_fight]['capacity'][0]['nb_pp'].'/'.$team[$in_fight]['capacity'][0]['pp']; ?>"></a>
+		<a href="<?= site_url('fight/temp/1') ?>"><input class="capacity" type="button" name="capacity_2" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][1])) echo $team[$in_fight]['capacity'][1]['name'].' '.$team[$in_fight]['capacity'][1]['nb_pp'].'/'.$team[$in_fight]['capacity'][1]['pp']; ?>"></a>
+		<a href="<?= site_url('fight/temp/2') ?>"><input class="capacity" type="button" name="capacity_3" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][2])) echo $team[$in_fight]['capacity'][2]['name'].' '.$team[$in_fight]['capacity'][2]['nb_pp'].'/'.$team[$in_fight]['capacity'][2]['pp']; ?>"></a>
+		<a href="<?= site_url('fight/temp/3') ?>"><input class="capacity" type="button" name="capacity_4" value="<?php if (isset($team[$in_fight]['capacity']) && isset($team[$in_fight]['capacity'][3])) echo $team[$in_fight]['capacity'][3]['name'].' '.$team[$in_fight]['capacity'][3]['nb_pp'].'/'.$team[$in_fight]['capacity'][3]['pp']; ?>"></a>
 	</div>
 </div>
 <div class="controls">
@@ -31,10 +31,10 @@
 	</div>
 </div>
 <div class="turn">
-	<?php 
+	<!-- <?php 
 	if ($turn != $trainer['id'])
 		echo "Waiting for your opponent...";
-	?>
+	?> -->
 </div>
 
 <script>
