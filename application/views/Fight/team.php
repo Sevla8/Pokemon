@@ -87,4 +87,4 @@
 		<?php } ?>
 	</tbody>
 </table>
-<a href="<?= site_url('fight/set_ready/') ?>">Ready</a>
+<a href="<?= site_url('fight/change_pokemon/') ?>">Ready</a>

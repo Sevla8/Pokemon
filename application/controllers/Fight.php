@@ -22,7 +22,7 @@ class Fight extends CI_Controller {
 		if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
 			redirect('fight/challenge/');
 		else {
-			redirect('fight/team/');
+			redirect('fight/fight/');
 		}
 	}
 
@@ -76,20 +76,31 @@ class Fight extends CI_Controller {
 	}
 
 	public function team() {
+		if ($this->session->userdata('id') == $this->challenge_model->get_turn($this->session->userdata('id'))) {
+			if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
+				redirect('fight/challenge/');
+			else {
+				$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id')),
+						 'pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
+
+				$this->layout->view('header', $data)
+							 ->link_css('header')
+							 ->view('Fight/team')
+							 ->view('footer')
+							 ->link_css('footer')
+							 ->set_title('Fight-Team')
+							 ->print();
+			}
+		}
+		else 
+			redirect('fight/fight');
+	}
+
+	public function change_pokemon() {
 		if (!$this->challenge_model->exists_fight($this->session->userdata('id')))
 			redirect('fight/challenge/');
-		else {
-			$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id')),
-					 'pokemon' => $this->pokemon_model->get_in_team($this->session->userdata('id'))];
-
-			$this->layout->view('header', $data)
-						 ->link_css('header')
-						 ->view('Fight/team')
-						 ->view('footer')
-						 ->link_css('footer')
-						 ->set_title('Fight-Team')
-						 ->print();
-		}
+		$this->turn_over();
+		redirect('fight/fight/');
 	}
 
 	public function move_up($id) {
@@ -237,12 +248,6 @@ class Fight extends CI_Controller {
 															 $enemy_team[$this->session->userdata('enemy_in_fight')]['id_pokedex'],
 															 $enemy_team[$this->session->userdata('enemy_in_fight')]['in_team']);
 
-						if ($hp == 0) {
-							$this->session->set_userdata('enemy_in_fight', $this->session->userdata('enemy_in_fight') + 1);
-							if ($this->session->userdata('enemy_in_fight') == 7)
-								echo "you win";
-						}
-
 						$this->turn_over();
 						redirect('fight/fight');
 					}
@@ -262,6 +267,10 @@ class Fight extends CI_Controller {
 	}
 
 	private function turn_over() {
+		$poke = $this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')]['id'];
+		$this->pokemon_model->xp_up($poke, 10);
+		if ($this->pokemon_model->get_xp($poke) == 100)
+			$this->pokemon_model->level_up($poke, 1);
 		$this->challenge_model->turn_over($this->session->userdata('id'));
 	}
 

@@ -256,4 +256,33 @@ class Pokemon_Model extends CI_Model {
 				 ->where('id_trainer', $id)
 				 ->update($this->table);
 	}
+
+	public function get_xp($id) {
+		return $this->db->select('xp')
+						->from($this->table)
+						->where('id', $id)
+						->get()
+						->result_array()[0]['xp'];
+	}
+
+	public function xp_up($id, $xp) {
+		$this->db->set('xp', $this->get_xp($id) + $xp)
+				 ->where('id', $id)
+				 ->update($this->table);
+	}
+
+	public function get_level($id) {
+		return $this->db->select('level')
+						->from($this->table)
+						->where('id', $id)
+						->get()
+						->result_array()[0]['level'];
+	}
+
+	public function level_up($id, $level) {
+		$this->db->set('level', $this->get_level($id) + $level)
+				 ->set('xp', 0)
+				 ->where('id', $id)
+				 ->update($this->table);
+	}
 }
