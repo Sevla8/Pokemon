@@ -35,6 +35,11 @@ class Pokemon_Capacity_Model extends CI_Model {
 				 ->update($this->table);
 	}
 
+	public function delete_capacity($id_pokemon) {
+		$this->db->where('id_pokemon', $id_pokemon)
+				 ->delete($this->table);
+	}
+
 	public function get_pp($id_capacity, $id_pokemon) {
 		return $this->db->select('*')
 						->from($this->table)

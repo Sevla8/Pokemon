@@ -281,7 +281,7 @@ class Pokemon_Model extends CI_Model {
 
 	public function level_up($id, $level) {
 		$this->db->set('level', $this->get_level($id) + $level)
-				 ->set('xp', 0)
+				 ->set('xp', $this->get_xp($id) % 100)
 				 ->where('id', $id)
 				 ->update($this->table);
 	}

@@ -3,9 +3,9 @@
 	<div class="tariner"><?= $enemy_trainer['name'] ?></div>
 	<div class="avatar"><?= img($enemy_trainer['avatar'].'_trainer.gif', 'enemy_avatar') ?></div>
 	<div class="tariner"><?= $enemy_team[$enemy_in_fight]['name'] ?></div>
-	<div class="pokemon"><?= img($enemy_team[$enemy_in_fight]['id_pokedex'].'_front.gif', $team[$enemy_in_fight]['name']) ?></div>
+	<div class="pokemon"><?= img($enemy_team[$enemy_in_fight]['id_pokedex'].'_front.gif', $enemy_team[$enemy_in_fight]['name']) ?></div>
 	<div class="tariner">hp : <?= $enemy_team[$enemy_in_fight]['%_hp']/100*$enemy_team[$enemy_in_fight]['hp']*(1+$enemy_team[$enemy_in_fight]['level']/100).'/'.$enemy_team[$enemy_in_fight]['hp']*(1+$enemy_team[$enemy_in_fight]['level']/100) ?></div>
-	<div class="tariner">lvl : <?= $enemy_team[0]['level'] ?></div>
+	<div class="tariner">lvl : <?= $enemy_team[$enemy_in_fight]['level'] ?></div>
 </div>
 <div class="ally">
 	<p><?php echo img($team[$in_fight]['id_pokedex'].'_back.gif', $team[$in_fight]['name']); ?></p>

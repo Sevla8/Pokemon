@@ -12,8 +12,9 @@ class Fight extends CI_Controller {
 		$this->load->library('layout');
 		$this->load->model('Member_model', 'member_model');
 		$this->load->model('Trainer_model', 'trainer_model');
-		$this->load->model('Challenge_model', 'challenge_model');
 		$this->load->model('Pokemon_model', 'pokemon_model');
+		$this->load->model('Challenge_model', 'challenge_model');
+		$this->load->model('Pokedex_evolution_model', 'pokedex_evolution_model');
 		if (!$this->session->has_userdata('id'))
 			redirect('user/connection');
 	}
@@ -267,10 +268,34 @@ class Fight extends CI_Controller {
 	}
 
 	private function turn_over() {
-		$poke = $this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')]['id'];
-		$this->pokemon_model->xp_up($poke, 10);
-		if ($this->pokemon_model->get_xp($poke) == 100)
-			$this->pokemon_model->level_up($poke, 1);
+		$poke = $this->pokemon_model->get_in_team($this->session->userdata('id'))[$this->session->userdata('in_fight')];
+
+		$this->pokemon_model->xp_up($poke['id'], 10);
+
+		if ($this->pokemon_model->get_xp($poke['id']) >= 100) {
+			$this->pokemon_model->level_up($poke['id'], 1);
+
+			if ($this->pokedex_evolution_model->have_evolution($poke['id_pokedex'])) {
+				$evol = $this->pokedex_evolution_model->get_evolution($poke['id_pokedex']);
+				if ($evol['level'] <= $this->pokemon_model->get_level($poke['id'])) {
+					$this->pokemon_model->update_pokemon($poke['id'],
+														 $this->pokemon_model->get_level($poke['id']),
+														 $this->pokemon_model->get_xp($poke['id']),
+														 $poke['%_hp'],
+														 $poke['id_trainer'],
+														 $evol['id_to'],
+														 $poke['in_team']);
+					$capa = $this->pokedex_capacity_model->get_capacity($evol['id_to'], $poke['level']);
+					$this->pokemon_capacity_model->delete_capacity($poke['id']);
+					foreach ($capa as $capacity) {
+						$this->pokemon_capacity_model->set_capacity($poke['id'],
+																	$capacity['id_capacity'],
+																	$this->capacity_model->get_capacity($capacity['id_capacity'])['pp']);
+					}
+				}
+			}
+		}
+
 		$this->challenge_model->turn_over($this->session->userdata('id'));
 	}
 
