@@ -61,7 +61,6 @@ class Challenge_model extends CI_Model {
 						->from($this->table)
 						->where('id_to', $id_to)
 						->where('checked', 0)
-						->where('accepted', 0)
 						->order_by('timestamp', 'DESC')
 						->get()
 						->result_array()[0]['id_from'];
@@ -106,6 +105,29 @@ class Challenge_model extends CI_Model {
 				 ->where('id_from', $id_from)
 				 ->where('id_to', $id_to)
 				 ->update($this->table);
+	}
+
+	public function close_fight($id) {
+		$data = $this->db->select('*')
+						 ->from($this->table)
+						 ->where('id_from', $id)
+						 ->where('accepted', 1)
+						 ->where('closed', 0)
+						 ->count_all_results();
+		if ($data > 0) {
+			$this->db->set('closed', 1)
+					 ->where('closed', 0)
+					 ->where('accepted', 1)
+					 ->where('id_from', $id)
+					 ->update($this->table);	
+		}
+		else {
+			$this->db->set('closed', 1)
+					 ->where('closed', 0)
+					 ->where('accepted', 1)
+					 ->where('id_to', $id)
+					 ->update($this->table);
+		}
 	}
 
 	public function exists_fight($id) {

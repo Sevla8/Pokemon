@@ -321,10 +321,37 @@ class Fight extends CI_Controller {
 	}
 
 	public function win() {
-		echo "win";
+		$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->trainer_model->update_trainer($data['trainer']['id'],
+											 $data['trainer']['name'],
+											 $data['trainer']['avatar'],
+											 $data['trainer']['pokedollar'] + 100,
+											 $data['trainer']['pokeball'],
+											 $data['trainer']['potion']);
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Fight/win')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Fight-Result')
+					 ->print();
 	}
 
 	public function lose() {
-		echo "lose";
+		$data = ['trainer' => $this->trainer_model->get_trainer($this->session->userdata('id'))];
+		$this->trainer_model->update_trainer($data['trainer']['id'],
+											 $data['trainer']['name'],
+											 $data['trainer']['avatar'],
+											 $data['trainer']['pokedollar'] - 100,
+											 $data['trainer']['pokeball'],
+											 $data['trainer']['potion']);
+		$this->challenge_model->close_fight($this->session->userdata('id'));
+		$this->layout->view('header', $data)
+					 ->link_css('header')
+					 ->view('Fight/lose')
+					 ->view('footer')
+					 ->link_css('footer')
+					 ->set_title('Fight-Result')
+					 ->print();
 	}
 }

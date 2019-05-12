@@ -31,10 +31,11 @@ class User extends CI_Controller {
 			$this->layout->view('header', $data)
 						 ->link_css('header')
 						 ->view('User/home')
+						 ->link_js('challenge')
+						 ->link_js('abandon')
 						 ->view('footer')
 						 ->link_css('footer')
 						 ->set_title('Home')
-						 ->link_js('challenge')
 						 ->print();
 			// new day
 			if ($this->member_model->get_last_activity($this->session->userdata('id')) != date('Y-m-d')) {
@@ -183,6 +184,14 @@ class User extends CI_Controller {
 				$this->load->view('User/member_not_active');
 			}
 		}
+	}
+
+	public function abandon() {
+		if ($this->challenge_model->exists_fight($this->session->userdata('id')))
+			if ($this->challenge_model->get_current_fight($this->session->userdata('id'))['turn'] == $this->session->userdata('id'))
+				echo "lose";
+			else 
+				echo "win";
 	}
 
 	public function disconnection() {
