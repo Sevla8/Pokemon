@@ -275,6 +275,14 @@ class Fight extends CI_Controller {
 		if ($this->pokemon_model->get_xp($poke['id']) >= 100) {
 			$this->pokemon_model->level_up($poke['id'], 1);
 
+			$capa = $this->pokedex_capacity_model->get_capacity($poke['id_pokedex'], $poke['level'] + 1);
+			$this->pokemon_capacity_model->delete_capacity($poke['id']);
+			foreach ($capa as $capacity) {
+				$this->pokemon_capacity_model->set_capacity($poke['id'],
+															$capacity['id_capacity'],
+															$this->capacity_model->get_capacity($capacity['id_capacity'])['pp']);
+			}
+
 			if ($this->pokedex_evolution_model->have_evolution($poke['id_pokedex'])) {
 				$evol = $this->pokedex_evolution_model->get_evolution($poke['id_pokedex']);
 				if ($evol['level'] <= $this->pokemon_model->get_level($poke['id'])) {
