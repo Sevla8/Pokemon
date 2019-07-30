@@ -111,8 +111,12 @@ class Pokedex_model extends CI_Model {
 
 		$capacity = $this->pokedex_capacity_model->get_capacity($rand_id_pokedex, $rand_level);
 
-		foreach ($capacity as $capa) {
-		 	$data['capacity'][] = $this->capacity_model->get_capacity($capa['id_capacity']);
+		if (empty($capacity))
+			$data['capacity'][] = array($this->capacity_model->get_capacity(84));
+		else {
+			foreach ($capacity as $capa) {
+				 $data['capacity'][] = $this->capacity_model->get_capacity($capa['id_capacity']);
+			}
 		}
 
 		return $data;
